@@ -77,7 +77,10 @@ const charterClauses = [
             <dd>{item.value}</dd>
           </div>
         ))}
-        <p>Guidelines only. Every opportunity is evaluated on its own facts.</p>
+        <div class="mandate-stamp__note">
+          <dt class="sr-only">Mandate note</dt>
+          <dd>Guidelines only. Every opportunity is evaluated on its own facts.</dd>
+        </div>
       </dl>
     </div>
   </section>
@@ -289,12 +292,21 @@ const charterClauses = [
     letter-spacing: 0.1em;
   }
 
-  .mandate-stamp__document > p {
+  .mandate-stamp__document .mandate-stamp__note {
     position: relative;
     z-index: 1;
+    display: block;
+    min-height: auto;
+    padding: 0;
+    border: 0;
     margin-top: var(--space-md);
+  }
+
+  .mandate-stamp__document .mandate-stamp__note dd {
     color: var(--color-slate);
+    font-family: var(--font-sans);
     font-size: 0.68rem;
+    letter-spacing: 0;
   }
 
   .relationship-note h2 {
@@ -325,7 +337,7 @@ const charterClauses = [
     }
 
     .mandate-stamp__document .mandate-stamp__title,
-    .mandate-stamp__document > p {
+    .mandate-stamp__document .mandate-stamp__note {
       grid-column: 1 / -1;
     }
   }

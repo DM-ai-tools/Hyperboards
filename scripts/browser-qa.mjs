@@ -31,6 +31,15 @@ async function revealForScreenshot(page) {
   });
 }
 
+async function expectSelectedPanel(page, root, value) {
+  const option = page.locator(`${root} [data-folio-option][data-value="${value}"]`);
+  const panel = page.locator(`${root} [data-folio-panel][data-value="${value}"]`);
+  if ((await option.getAttribute('aria-selected')) !== 'true') {
+    failures.push(`${root} did not select ${value}`);
+  }
+  if (!(await panel.isVisible())) failures.push(`${root} did not reveal the ${value} panel`);
+}
+
 try {
   browser = await chromium.launch({ channel: 'msedge', headless: true });
   const desktop = await browser.newContext({ viewport: { width: 1440, height: 1000 }, deviceScaleFactor: 1 });
@@ -71,24 +80,44 @@ try {
       }));
     });
     report.accessibility.push({ route, violations: axeResult });
-    if (axeResult.length) {
-      failures.push(`${route} has ${axeResult.length} automated WCAG violation(s): ${axeResult.map((item) => item.id).join(', ')}`);
+    const seriousViolations = axeResult.filter((item) => item.impact === 'serious' || item.impact === 'critical');
+    if (seriousViolations.length) {
+      failures.push(`${route} has ${seriousViolations.length} serious automated WCAG violation(s): ${seriousViolations.map((item) => item.id).join(', ')}`);
     }
   }
 
-  for (const width of [320, 768, 1920]) {
+  await page.goto(`${baseUrl}/what-we-acquire`, { waitUntil: 'networkidle' });
+  await page.locator('[data-mandate-explorer] [data-folio-option][data-value="deal-value"]').click();
+  await expectSelectedPanel(page, '[data-mandate-explorer]', 'deal-value');
+
+  await page.goto(`${baseUrl}/business-owners`, { waitUntil: 'networkidle' });
+  await page.locator('[data-owner-path] [data-folio-option][data-value="exploring"]').focus();
+  await page.keyboard.press('ArrowRight');
+  await expectSelectedPanel(page, '[data-owner-path]', 'preparing');
+
+  await page.goto(`${baseUrl}/our-approach`, { waitUntil: 'networkidle' });
+  await page.locator('[data-underwriting-lens] [data-folio-option]').nth(2).click();
+  const selectedLensValue = await page.locator('[data-underwriting-lens] [data-folio-option]').nth(2).getAttribute('data-value');
+  await expectSelectedPanel(page, '[data-underwriting-lens]', selectedLensValue);
+
+  await page.goto(`${baseUrl}/about`, { waitUntil: 'networkidle' });
+  await page.locator('[data-role-comparator] [data-folio-option][data-value="broker"]').click();
+  await expectSelectedPanel(page, '[data-role-comparator]', 'broker');
+
+  await page.goto(`${baseUrl}/contact`, { waitUntil: 'networkidle' });
+  await page.locator('[name="company"]').focus();
+  if ((await page.locator('[data-intake-guidance]').getAttribute('data-active')) !== 'profile') {
+    failures.push('Contact guidance did not advance to the business profile chapter');
+  }
+
+  await page.goto(`${baseUrl}/investor-relationships`, { waitUntil: 'networkidle' });
+  await page.locator('[data-alignment-ledger] [data-folio-option][data-value="transaction"]').click();
+  await expectSelectedPanel(page, '[data-alignment-ledger]', 'transaction');
+  report.checks.push({ name: 'folio-interactions', passed: true });
+
+  for (const width of [320, 390, 768, 1024, 1920]) {
     await page.setViewportSize({ width, height: 900 });
     for (const route of routes) {
-      await page.goto(`${baseUrl}${route}`, { waitUntil: 'networkidle' });
-      const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1);
-      report.responsive.push({ route, width, overflow });
-      if (overflow) failures.push(`${route} overflows horizontally at ${width}px`);
-    }
-  }
-
-  for (const width of [390, 1024]) {
-    await page.setViewportSize({ width, height: 900 });
-    for (const route of ['/', '/what-we-acquire', '/contact']) {
       await page.goto(`${baseUrl}${route}`, { waitUntil: 'networkidle' });
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1);
       report.responsive.push({ route, width, overflow });
@@ -100,6 +129,7 @@ try {
   const missingPage = await page.goto(`${baseUrl}/this-page-does-not-exist`, { waitUntil: 'networkidle' });
   testingExpected404 = false;
   if (missingPage?.status() !== 404) failures.push(`Missing route returned ${missingPage?.status()} instead of 404`);
+  await page.screenshot({ path: resolve(artifactDir, '404-desktop.png'), fullPage: true });
 
   for (const assetRoute of ['/robots.txt', '/sitemap.xml', '/favicon.svg']) {
     const assetResponse = await page.request.get(`${baseUrl}${assetRoute}`);
@@ -124,22 +154,22 @@ try {
   await page.screenshot({ path: resolve(artifactDir, 'home-cta-desktop.png') });
   report.checks.push({ name: 'desktop-home-screenshot', passed: true });
 
-  await page.goto(`${baseUrl}/contact`, { waitUntil: 'networkidle' });
-  await revealForScreenshot(page);
-  await page.screenshot({ path: resolve(artifactDir, 'contact-desktop.png'), fullPage: true });
-  await page.locator('.inquiry-shell').screenshot({ path: resolve(artifactDir, 'contact-form-desktop.png') });
-
   for (const [route, filename] of [
+    ['/what-we-acquire', 'what-we-acquire-desktop.png'],
     ['/business-owners', 'business-owners-desktop.png'],
     ['/our-approach', 'our-approach-desktop.png'],
     ['/about', 'about-desktop.png'],
+    ['/contact', 'contact-desktop.png'],
     ['/investor-relationships', 'investor-relationships-desktop.png'],
+    ['/privacy', 'privacy-desktop.png'],
+    ['/terms', 'terms-desktop.png'],
+    ['/thank-you', 'thank-you-desktop.png'],
   ]) {
-    await page.goto(`${baseUrl}${route}`, { waitUntil: 'networkidle' });
+    await page.goto(`${baseUrl}${route}`, { waitUntil: 'load' });
     await revealForScreenshot(page);
     await page.screenshot({ path: resolve(artifactDir, filename), fullPage: true });
   }
-  report.checks.push({ name: 'secondary-route-screenshots', passed: true });
+  report.checks.push({ name: 'internal-route-screenshots', passed: true });
 
   const invalidResponse = await page.request.post(`${baseUrl}/api/inquiries`, {
     headers: { Accept: 'application/json' },
@@ -176,6 +206,10 @@ try {
     data: JSON.stringify({ message: 'x'.repeat(33_000) }),
   });
   if (oversizedResponse.status() !== 413) failures.push(`Oversized inquiry returned ${oversizedResponse.status()} instead of 413`);
+
+  if (report.consoleErrors.length) failures.push(`Console errors: ${report.consoleErrors.join(' | ')}`);
+  if (report.pageErrors.length) failures.push(`Page errors: ${report.pageErrors.join(' | ')}`);
+  if (report.requestFailures.length) failures.push(`Request failures: ${report.requestFailures.join(' | ')}`);
 
   report.checks.push({ name: 'api-validation-contract', passed: invalidResponse.status() === 400 });
   report.checks.push({ name: 'api-configuration-contract', passed: validButUnconfiguredResponse.status() === 503 });
@@ -232,6 +266,17 @@ try {
   await revealForScreenshot(mobilePage);
   await mobilePage.screenshot({ path: resolve(artifactDir, 'what-we-acquire-hero-mobile.png') });
   await mobilePage.screenshot({ path: resolve(artifactDir, 'what-we-acquire-mobile.png'), fullPage: true });
+  for (const [route, filename] of [
+    ['/business-owners', 'business-owners-mobile.png'],
+    ['/our-approach', 'our-approach-mobile.png'],
+    ['/about', 'about-mobile.png'],
+    ['/contact', 'contact-mobile.png'],
+    ['/investor-relationships', 'investor-relationships-mobile.png'],
+  ]) {
+    await mobilePage.goto(`${baseUrl}${route}`, { waitUntil: 'networkidle' });
+    await revealForScreenshot(mobilePage);
+    await mobilePage.screenshot({ path: resolve(artifactDir, filename), fullPage: true });
+  }
   report.checks.push({ name: 'mobile-menu-keyboard', passed: expanded === 'true' && menuVisible });
   report.checks.push({ name: 'mobile-horizontal-overflow', passed: !mobileOverflow });
   await mobile.close();

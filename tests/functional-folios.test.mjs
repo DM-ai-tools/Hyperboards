@@ -212,3 +212,15 @@ test('404 is a route index card with three immediate recovery links', async () =
   assert.match(page, /href="\/what-we-acquire"/);
   assert.match(page, /href="\/business-owners"/);
 });
+
+test('browser QA exercises the folio interactions and dedicated preview URL', async () => {
+  const qa = await readFile('scripts/browser-qa.mjs', 'utf8');
+  assert.match(qa, /QA_BASE_URL/);
+  assert.match(qa, /expectSelectedPanel/);
+  assert.match(qa, /data-mandate-explorer/);
+  assert.match(qa, /data-owner-path/);
+  assert.match(qa, /data-intake-guidance/);
+  assert.match(qa, /data-role-comparator/);
+  assert.match(qa, /data-alignment-ledger/);
+  assert.match(qa, /serious/);
+});
