@@ -164,16 +164,16 @@ test('secondary routes inherit the same leather and paper craft language', async
   await page.setViewportSize({ width: 1200, height: 900 });
 
   const routeContracts = [
-    ['/business-owners', '.reasons__grid li', 'paper-grain.svg'],
-    ['/about', '.values article', 'paper-grain.svg'],
-    ['/our-approach', '.principal__statement', 'leather-relief.jpg'],
-    ['/investor-relationships', '.working article', 'paper-grain.svg'],
-    ['/privacy', '.legal-status', 'paper-grain.svg'],
-    ['/terms', '.legal-status', 'paper-grain.svg'],
-    ['/thank-you', '.follow-up__steps li', 'paper-grain.svg'],
+    ['/business-owners', '.owner-map', 'paper-grain.svg', 4, true],
+    ['/about', '.role-comparator__document', 'paper-grain.svg', 0, true],
+    ['/our-approach', '.lens', 'leather-relief.jpg', 4, true],
+    ['/investor-relationships', '.ledger', 'paper-grain.svg', 0, true],
+    ['/privacy', '.privacy-reader', 'paper-grain.svg', 0, false],
+    ['/terms', '.terms', 'paper-grain.svg', 0, false],
+    ['/thank-you', '.receipt', 'paper-grain.svg', 0, false],
   ];
 
-  for (const [route, selector, texture] of routeContracts) {
+  for (const [route, selector, texture, minimumRadius, expectsBorder] of routeContracts) {
     await page.goto(`${baseUrl}${route}`, { waitUntil: 'networkidle' });
     const contract = await page.locator(selector).first().evaluate((element) => {
       const style = getComputedStyle(element);
@@ -185,8 +185,9 @@ test('secondary routes inherit the same leather and paper craft language', async
     });
 
     assert.match(contract.backgroundImage, new RegExp(texture.replace('.', '\\.')), `${route} should use ${texture}`);
-    assert.ok(contract.borderRadius >= 4, `${route} should expose a finished folio edge`);
-    assert.notEqual(contract.borderStyle, 'none', `${route} should expose a material boundary`);
+    assert.ok(contract.borderRadius >= minimumRadius, `${route} should preserve its intended folio edge`);
+    if (expectsBorder) assert.notEqual(contract.borderStyle, 'none', `${route} should expose a material boundary`);
+    else assert.equal(contract.borderStyle, 'none', `${route} should remain a native edge-to-edge document`);
   }
 });
 
@@ -205,7 +206,7 @@ test('major leather pieces use dimensional saddle stitching instead of dashed bo
       ['.submit-button', '::before'],
     ]],
     ['/our-approach', [
-      ['.principal__statement', '::after'],
+      ['.lens', '::before'],
     ]],
   ];
 
@@ -230,7 +231,7 @@ test('major leather pieces use dimensional saddle stitching instead of dashed bo
       assert.match(stitch.image, /saddle-stitch-vertical\.svg/, `${selector}${pseudo} needs vertical saddle thread`);
       assert.equal(stitch.borderStyle, 'none', `${selector}${pseudo} must not use a dashed CSS border`);
       assert.notEqual(stitch.shadow, 'none', `${selector}${pseudo} needs a recessed stitch channel`);
-      if (['.owner-context__aside', '.cta-band__inner', '.hero-art', '.inquiry-shell', '.principal__statement'].includes(selector)) {
+      if (['.owner-context__aside', '.cta-band__inner', '.hero-art', '.inquiry-shell', '.lens'].includes(selector)) {
         assert.match(stitch.size, /^28px 5px/, `${selector}${pseudo} should use the finer panel seam`);
       }
       if (selector === '.inquiry-shell') {
