@@ -2,6 +2,7 @@ node_modules/
 dist/
 .astro/
 artifacts/
+.worktrees/
 .env
 .env.*
 !.env.example
