@@ -12,7 +12,7 @@
     "build": "astro check && astro build",
     "check": "astro check",
     "preview": "astro preview",
-    "test": "node tests/content.test.mjs",
+    "test": "node --test tests/*.test.mjs",
     "test:content": "node scripts/check-content.mjs",
     "qa:browser": "node scripts/browser-qa.mjs"
   },
