@@ -153,3 +153,23 @@ test('Contact preserves the inquiry contract inside a guided Confidential Intake
   assert.match(guidance, /Do not include customer lists/i);
   assert.match(guidance, /focusin/);
 });
+
+test('Investor Relationships presents a discreet four-part Alignment Ledger', async () => {
+  const [page, ledger] = await Promise.all([
+    readFile('src/pages/investor-relationships.astro', 'utf8'),
+    readFile('src/components/folios/AlignmentLedger.astro', 'utf8'),
+  ]);
+
+  assert.doesNotMatch(page, /PageHero/);
+  assert.match(page, /AlignmentLedger/);
+  assert.match(page, /noindex={true}/);
+  assert.match(page, /\$750K–\$2M/);
+  assert.match(page, /\$2M–\$6M/);
+  assert.match(page, /This page is not an investment offering\./);
+  assert.match(ledger, /data-ledger-row/);
+  assert.equal((ledger.match(/title: '/g) ?? []).length, 4);
+  assert.match(ledger, /Selective relationships/);
+  assert.match(ledger, /Transaction by transaction/);
+  assert.match(ledger, /Clear roles/);
+  assert.match(ledger, /Seller confidentiality/);
+});
