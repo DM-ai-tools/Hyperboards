@@ -1,0 +1,376 @@
+---
+const dimensions = [
+  {
+    key: 'earnings',
+    label: 'Quality and sustainability of earnings',
+    short: 'Earnings quality',
+    body: 'We seek to understand how earnings are produced, what supports them and which adjustments are genuinely repeatable.',
+  },
+  {
+    key: 'revenue',
+    label: 'Recurring and repeat revenue',
+    short: 'Repeat revenue',
+    body: 'Repeat use, contracted relationships and recurring demand can make performance more understandable and durable.',
+  },
+  {
+    key: 'concentration',
+    label: 'Customer and supplier concentration',
+    short: 'Concentration',
+    body: 'We examine how much performance depends on individual customers, vendors and other critical commercial relationships.',
+  },
+  {
+    key: 'management',
+    label: 'Management depth and owner dependence',
+    short: 'Management depth',
+    body: 'A responsible transition requires a clear view of leadership capacity, operating knowledge and dependence on the current owner.',
+  },
+  {
+    key: 'capital',
+    label: 'Working-capital and capital-expenditure requirements',
+    short: 'Capital needs',
+    body: 'The cash and investment required to operate and grow the company must be understood in the context of normal performance.',
+  },
+  {
+    key: 'risk',
+    label: 'Competitive position and operational risks',
+    short: 'Position and risk',
+    body: 'We consider why customers choose the business, what could disrupt it and which operating risks require attention.',
+  },
+  {
+    key: 'growth',
+    label: 'Practical opportunities for future growth',
+    short: 'Growth paths',
+    body: 'Potential matters when it is grounded in the company’s capabilities, customer needs and practical ability to execute.',
+  },
+  {
+    key: 'transition',
+    label: 'The transition required after closing',
+    short: 'Transition',
+    body: 'The handover must account for relationships, knowledge, employees and the role the owner may or may not wish to retain.',
+  },
+] as const;
+---
+
+<div class="lens" data-underwriting-lens data-active="earnings">
+  <div class="lens__heading">
+    <span>Underwriting lens</span>
+    <span>Eight dimensions / one judgment</span>
+  </div>
+
+  <div class="lens__instrument">
+    <div class="lens__orbit" role="tablist" aria-label="Underwriting dimensions">
+      <div class="lens__rings" aria-hidden="true">
+        <span>Business</span>
+        <i></i>
+      </div>
+      {dimensions.map((dimension, index) => (
+        <button
+          type="button"
+          role="tab"
+          id={`lens-tab-${dimension.key}`}
+          aria-controls={`lens-panel-${dimension.key}`}
+          aria-selected={index === 0 ? 'true' : 'false'}
+          tabindex={index === 0 ? 0 : -1}
+          data-folio-option
+          data-value={dimension.key}
+          style={`--angle: ${index * 45}deg`}
+          title={dimension.label}
+        >
+          <span>0{index + 1}</span>
+          {dimension.short}
+        </button>
+      ))}
+    </div>
+
+    <div class="lens__panels">
+      {dimensions.map((dimension, index) => (
+        <article
+          role="tabpanel"
+          id={`lens-panel-${dimension.key}`}
+          aria-labelledby={`lens-tab-${dimension.key}`}
+          data-folio-panel
+          data-value={dimension.key}
+        >
+          <span>{String(index + 1).padStart(2, '0')} / 08</span>
+          <h2>{dimension.label}</h2>
+          <p>{dimension.body}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+
+  <p class="lens__qualification">
+    These dimensions inform judgment; they do not produce a score, approval or formulaic acquisition decision.
+  </p>
+</div>
+
+<script>
+  import { initSingleSelect } from '../../scripts/folio-controls';
+
+  const dimensionOrder = ['earnings', 'revenue', 'concentration', 'management', 'capital', 'risk', 'growth', 'transition'];
+  document.querySelectorAll<HTMLElement>('[data-underwriting-lens]').forEach((root) => {
+    root.addEventListener('foliochange', (event) => {
+      const value = (event as CustomEvent<{ value: string }>).detail.value;
+      const index = Math.max(0, dimensionOrder.indexOf(value));
+      root.style.setProperty('--lens-rotation', `${index * 45}deg`);
+    });
+    initSingleSelect(root);
+  });
+</script>
+
+<style>
+  .lens {
+    --lens-rotation: 0deg;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(199, 168, 91, 0.58);
+    border-radius: var(--radius-lg);
+    background-color: rgba(7, 20, 42, 0.72);
+    background-image: var(--texture-leather);
+    background-blend-mode: screen, normal, soft-light;
+    color: var(--color-white);
+    box-shadow:
+      inset 0 0 0 1px rgba(251, 250, 246, 0.05),
+      0 2rem 5rem rgba(0, 0, 0, 0.22);
+    container-type: inline-size;
+  }
+
+  .lens::before {
+    position: absolute;
+    inset: 0.55rem;
+    border-radius: calc(var(--radius-lg) - 0.25rem);
+    background: var(--stitch-frame-panel);
+    box-shadow: var(--stitch-channel-shadow);
+    content: '';
+    opacity: 0.8;
+    pointer-events: none;
+  }
+
+  .lens__heading {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid rgba(199, 168, 91, 0.32);
+    color: var(--color-brass-light);
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .lens__instrument {
+    position: relative;
+    z-index: 1;
+    padding: 1rem;
+  }
+
+  .lens__orbit {
+    position: relative;
+    width: min(100%, 35rem);
+    aspect-ratio: 1;
+    margin-inline: auto;
+  }
+
+  .lens__orbit::before,
+  .lens__orbit::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border: 1px solid rgba(251, 250, 246, 0.11);
+    border-radius: 50%;
+    content: '';
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  .lens__orbit::before { width: 72%; aspect-ratio: 1; }
+  .lens__orbit::after { width: 48%; aspect-ratio: 1; }
+
+  .lens__rings {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: grid;
+    width: 25%;
+    aspect-ratio: 1;
+    place-items: center;
+    border: 1px solid rgba(199, 168, 91, 0.62);
+    border-radius: 50%;
+    background: rgba(7, 20, 42, 0.72);
+    box-shadow:
+      inset 0 0 0 0.55rem rgba(199, 168, 91, 0.06),
+      0 0 0 0.55rem rgba(7, 20, 42, 0.72),
+      0 0 0 0.62rem rgba(199, 168, 91, 0.28);
+    transform: translate(-50%, -50%);
+  }
+
+  .lens__rings span {
+    color: var(--color-white);
+    font-family: var(--font-display);
+    font-size: clamp(1rem, 3cqw, 1.7rem);
+  }
+
+  .lens__rings i {
+    position: absolute;
+    inset: -1.25rem;
+    border: 1px dashed rgba(199, 168, 91, 0.55);
+    border-radius: 50%;
+    transform: rotate(var(--lens-rotation));
+    transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .lens__rings i::after {
+    position: absolute;
+    top: -0.28rem;
+    left: 50%;
+    width: 0.55rem;
+    aspect-ratio: 1;
+    background: var(--color-brass);
+    content: '';
+    transform: translateX(-50%) rotate(45deg);
+  }
+
+  .lens__orbit button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 8.25rem;
+    min-height: 3rem;
+    padding: 0.5rem 0.6rem;
+    border: 1px solid rgba(199, 168, 91, 0.32);
+    background: rgba(7, 20, 42, 0.82);
+    color: rgba(251, 250, 246, 0.68);
+    cursor: pointer;
+    font: 650 0.62rem/1.2 var(--font-sans);
+    text-align: left;
+    transform:
+      translate(-50%, -50%)
+      rotate(var(--angle))
+      translateY(-13.1rem)
+      rotate(calc(-1 * var(--angle)));
+    transition: color 220ms var(--ease-out), border-color 220ms var(--ease-out), background 220ms var(--ease-out);
+  }
+
+  .lens__orbit button span {
+    display: block;
+    margin-bottom: 0.25rem;
+    color: var(--color-brass-light);
+    font-family: var(--font-mono);
+    font-size: 0.5rem;
+  }
+
+  .lens__orbit button[aria-selected='true'] {
+    border-color: var(--color-brass);
+    background: var(--color-brass);
+    color: var(--color-midnight);
+    box-shadow: 0 0.8rem 1.8rem rgba(0, 0, 0, 0.2);
+  }
+
+  .lens__orbit button[aria-selected='true'] span {
+    color: var(--color-midnight);
+  }
+
+  .lens__orbit button:focus-visible {
+    outline: 2px solid var(--color-white);
+    outline-offset: 3px;
+  }
+
+  .lens__panels {
+    min-height: 10.8rem;
+    margin-top: 0.5rem;
+    border: 1px solid rgba(199, 168, 91, 0.48);
+    background-color: rgba(244, 239, 226, 0.97);
+    background-image: var(--texture-paper);
+    color: var(--color-midnight);
+  }
+
+  .lens__panels article {
+    padding: clamp(1.25rem, 4vw, 2.2rem);
+    animation: lens-note 260ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .lens__panels article[hidden] {
+    display: none;
+  }
+
+  .lens__panels span {
+    color: var(--color-brass-dark);
+    font-family: var(--font-mono);
+    font-size: 0.56rem;
+    letter-spacing: 0.1em;
+  }
+
+  .lens__panels h2 {
+    max-width: 24ch;
+    margin-block: 0.45rem 0.55rem;
+    font-size: var(--step-2);
+  }
+
+  .lens__panels p {
+    max-width: 43rem;
+    color: var(--color-slate);
+    font-size: 0.82rem;
+  }
+
+  .lens__qualification {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    padding: 0.85rem 1.25rem 1.2rem;
+    color: rgba(251, 250, 246, 0.52);
+    font-size: 0.68rem;
+  }
+
+  @keyframes lens-note {
+    from { opacity: 0; transform: translate3d(0.5rem, 0, 0); }
+    to { opacity: 1; transform: translate3d(0, 0, 0); }
+  }
+
+  @container (max-width: 39rem) {
+    .lens__orbit {
+      display: grid;
+      width: auto;
+      aspect-ratio: auto;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.4rem;
+    }
+
+    .lens__orbit::before,
+    .lens__orbit::after,
+    .lens__rings {
+      display: none;
+    }
+
+    .lens__orbit button {
+      position: static;
+      width: auto;
+      min-height: 3.6rem;
+      transform: none;
+    }
+
+    .lens__panels {
+      margin-top: 0.9rem;
+    }
+  }
+
+  @container (max-width: 24rem) {
+    .lens__heading {
+      display: grid;
+      gap: 0.35rem;
+    }
+
+    .lens__orbit {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lens__rings i,
+    .lens__panels article {
+      animation: none;
+      transition: none;
+    }
+  }
+</style>

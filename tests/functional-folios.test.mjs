@@ -82,3 +82,24 @@ test('For Business Owners exposes an owner-controlled Transition Map', async () 
   assert.match(selector, /Phased handover/);
   assert.match(selector, /Continued involvement/);
 });
+
+test('Our Approach presents a non-scoring Underwriting Lens', async () => {
+  const [page, lens] = await Promise.all([
+    readFile('src/pages/our-approach.astro', 'utf8'),
+    readFile('src/components/folios/UnderwritingLens.astro', 'utf8'),
+  ]);
+
+  assert.doesNotMatch(page, /PageHero/);
+  assert.match(page, /UnderwritingLens/);
+  assert.match(page, /We are the buyer\. We do not represent the seller\./);
+  assert.match(lens, /data-underwriting-lens/);
+  assert.match(lens, /Quality and sustainability of earnings/);
+  assert.match(lens, /Recurring and repeat revenue/);
+  assert.match(lens, /Customer and supplier concentration/);
+  assert.match(lens, /Management depth and owner dependence/);
+  assert.match(lens, /Working-capital and capital-expenditure requirements/);
+  assert.match(lens, /Competitive position and operational risks/);
+  assert.match(lens, /Practical opportunities for future growth/);
+  assert.match(lens, /transition required after closing/i);
+  assert.match(lens, /inform judgment; they do not produce a score/i);
+});
