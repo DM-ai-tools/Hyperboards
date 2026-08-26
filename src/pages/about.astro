@@ -1,97 +1,89 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import PageHero from '../components/PageHero.astro';
-import SectionIntro from '../components/SectionIntro.astro';
 import ButtonLink from '../components/ButtonLink.astro';
 import CtaBand from '../components/CtaBand.astro';
+import FolioShell from '../components/folios/FolioShell.astro';
+import RoleComparator from '../components/folios/RoleComparator.astro';
 import { criteria } from '../data/site';
 
-const values = [
-  ['Direct', 'We engage as a prospective buyer—not as a broker marketing the business to someone else.'],
-  ['Selective', 'We pursue opportunities that fit our mandate and can withstand disciplined review.'],
-  ['Respectful', 'We recognize the people, relationships and operating knowledge behind the numbers.'],
-  ['Adaptable', 'We consider structure and transition in the context of the owner and the company.'],
-];
+const charterClauses = [
+  ['01', 'Direct', 'We engage as a prospective buyer—not as a broker marketing the business to someone else.'],
+  ['02', 'Selective', 'We pursue opportunities that fit our mandate and can withstand disciplined review.'],
+  ['03', 'Respectful', 'We recognize the people, relationships and operating knowledge behind the numbers.'],
+  ['04', 'Adaptable', 'We consider structure and transition in the context of the owner and the company.'],
+] as const;
 ---
 
 <BaseLayout
   title="About Hyperboards | We Buy Established Businesses"
   description="Hyperboards is a family-office buyer that acquires established, profitable businesses directly from owners."
 >
-  <PageHero
-    eyebrow="A direct acquirer"
+  <FolioShell
+    eyebrow="About Hyperboards"
+    index="H"
     title="We buy businesses. We do not broker them."
-    intro="Hyperboards is a family-office buyer focused on acquiring established, profitable companies directly from their owners."
-    marker="H"
-  />
+    intro="Hyperboards is a family-office buyer focused on acquiring established, profitable companies directly from their owners. The party evaluating the opportunity is the prospective buyer."
+  >
+    <div slot="visual">
+      <RoleComparator />
+    </div>
+    <div slot="actions">
+      <ButtonLink href="/contact">Speak with the buyer</ButtonLink>
+      <ButtonLink href="#charter" variant="light">Read our charter</ButtonLink>
+    </div>
+  </FolioShell>
 
-  <section class="identity section">
-    <div class="identity__grid container-wide">
-      <div data-reveal>
-        <p class="eyebrow">Why we exist</p>
-        <h2>The party evaluating your business is the party seeking to buy it.</h2>
-      </div>
-      <div class="identity__copy" data-reveal>
-        <p class="lede">
-          Many acquisition websites belong to investment bankers, brokers or advisers who facilitate a sale to someone else. Hyperboards serves a different role: we evaluate businesses as the prospective buyer and acquire directly within a focused lower-middle-market profile.
-        </p>
+  <section class="charter section section--paper" id="charter">
+    <div class="charter__layout container-wide">
+      <header class="charter__heading" data-reveal>
+        <p class="eyebrow">The buyer’s charter</p>
+        <h2>Clear in role. Careful in judgment.</h2>
         <p>
-          Our responsibility is to understand each opportunity carefully, agree on terms that work for both parties and support a considered ownership transition.
+          Our identity is grounded in how we approach owners and opportunities—not in unsupported claims about scale or transaction history.
         </p>
-        <ButtonLink href="/our-approach" variant="secondary">Read about our approach</ButtonLink>
-      </div>
-    </div>
-  </section>
+        <div class="charter__seal" aria-hidden="true"><span>H</span><small>Principal</small></div>
+      </header>
 
-  <section class="values section section--paper">
-    <div class="container-wide">
-      <SectionIntro
-        eyebrow="What defines us"
-        title="Clear in role. Careful in judgment."
-        intro="Our identity is grounded in how we approach owners and opportunities—not in unsupported claims about scale or transaction history."
-        align="split"
-      />
-      <div class="values__grid">
-        {values.map(([title, body], index) => (
-          <article data-reveal>
-            <span>0{index + 1}</span>
-            <h3>{title}</h3>
-            <p>{body}</p>
-          </article>
+      <ol class="charter__clauses">
+        {charterClauses.map(([number, title, body]) => (
+          <li data-reveal>
+            <span>{number}</span>
+            <div><h3>{title}</h3><p>{body}</p></div>
+          </li>
         ))}
-      </div>
+      </ol>
     </div>
   </section>
 
-  <section class="focus section section--navy">
-    <div class="container-wide">
-      <SectionIntro
-        eyebrow="Where we focus"
-        title="A defined acquisition profile."
-        intro="We concentrate on companies within a practical financial range and sectors where durable demand can support continued performance."
-        align="split"
-      />
+  <section class="mandate-stamp section section--navy">
+    <div class="mandate-stamp__layout container-wide">
+      <div data-reveal>
+        <p class="eyebrow">Where we focus</p>
+        <h2>A defined acquisition mandate.</h2>
+        <p>
+          We concentrate on established companies within a practical financial range and sectors where durable demand can support continued performance.
+        </p>
+        <ButtonLink href="/what-we-acquire" variant="light">Explore the full criteria</ButtonLink>
+      </div>
 
-      <dl class="focus__criteria">
+      <dl class="mandate-stamp__document" data-reveal>
+        <div class="mandate-stamp__title">
+          <dt>Hyperboards</dt>
+          <dd>Acquisition profile</dd>
+        </div>
         {criteria.slice(0, 3).map((item) => (
-          <div data-reveal>
+          <div>
             <dt>{item.label}</dt>
             <dd>{item.value}</dd>
           </div>
         ))}
+        <p>Guidelines only. Every opportunity is evaluated on its own facts.</p>
       </dl>
-
-      <div class="focus__note" data-reveal>
-        <p>
-          These figures define our target profile, not an offer or an automatic decision. Earnings quality, concentration, capital needs, transition requirements and other business-specific factors influence fit.
-        </p>
-        <ButtonLink href="/what-we-acquire" variant="light">Explore the full criteria</ButtonLink>
-      </div>
     </div>
   </section>
 
-  <section class="relationships section section--compact">
-    <div class="relationships__inner container-wide" data-reveal>
+  <section class="relationship-note section section--compact">
+    <div class="relationship-note__layout container-wide" data-reveal>
       <div>
         <p class="eyebrow">Investment relationships</p>
         <h2>Selective and intentionally secondary.</h2>
@@ -112,173 +104,229 @@ const values = [
 </BaseLayout>
 
 <style>
-  .identity__grid,
-  .relationships__inner {
+  .charter__layout,
+  .mandate-stamp__layout,
+  .relationship-note__layout {
     display: grid;
     gap: var(--space-xl);
   }
 
-  .identity h2 {
-    max-width: 13ch;
-  }
-
-  .identity__copy {
-    max-width: 45rem;
-  }
-
-  .identity__copy .button {
-    margin-top: var(--space-md);
-  }
-
-  .values__grid {
-    display: grid;
-    gap: var(--space-sm);
-  }
-
-  .values article {
-    min-height: 17rem;
-    padding: var(--space-lg) var(--space-md);
+  .charter__heading {
+    position: relative;
+    align-self: start;
+    min-height: 25rem;
+    padding: clamp(1.5rem, 4vw, 3rem);
     border: 1px solid rgba(11, 27, 54, 0.14);
-    border-radius: var(--radius-md);
-    background-color: rgba(251, 250, 246, 0.68);
-    background-image: var(--texture-paper);
+    background: rgba(251, 250, 246, 0.56);
     box-shadow: var(--paper-tile-shadow);
   }
 
-  .values article span {
-    display: block;
-    margin-bottom: var(--space-xl);
-    color: var(--color-brass);
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
+  .charter__heading::before {
+    position: absolute;
+    inset: 0.65rem;
+    border: 1px solid rgba(11, 27, 54, 0.09);
+    content: '';
+    pointer-events: none;
   }
 
-  .values h3 {
-    margin-bottom: var(--space-sm);
-    font-family: var(--font-sans);
-    font-size: var(--step-1);
-    font-weight: 700;
-    letter-spacing: -0.025em;
+  .charter__heading > * {
+    position: relative;
+    z-index: 1;
   }
 
-  .values article p {
+  .charter__heading h2 {
+    max-width: 10ch;
+    font-size: var(--step-4);
+  }
+
+  .charter__heading > p:not(.eyebrow) {
+    max-width: 35rem;
+    margin-top: var(--space-md);
     color: var(--color-slate);
   }
 
-  .focus__criteria {
+  .charter__seal {
+    position: absolute;
+    right: clamp(1.5rem, 4vw, 3rem);
+    bottom: clamp(1.5rem, 4vw, 3rem);
     display: grid;
+    width: 5.4rem;
+    aspect-ratio: 1;
+    place-items: center;
+    border: 1px solid var(--color-brass-dark);
+    border-radius: 50%;
+    transform: rotate(-6deg);
+  }
+
+  .charter__seal span {
+    margin-top: 0.55rem;
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+  }
+
+  .charter__seal small {
+    align-self: start;
+    margin-top: -0.75rem;
+    color: var(--color-forest);
+    font-family: var(--font-mono);
+    font-size: 0.45rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .charter__clauses {
     padding: 0;
-    border-block: 1px solid var(--color-border-dark);
+    border-block: 1px solid var(--color-border);
     margin: 0;
+    list-style: none;
   }
 
-  .focus__criteria > div {
-    display: flex;
-    min-height: 10rem;
-    flex-direction: column-reverse;
-    justify-content: space-between;
-    padding-block: var(--space-md);
-    border-bottom: 1px solid var(--color-border-dark);
+  .charter__clauses li {
+    display: grid;
+    grid-template-columns: 3.5rem minmax(0, 1fr);
+    gap: var(--space-md);
+    padding: clamp(1.25rem, 3vw, 2.1rem) 0;
+    border-bottom: 1px solid var(--color-border);
   }
 
-  .focus__criteria > div:last-child {
+  .charter__clauses li:last-child {
     border-bottom: 0;
   }
 
-  .focus dt {
-    color: rgba(251, 250, 246, 0.62);
-    font-size: var(--step--1);
+  .charter__clauses > li > span {
+    color: var(--color-brass-dark);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
   }
 
-  .focus dd {
-    margin: 0;
-    color: var(--color-white);
-    font-family: var(--font-display);
-    font-size: var(--step-3);
-    letter-spacing: -0.04em;
-    line-height: 1;
+  .charter__clauses h3 {
+    margin-bottom: 0.45rem;
+    font-family: var(--font-sans);
+    font-size: var(--step-2);
+    font-weight: 720;
+    letter-spacing: -0.025em;
   }
 
-  .focus__note {
-    display: grid;
-    gap: var(--space-md);
-    justify-items: start;
+  .charter__clauses p {
+    max-width: 42rem;
+    color: var(--color-slate);
+  }
+
+  .mandate-stamp__layout > div:first-child {
+    align-self: center;
+  }
+
+  .mandate-stamp h2 {
+    max-width: 11ch;
+  }
+
+  .mandate-stamp__layout > div:first-child > p:last-of-type {
+    max-width: 39rem;
+  }
+
+  .mandate-stamp .button {
     margin-top: var(--space-lg);
   }
 
-  .focus__note p {
-    max-width: 46rem;
-    color: rgba(251, 250, 246, 0.68);
-    font-size: var(--step--1);
+  .mandate-stamp__document {
+    position: relative;
+    padding: clamp(1.4rem, 4vw, 2.7rem);
+    border: 1px solid rgba(199, 168, 91, 0.62);
+    margin: 0;
+    background-color: rgba(244, 239, 226, 0.97);
+    background-image: var(--texture-paper);
+    color: var(--color-midnight);
+    box-shadow: 0 2rem 5rem rgba(0, 0, 0, 0.22);
+    transform: rotate(1deg);
   }
 
-  .relationships h2 {
+  .mandate-stamp__document::before {
+    position: absolute;
+    inset: 0.55rem;
+    border: 1px solid rgba(11, 27, 54, 0.1);
+    content: '';
+    pointer-events: none;
+  }
+
+  .mandate-stamp__document > div {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    min-height: 5rem;
+    flex-direction: column-reverse;
+    justify-content: space-between;
+    padding-block: 1rem;
+    border-bottom: 1px solid rgba(11, 27, 54, 0.14);
+  }
+
+  .mandate-stamp__document dt {
+    color: var(--color-slate);
+    font-size: 0.72rem;
+  }
+
+  .mandate-stamp__document dd {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--step-3);
+    letter-spacing: -0.04em;
+  }
+
+  .mandate-stamp__document .mandate-stamp__title {
+    min-height: auto;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--color-forest);
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+  }
+
+  .mandate-stamp__document .mandate-stamp__title dd,
+  .mandate-stamp__document .mandate-stamp__title dt {
+    color: inherit;
+    font: inherit;
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+  }
+
+  .mandate-stamp__document > p {
+    position: relative;
+    z-index: 1;
+    margin-top: var(--space-md);
+    color: var(--color-slate);
+    font-size: 0.68rem;
+  }
+
+  .relationship-note h2 {
     max-width: 14ch;
-    margin-bottom: 0;
+    margin: 0;
     font-size: var(--step-3);
   }
 
-  .relationships__inner > div:last-child {
+  .relationship-note__layout > div:last-child {
     max-width: 42rem;
   }
 
-  @media (min-width: 42rem) {
-    .values__grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .values article:nth-child(odd) {
-      padding-right: var(--space-lg);
-    }
-
-    .values article:nth-child(even) {
-      padding-left: var(--space-lg);
-    }
-
-    .focus__criteria {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    .focus__criteria > div {
-      padding-inline: var(--space-md);
-      border-right: 1px solid var(--color-border-dark);
-      border-bottom: 0;
-    }
-
-    .focus__criteria > div:first-child {
-      padding-left: 0;
-    }
-
-    .focus__criteria > div:last-child {
-      padding-right: 0;
-      border-right: 0;
-    }
+  .relationship-note .button {
+    margin-top: var(--space-sm);
   }
 
   @media (min-width: 64rem) {
-    .identity__grid,
-    .relationships__inner {
-      grid-template-columns: minmax(0, 1fr) minmax(30rem, 0.85fr);
+    .charter__layout,
+    .mandate-stamp__layout,
+    .relationship-note__layout {
+      grid-template-columns: minmax(20rem, 0.85fr) minmax(32rem, 1.15fr);
     }
 
-    .values__grid {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+    .mandate-stamp__document {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0 var(--space-md);
     }
 
-    .values article,
-    .values article:nth-child(odd),
-    .values article:nth-child(even) {
-      padding-inline: var(--space-md);
-      border: 1px solid rgba(11, 27, 54, 0.14);
-    }
-
-    .values article:first-child {
-      padding-left: var(--space-md);
-    }
-
-    .values article:last-child {
-      padding-right: 0;
-      padding-right: var(--space-md);
+    .mandate-stamp__document .mandate-stamp__title,
+    .mandate-stamp__document > p {
+      grid-column: 1 / -1;
     }
   }
 </style>

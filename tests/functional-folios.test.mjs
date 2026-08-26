@@ -103,3 +103,20 @@ test('Our Approach presents a non-scoring Underwriting Lens', async () => {
   assert.match(lens, /transition required after closing/i);
   assert.match(lens, /inform judgment; they do not produce a score/i);
 });
+
+test('About distinguishes the direct buyer through a neutral Role Comparator', async () => {
+  const [page, comparator] = await Promise.all([
+    readFile('src/pages/about.astro', 'utf8'),
+    readFile('src/components/folios/RoleComparator.astro', 'utf8'),
+  ]);
+
+  assert.doesNotMatch(page, /PageHero/);
+  assert.match(page, /RoleComparator/);
+  assert.match(page, /We buy businesses/);
+  assert.match(page, /prospective buyer/);
+  assert.match(comparator, /data-role-comparator/);
+  assert.match(comparator, /label: 'Buyer'/);
+  assert.match(comparator, /label: 'Broker'/);
+  assert.match(comparator, /label: 'Adviser'/);
+  assert.match(comparator, /aria-selected={index === 0/);
+});

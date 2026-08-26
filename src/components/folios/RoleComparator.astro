@@ -1,0 +1,376 @@
+---
+const roles = [
+  {
+    key: 'buyer',
+    label: 'Buyer',
+    definition: 'Evaluates a company for its own potential acquisition and negotiates directly with the owner.',
+    represents: 'Its own acquisition interest',
+    outcome: 'May become the new owner',
+    relationship: 'Direct principal-to-owner relationship',
+  },
+  {
+    key: 'broker',
+    label: 'Broker',
+    definition: 'Typically facilitates a sale process or introductions between a seller and prospective third-party buyers.',
+    represents: 'A transaction or marketing mandate',
+    outcome: 'Does not become the owner',
+    relationship: 'Intermediary between parties',
+  },
+  {
+    key: 'adviser',
+    label: 'Adviser',
+    definition: 'Provides professional guidance to a party on strategy, valuation, structure or execution.',
+    represents: 'The client receiving advice',
+    outcome: 'Does not become the owner',
+    relationship: 'Professional advisory relationship',
+  },
+] as const;
+---
+
+<div class="role-comparator" data-role-comparator>
+  <div class="role-comparator__seal" aria-hidden="true">
+    <span>H</span>
+    <small>Direct acquirer</small>
+  </div>
+
+  <div class="role-comparator__document">
+    <div class="role-comparator__heading">
+      <span>Role comparator</span>
+      <span>Clear counterparties</span>
+    </div>
+
+    <div class="role-comparator__tabs" role="tablist" aria-label="Transaction roles">
+      {roles.map((role, index) => (
+        <button
+          type="button"
+          role="tab"
+          id={`role-tab-${role.key}`}
+          aria-controls={`role-panel-${role.key}`}
+          aria-selected={index === 0 ? 'true' : 'false'}
+          tabindex={index === 0 ? 0 : -1}
+          data-folio-option
+          data-value={role.key}
+        >
+          <span>0{index + 1}</span>
+          {role.label}
+        </button>
+      ))}
+      <i aria-hidden="true"></i>
+    </div>
+
+    <div class="role-comparator__panels">
+      {roles.map((role, index) => (
+        <article
+          role="tabpanel"
+          id={`role-panel-${role.key}`}
+          aria-labelledby={`role-tab-${role.key}`}
+          data-folio-panel
+          data-value={role.key}
+        >
+          <header>
+            <span>{String(index + 1).padStart(2, '0')} / 03</span>
+            <h2>{role.label}</h2>
+            {role.key === 'buyer' && <strong>Hyperboards’ role</strong>}
+          </header>
+          <p>{role.definition}</p>
+          <dl>
+            <div><dt>Represents</dt><dd>{role.represents}</dd></div>
+            <div><dt>Potential outcome</dt><dd>{role.outcome}</dd></div>
+            <div><dt>Relationship</dt><dd>{role.relationship}</dd></div>
+          </dl>
+        </article>
+      ))}
+    </div>
+  </div>
+</div>
+
+<script>
+  import { initSingleSelect } from '../../scripts/folio-controls';
+
+  document.querySelectorAll<HTMLElement>('[data-role-comparator]')
+    .forEach((root) => initSingleSelect(root));
+</script>
+
+<style>
+  .role-comparator {
+    position: relative;
+    min-height: 34rem;
+    padding: 1.15rem;
+    container-type: inline-size;
+  }
+
+  .role-comparator__seal {
+    position: absolute;
+    top: -1.4rem;
+    right: -0.4rem;
+    z-index: 3;
+    display: grid;
+    width: clamp(6.5rem, 18cqw, 9rem);
+    aspect-ratio: 1;
+    place-items: center;
+    border: 1px solid var(--color-brass);
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 38% 28%, rgba(255, 248, 213, 0.36), transparent 28%),
+      linear-gradient(135deg, #d7bc70, #9f7722 58%, #ebd68d);
+    color: var(--color-midnight);
+    box-shadow:
+      inset 0 0 0 0.35rem rgba(11, 27, 54, 0.78),
+      inset 0 0 0 0.48rem rgba(244, 222, 154, 0.72),
+      0 1.4rem 3rem rgba(0, 0, 0, 0.28);
+    transform: rotate(7deg);
+    animation: seal-impression 640ms cubic-bezier(0.16, 1, 0.3, 1) 160ms both;
+  }
+
+  .role-comparator__seal span {
+    margin-top: 0.4rem;
+    font-family: var(--font-display);
+    font-size: var(--step-3);
+    line-height: 1;
+  }
+
+  .role-comparator__seal small {
+    align-self: start;
+    margin-top: -1.2rem;
+    font-family: var(--font-mono);
+    font-size: 0.45rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .role-comparator__document {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(199, 168, 91, 0.6);
+    background-color: rgba(244, 239, 226, 0.98);
+    background-image: var(--texture-paper);
+    color: var(--color-midnight);
+    box-shadow: 0 2rem 5rem rgba(0, 0, 0, 0.24);
+    transform: rotate(-1deg);
+  }
+
+  .role-comparator__document::before {
+    position: absolute;
+    inset: 0.45rem;
+    border: 1px solid rgba(11, 27, 54, 0.1);
+    content: '';
+    pointer-events: none;
+  }
+
+  .role-comparator__heading {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid rgba(11, 27, 54, 0.14);
+    color: var(--color-forest);
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .role-comparator__tabs {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-bottom: 1px solid rgba(11, 27, 54, 0.14);
+  }
+
+  .role-comparator__tabs button {
+    min-height: 4.2rem;
+    padding: 0.65rem 1rem;
+    border: 0;
+    background: transparent;
+    color: var(--color-slate);
+    cursor: pointer;
+    font: 720 0.78rem/1 var(--font-sans);
+    text-align: left;
+    transition: color 220ms var(--ease-out), background 220ms var(--ease-out);
+  }
+
+  .role-comparator__tabs button + button {
+    border-left: 1px solid rgba(11, 27, 54, 0.1);
+  }
+
+  .role-comparator__tabs button span {
+    display: block;
+    margin-bottom: 0.4rem;
+    color: var(--color-brass-dark);
+    font-family: var(--font-mono);
+    font-size: 0.5rem;
+  }
+
+  .role-comparator__tabs button[aria-selected='true'] {
+    background: var(--color-midnight);
+    color: var(--color-white);
+  }
+
+  .role-comparator__tabs button:focus-visible {
+    outline: 2px solid var(--color-brass-dark);
+    outline-offset: -4px;
+  }
+
+  .role-comparator__tabs > i {
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 33.333%;
+    height: 2px;
+    background: var(--color-brass);
+    pointer-events: none;
+    transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .role-comparator[data-active='broker'] .role-comparator__tabs > i {
+    transform: translate3d(100%, 0, 0);
+  }
+
+  .role-comparator[data-active='adviser'] .role-comparator__tabs > i {
+    transform: translate3d(200%, 0, 0);
+  }
+
+  .role-comparator__panels {
+    position: relative;
+    z-index: 1;
+    min-height: 24rem;
+  }
+
+  .role-comparator__panels article {
+    padding: clamp(1.4rem, 4vw, 2.5rem);
+    animation: charter-sheet 280ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .role-comparator__panels article[hidden] {
+    display: none;
+  }
+
+  .role-comparator__panels header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.35rem 1rem;
+    align-items: end;
+    margin-bottom: var(--space-md);
+  }
+
+  .role-comparator__panels header > span {
+    grid-column: 1 / -1;
+    color: var(--color-brass-dark);
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+  }
+
+  .role-comparator__panels h2 {
+    margin: 0;
+    font-size: var(--step-3);
+  }
+
+  .role-comparator__panels header strong {
+    padding: 0.55rem 0.7rem;
+    border: 1px solid var(--color-brass-dark);
+    color: var(--color-forest);
+    font-family: var(--font-mono);
+    font-size: 0.52rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transform: rotate(-2deg);
+  }
+
+  .role-comparator__panels article > p {
+    max-width: 42rem;
+    color: var(--color-slate);
+    font-size: 0.88rem;
+  }
+
+  .role-comparator__panels dl {
+    display: grid;
+    padding: 0;
+    border-top: 1px solid rgba(11, 27, 54, 0.14);
+    margin: var(--space-lg) 0 0;
+  }
+
+  .role-comparator__panels dl > div {
+    display: grid;
+    grid-template-columns: minmax(8rem, 0.65fr) minmax(0, 1.35fr);
+    gap: var(--space-sm);
+    padding-block: 0.75rem;
+    border-bottom: 1px solid rgba(11, 27, 54, 0.14);
+  }
+
+  .role-comparator__panels dt {
+    color: var(--color-forest);
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .role-comparator__panels dd {
+    margin: 0;
+    color: var(--color-midnight);
+    font-size: 0.8rem;
+    font-weight: 650;
+  }
+
+  @keyframes seal-impression {
+    from { opacity: 0; transform: rotate(13deg) scale(1.18); }
+    to { opacity: 1; transform: rotate(7deg) scale(1); }
+  }
+
+  @keyframes charter-sheet {
+    from { opacity: 0; transform: translate3d(0.6rem, 0, 0); }
+    to { opacity: 1; transform: translate3d(0, 0, 0); }
+  }
+
+  @container (max-width: 30rem) {
+    .role-comparator {
+      padding: 2.2rem 0 0;
+    }
+
+    .role-comparator__seal {
+      top: -0.75rem;
+      right: 0.4rem;
+    }
+
+    .role-comparator__heading {
+      display: grid;
+      gap: 0.3rem;
+      padding-right: 7rem;
+    }
+
+    .role-comparator__tabs {
+      grid-template-columns: 1fr;
+    }
+
+    .role-comparator__tabs button {
+      min-height: 3.4rem;
+    }
+
+    .role-comparator__tabs button + button {
+      border-top: 1px solid rgba(11, 27, 54, 0.1);
+      border-left: 0;
+    }
+
+    .role-comparator__tabs > i {
+      display: none;
+    }
+
+    .role-comparator__panels header {
+      grid-template-columns: 1fr;
+    }
+
+    .role-comparator__panels dl > div {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .role-comparator__seal,
+    .role-comparator__panels article {
+      animation: none;
+    }
+  }
+</style>
