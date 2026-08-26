@@ -1,0 +1,284 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionIntro from '../components/SectionIntro.astro';
+import ButtonLink from '../components/ButtonLink.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { criteria } from '../data/site';
+
+const values = [
+  ['Direct', 'We engage as a prospective buyer—not as a broker marketing the business to someone else.'],
+  ['Selective', 'We pursue opportunities that fit our mandate and can withstand disciplined review.'],
+  ['Respectful', 'We recognize the people, relationships and operating knowledge behind the numbers.'],
+  ['Adaptable', 'We consider structure and transition in the context of the owner and the company.'],
+];
+---
+
+<BaseLayout
+  title="About Hyperboards | We Buy Established Businesses"
+  description="Hyperboards is a family-office buyer that acquires established, profitable businesses directly from owners."
+>
+  <PageHero
+    eyebrow="A direct acquirer"
+    title="We buy businesses. We do not broker them."
+    intro="Hyperboards is a family-office buyer focused on acquiring established, profitable companies directly from their owners."
+    marker="H"
+  />
+
+  <section class="identity section">
+    <div class="identity__grid container-wide">
+      <div data-reveal>
+        <p class="eyebrow">Why we exist</p>
+        <h2>The party evaluating your business is the party seeking to buy it.</h2>
+      </div>
+      <div class="identity__copy" data-reveal>
+        <p class="lede">
+          Many acquisition websites belong to investment bankers, brokers or advisers who facilitate a sale to someone else. Hyperboards serves a different role: we evaluate businesses as the prospective buyer and acquire directly within a focused lower-middle-market profile.
+        </p>
+        <p>
+          Our responsibility is to understand each opportunity carefully, agree on terms that work for both parties and support a considered ownership transition.
+        </p>
+        <ButtonLink href="/our-approach" variant="secondary">Read about our approach</ButtonLink>
+      </div>
+    </div>
+  </section>
+
+  <section class="values section section--paper">
+    <div class="container-wide">
+      <SectionIntro
+        eyebrow="What defines us"
+        title="Clear in role. Careful in judgment."
+        intro="Our identity is grounded in how we approach owners and opportunities—not in unsupported claims about scale or transaction history."
+        align="split"
+      />
+      <div class="values__grid">
+        {values.map(([title, body], index) => (
+          <article data-reveal>
+            <span>0{index + 1}</span>
+            <h3>{title}</h3>
+            <p>{body}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="focus section section--navy">
+    <div class="container-wide">
+      <SectionIntro
+        eyebrow="Where we focus"
+        title="A defined acquisition profile."
+        intro="We concentrate on companies within a practical financial range and sectors where durable demand can support continued performance."
+        align="split"
+      />
+
+      <dl class="focus__criteria">
+        {criteria.slice(0, 3).map((item) => (
+          <div data-reveal>
+            <dt>{item.label}</dt>
+            <dd>{item.value}</dd>
+          </div>
+        ))}
+      </dl>
+
+      <div class="focus__note" data-reveal>
+        <p>
+          These figures define our target profile, not an offer or an automatic decision. Earnings quality, concentration, capital needs, transition requirements and other business-specific factors influence fit.
+        </p>
+        <ButtonLink href="/what-we-acquire" variant="light">Explore the full criteria</ButtonLink>
+      </div>
+    </div>
+  </section>
+
+  <section class="relationships section section--compact">
+    <div class="relationships__inner container-wide" data-reveal>
+      <div>
+        <p class="eyebrow">Investment relationships</p>
+        <h2>Selective and intentionally secondary.</h2>
+      </div>
+      <div>
+        <p>
+          On selected acquisitions, Hyperboards may work alongside aligned investment partners. The owner relationship and a clear buyer process remain central.
+        </p>
+        <ButtonLink href="/investor-relationships" variant="quiet">For investment partners</ButtonLink>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand
+    title="Considering the future of your business?"
+    body="Start with a private introduction and the broad facts that matter."
+  />
+</BaseLayout>
+
+<style>
+  .identity__grid,
+  .relationships__inner {
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  .identity h2 {
+    max-width: 13ch;
+  }
+
+  .identity__copy {
+    max-width: 45rem;
+  }
+
+  .identity__copy .button {
+    margin-top: var(--space-md);
+  }
+
+  .values__grid {
+    display: grid;
+    gap: var(--space-sm);
+  }
+
+  .values article {
+    min-height: 17rem;
+    padding: var(--space-lg) var(--space-md);
+    border: 1px solid rgba(11, 27, 54, 0.14);
+    border-radius: var(--radius-md);
+    background-color: rgba(251, 250, 246, 0.68);
+    background-image: var(--texture-paper);
+    box-shadow: var(--paper-tile-shadow);
+  }
+
+  .values article span {
+    display: block;
+    margin-bottom: var(--space-xl);
+    color: var(--color-brass);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+  }
+
+  .values h3 {
+    margin-bottom: var(--space-sm);
+    font-family: var(--font-sans);
+    font-size: var(--step-1);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+  }
+
+  .values article p {
+    color: var(--color-slate);
+  }
+
+  .focus__criteria {
+    display: grid;
+    padding: 0;
+    border-block: 1px solid var(--color-border-dark);
+    margin: 0;
+  }
+
+  .focus__criteria > div {
+    display: flex;
+    min-height: 10rem;
+    flex-direction: column-reverse;
+    justify-content: space-between;
+    padding-block: var(--space-md);
+    border-bottom: 1px solid var(--color-border-dark);
+  }
+
+  .focus__criteria > div:last-child {
+    border-bottom: 0;
+  }
+
+  .focus dt {
+    color: rgba(251, 250, 246, 0.62);
+    font-size: var(--step--1);
+  }
+
+  .focus dd {
+    margin: 0;
+    color: var(--color-white);
+    font-family: var(--font-display);
+    font-size: var(--step-3);
+    letter-spacing: -0.04em;
+    line-height: 1;
+  }
+
+  .focus__note {
+    display: grid;
+    gap: var(--space-md);
+    justify-items: start;
+    margin-top: var(--space-lg);
+  }
+
+  .focus__note p {
+    max-width: 46rem;
+    color: rgba(251, 250, 246, 0.68);
+    font-size: var(--step--1);
+  }
+
+  .relationships h2 {
+    max-width: 14ch;
+    margin-bottom: 0;
+    font-size: var(--step-3);
+  }
+
+  .relationships__inner > div:last-child {
+    max-width: 42rem;
+  }
+
+  @media (min-width: 42rem) {
+    .values__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .values article:nth-child(odd) {
+      padding-right: var(--space-lg);
+    }
+
+    .values article:nth-child(even) {
+      padding-left: var(--space-lg);
+    }
+
+    .focus__criteria {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .focus__criteria > div {
+      padding-inline: var(--space-md);
+      border-right: 1px solid var(--color-border-dark);
+      border-bottom: 0;
+    }
+
+    .focus__criteria > div:first-child {
+      padding-left: 0;
+    }
+
+    .focus__criteria > div:last-child {
+      padding-right: 0;
+      border-right: 0;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .identity__grid,
+    .relationships__inner {
+      grid-template-columns: minmax(0, 1fr) minmax(30rem, 0.85fr);
+    }
+
+    .values__grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .values article,
+    .values article:nth-child(odd),
+    .values article:nth-child(even) {
+      padding-inline: var(--space-md);
+      border: 1px solid rgba(11, 27, 54, 0.14);
+    }
+
+    .values article:first-child {
+      padding-left: var(--space-md);
+    }
+
+    .values article:last-child {
+      padding-right: 0;
+      padding-right: var(--space-md);
+    }
+  }
+</style>

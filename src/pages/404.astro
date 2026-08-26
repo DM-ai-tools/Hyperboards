@@ -1,0 +1,134 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import CtaBand from '../components/CtaBand.astro';
+---
+
+<BaseLayout
+  title="Page Not Found | Hyperboards"
+  description="The requested Hyperboards page could not be found."
+  noindex={true}
+>
+  <PageHero
+    eyebrow="404"
+    title="This page is not here."
+    intro="The address may have changed, or the link may be incomplete. These routes can take you back to the useful part of the conversation."
+    marker="404"
+  />
+
+  <section class="section route-finder">
+    <div class="container">
+      <div class="route-finder__intro" data-reveal>
+        <p class="eyebrow">Continue from here</p>
+        <h2>Choose the route that fits.</h2>
+      </div>
+      <nav class="route-finder__links" aria-label="Helpful pages" data-reveal>
+        <a href="/">
+          <span>01</span>
+          <strong>Home</strong>
+          <small>Return to the overview</small>
+        </a>
+        <a href="/what-we-acquire">
+          <span>02</span>
+          <strong>What we acquire</strong>
+          <small>Review the acquisition profile</small>
+        </a>
+        <a href="/business-owners">
+          <span>03</span>
+          <strong>For business owners</strong>
+          <small>Understand the owner journey</small>
+        </a>
+      </nav>
+    </div>
+  </section>
+
+  <CtaBand
+    eyebrow="A private first step"
+    title="Considering what comes next?"
+    body="Begin with a broad, confidential introduction. A formal sale process is not required."
+    href="/contact"
+    label="Start a confidential conversation"
+  />
+</BaseLayout>
+
+<style>
+  .route-finder {
+    background-color: var(--color-paper);
+    background-image: var(--texture-paper);
+  }
+
+  .route-finder__intro {
+    max-width: 42rem;
+    margin-bottom: var(--space-xl);
+  }
+
+  .route-finder__links {
+    display: grid;
+    gap: var(--space-sm);
+  }
+
+  .route-finder__links a {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0 var(--space-md);
+    padding: var(--space-md);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background-color: rgba(251, 250, 246, 0.66);
+    background-image: var(--texture-paper);
+    color: var(--color-midnight);
+    text-decoration: none;
+    transition: padding 220ms var(--ease-out), background 220ms var(--ease-out);
+  }
+
+  .route-finder__links a:hover {
+    padding-inline: var(--space-sm);
+    background: rgba(251, 250, 246, 0.65);
+  }
+
+  .route-finder__links span {
+    grid-row: 1 / 3;
+    align-self: center;
+    color: var(--color-forest);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+  }
+
+  .route-finder__links strong {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 520;
+  }
+
+  .route-finder__links small {
+    color: var(--color-slate);
+    font-size: var(--step--1);
+  }
+
+  @media (min-width: 48rem) {
+    .route-finder__links {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .route-finder__links a {
+      grid-template-columns: 1fr;
+      align-content: start;
+      min-height: 13rem;
+      padding: var(--space-md);
+      border: 1px solid var(--color-border);
+    }
+
+    .route-finder__links a:last-child {
+      border-right: 1px solid var(--color-border);
+    }
+
+    .route-finder__links a:hover {
+      padding: calc(var(--space-md) + 0.2rem) var(--space-md) calc(var(--space-md) - 0.2rem);
+    }
+
+    .route-finder__links span {
+      grid-row: auto;
+      margin-bottom: var(--space-lg);
+    }
+  }
+</style>

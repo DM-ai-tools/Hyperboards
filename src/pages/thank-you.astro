@@ -1,0 +1,115 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import CtaBand from '../components/CtaBand.astro';
+---
+
+<BaseLayout
+  title="Thank You | Hyperboards"
+  description="Thank you for contacting Hyperboards."
+  noindex={true}
+>
+  <PageHero
+    eyebrow="Introduction"
+    title="Thank you for reaching out."
+    intro="If you arrived here after submitting the inquiry form, your introduction was accepted. The next step is a considered review, not an automated sales sequence."
+    marker="✓"
+  />
+
+  <section class="section follow-up">
+    <div class="follow-up__grid container">
+      <div data-reveal>
+        <p class="eyebrow">What happens next</p>
+        <h2>A private first review.</h2>
+      </div>
+      <ol class="follow-up__steps" data-reveal>
+        <li>
+          <span>01</span>
+          <div>
+            <h3>Broad fit is considered</h3>
+            <p>The information submitted is reviewed against the acquisition profile.</p>
+          </div>
+        </li>
+        <li>
+          <span>02</span>
+          <div>
+            <h3>An appropriate response follows</h3>
+            <p>If a next conversation appears useful, the contact details provided will be used to respond.</p>
+          </div>
+        </li>
+        <li>
+          <span>03</span>
+          <div>
+            <h3>Sensitive detail waits</h3>
+            <p>Please do not send confidential records until protections and a secure sharing method are agreed.</p>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <CtaBand
+    eyebrow="While you wait"
+    title="Review the acquisition profile."
+    body="The published criteria explain the target financial range, sectors and qualities considered in an initial fit review."
+    href="/what-we-acquire"
+    label="View what we acquire"
+  />
+</BaseLayout>
+
+<style>
+  .follow-up {
+    background-color: var(--color-paper);
+    background-image: var(--texture-paper);
+  }
+
+  .follow-up__grid {
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  .follow-up h2 {
+    max-width: 12ch;
+  }
+
+  .follow-up__steps {
+    display: grid;
+    gap: var(--space-sm);
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .follow-up__steps li {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: var(--space-md);
+    padding: var(--space-md);
+    border: 1px solid rgba(11, 27, 54, 0.14);
+    border-radius: var(--radius-md);
+    background-color: rgba(251, 250, 246, 0.68);
+    background-image: var(--texture-paper);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72);
+  }
+
+  .follow-up__steps li:last-child {
+    border-bottom: 1px solid rgba(11, 27, 54, 0.14);
+  }
+
+  .follow-up__steps span {
+    color: var(--color-forest);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+  }
+
+  .follow-up__steps h3 {
+    margin-bottom: var(--space-xs);
+    font-size: var(--step-2);
+  }
+
+  @media (min-width: 54rem) {
+    .follow-up__grid {
+      grid-template-columns: minmax(0, 0.8fr) minmax(28rem, 1.2fr);
+    }
+  }
+</style>

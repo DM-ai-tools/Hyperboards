@@ -1,0 +1,148 @@
+<div class="case-frame" aria-hidden="true">
+  <span class="case-frame__rail case-frame__rail--top"></span>
+  <span class="case-frame__rail case-frame__rail--right"></span>
+  <span class="case-frame__rail case-frame__rail--bottom"></span>
+  <span class="case-frame__rail case-frame__rail--left"></span>
+  <span class="case-frame__corner case-frame__corner--tl"></span>
+  <span class="case-frame__corner case-frame__corner--tr"></span>
+  <span class="case-frame__corner case-frame__corner--br"></span>
+  <span class="case-frame__corner case-frame__corner--bl"></span>
+</div>
+
+<style>
+  .case-frame {
+    position: fixed;
+    z-index: 950;
+    inset: 0 12px 0 0;
+    border: 1px solid rgba(199, 168, 91, 0.76);
+    pointer-events: none;
+    box-shadow:
+      inset 0 0 0 1px rgba(7, 20, 42, 0.82),
+      inset 0 0 1.2rem rgba(7, 20, 42, 0.12),
+      0 0.35rem 1.5rem rgba(1, 7, 17, 0.2);
+  }
+
+  .case-frame::after {
+    position: absolute;
+    inset: 1px;
+    border: 0;
+    border-radius: 0.42rem;
+    background: var(--stitch-frame);
+    box-shadow: var(--stitch-channel-shadow);
+    content: '';
+    opacity: 0.94;
+  }
+
+  .case-frame__rail {
+    position: absolute;
+    background-color: var(--color-midnight);
+    background-image: var(--texture-leather);
+    box-shadow: var(--deboss-shadow);
+  }
+
+  .case-frame__rail--top,
+  .case-frame__rail--bottom {
+    right: 0;
+    left: 0;
+    height: 14px;
+  }
+
+  .case-frame__rail--top { top: 0; }
+  .case-frame__rail--bottom { bottom: 0; }
+
+  .case-frame__rail--right,
+  .case-frame__rail--left {
+    top: 0;
+    bottom: 0;
+    width: 14px;
+  }
+
+  .case-frame__rail--right { right: 0; }
+  .case-frame__rail--left { left: 0; }
+
+  .case-frame__corner {
+    position: absolute;
+    z-index: 2;
+    width: 1.42rem;
+    height: 1.42rem;
+    border: 1px solid rgba(255, 239, 176, 0.72);
+    background:
+      linear-gradient(145deg, rgba(255, 255, 255, 0.42), transparent 24%, rgba(65, 43, 10, 0.2) 72%, rgba(255, 238, 168, 0.2)),
+      linear-gradient(90deg, #70501d 0%, #b98f3d 9%, #f2dfa0 22%, #c39b49 38%, #896526 51%, #dfc273 67%, #f5e4a9 82%, #94702c 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.72),
+      inset 0 -2px 2px rgba(75, 50, 12, 0.42),
+      inset 1px 0 0 rgba(255, 245, 203, 0.3),
+      0 1px 1px rgba(2, 8, 18, 0.55),
+      0 0.28rem 0.72rem rgba(2, 8, 18, 0.42);
+  }
+
+  .case-frame__corner::before {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0.52rem;
+    height: 0.52rem;
+    border: 1px solid rgba(80, 55, 15, 0.62);
+    border-radius: 50%;
+    background-image: radial-gradient(circle at 34% 28%, #fff1b8 0 10%, #d0aa55 28%, #8c6827 68%, #4d3511 100%);
+    box-shadow:
+      inset 0 1px 1px rgba(255, 255, 255, 0.5),
+      0 1px 1px rgba(4, 12, 27, 0.5);
+    content: '';
+    transform: translate(-50%, -50%);
+  }
+
+  .case-frame__corner::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0.3rem;
+    height: 1px;
+    background: rgba(67, 45, 11, 0.72);
+    box-shadow: 0 1px 0 rgba(255, 238, 174, 0.42);
+    content: '';
+    transform: translate(-50%, -50%) rotate(-32deg);
+  }
+
+  .case-frame__corner--tl { top: 2px; left: 2px; border-radius: 0 0 0.7rem; }
+  .case-frame__corner--tr { top: 2px; right: 2px; border-radius: 0 0 0 0.7rem; }
+  .case-frame__corner--br { right: 2px; bottom: 2px; border-radius: 0.7rem 0 0; }
+  .case-frame__corner--bl { bottom: 2px; left: 2px; border-radius: 0 0.7rem 0 0; }
+
+  @media (max-width: 30rem) {
+    .case-frame {
+      right: 8px;
+    }
+
+    .case-frame::after {
+      inset: 1px;
+      background: var(--stitch-frame-compact);
+      opacity: 0.76;
+    }
+
+    .case-frame__rail--top,
+    .case-frame__rail--bottom {
+      height: 10px;
+    }
+
+    .case-frame__rail--right,
+    .case-frame__rail--left {
+      width: 10px;
+    }
+
+    .case-frame__corner {
+      width: 0.78rem;
+      height: 0.78rem;
+    }
+
+    .case-frame__corner::before {
+      width: 0.34rem;
+      height: 0.34rem;
+    }
+
+    .case-frame__corner::after {
+      width: 0.2rem;
+    }
+  }
+</style>

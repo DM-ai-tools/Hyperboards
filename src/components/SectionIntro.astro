@@ -1,0 +1,49 @@
+---
+interface Props {
+  eyebrow?: string;
+  title: string;
+  intro?: string;
+  align?: 'left' | 'split';
+}
+
+const { eyebrow, title, intro, align = 'left' } = Astro.props;
+---
+
+<header class:list={['section-intro', `section-intro--${align}`]} data-reveal>
+  <div>
+    {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+    <h2>{title}</h2>
+  </div>
+  {intro && <p class="lede">{intro}</p>}
+</header>
+
+<style>
+  .section-intro {
+    margin-bottom: var(--space-xl);
+  }
+
+  .section-intro h2 {
+    max-width: 15ch;
+    margin-bottom: var(--space-md);
+  }
+
+  .section-intro--split {
+    display: grid;
+    gap: var(--space-lg);
+    align-items: end;
+  }
+
+  .section-intro--split .lede {
+    margin-bottom: var(--space-md);
+  }
+
+  @media (min-width: 54rem) {
+    .section-intro--split {
+      grid-template-columns: minmax(0, 1.1fr) minmax(22rem, 0.9fr);
+    }
+
+    .section-intro--split h2 {
+      margin-bottom: 0;
+    }
+  }
+</style>

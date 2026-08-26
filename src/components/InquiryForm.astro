@@ -1,0 +1,403 @@
+---
+import { ebitdaOptions, sectors } from '../data/site';
+
+interface Props {
+  status?: string | null;
+  compact?: boolean;
+}
+
+const { status = null, compact = false } = Astro.props;
+---
+
+<div class:list={['inquiry-shell', { 'inquiry-shell--compact': compact }]} data-inquiry-shell>
+  {status === 'configuration' && (
+    <div class="form-notice form-notice--error" role="alert">
+      Online submission is not yet connected. Please return once the private inquiry channel has been configured.
+    </div>
+  )}
+  {status === 'error' && (
+    <div class="form-notice form-notice--error" role="alert">
+      We could not deliver your inquiry. No information was accepted. Please try again later.
+    </div>
+  )}
+
+  <div class="form-summary" role="alert" tabindex="-1" data-form-summary hidden></div>
+
+  <form class="inquiry-form" action="/api/inquiries" method="post" data-inquiry-form>
+    <div class="form-grid">
+      <div class="field">
+        <label for="full-name">Full name <span aria-hidden="true">*</span></label>
+        <input id="full-name" name="fullName" type="text" autocomplete="name" minlength="2" maxlength="100" required />
+      </div>
+
+      <div class="field">
+        <label for="email">Work email <span aria-hidden="true">*</span></label>
+        <input id="email" name="email" type="email" inputmode="email" autocomplete="email" maxlength="200" required />
+      </div>
+
+      <div class="field">
+        <label for="phone">Phone <span class="field__optional">Optional</span></label>
+        <input id="phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="40" />
+      </div>
+
+      <div class="field">
+        <label for="company">Company name <span aria-hidden="true">*</span></label>
+        <input id="company" name="company" type="text" autocomplete="organization" minlength="2" maxlength="120" required />
+      </div>
+
+      <div class="field">
+        <label for="company-website">Company website <span class="field__optional">Optional</span></label>
+        <input id="company-website" name="companyWebsite" type="url" inputmode="url" autocomplete="url" maxlength="240" placeholder="https://" />
+      </div>
+
+      <div class="field">
+        <label for="location">Headquarters / location <span aria-hidden="true">*</span></label>
+        <input id="location" name="location" type="text" autocomplete="address-level2" minlength="2" maxlength="120" required />
+      </div>
+
+      <div class="field">
+        <label for="industry">Industry <span aria-hidden="true">*</span></label>
+        <select id="industry" name="industry" required>
+          <option value="">Select an industry</option>
+          {sectors.map((sector) => <option value={sector.slug}>{sector.name}</option>)}
+          <option value="other">Other / not sure</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="ebitda">Approximate EBITDA <span aria-hidden="true">*</span></label>
+        <select id="ebitda" name="ebitda" required>
+          <option value="">Select a range</option>
+          {ebitdaOptions.map((option) => <option value={option.value}>{option.label}</option>)}
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="role">Your role <span aria-hidden="true">*</span></label>
+        <select id="role" name="role" required>
+          <option value="">Select your role</option>
+          <option value="owner">Owner / shareholder</option>
+          <option value="adviser">Adviser / intermediary</option>
+          <option value="investor">Potential investment partner</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+
+      <div class="field field--wide">
+        <label for="message">What are you considering? <span aria-hidden="true">*</span></label>
+        <textarea id="message" name="message" rows="6" minlength="20" maxlength="4000" required aria-describedby="message-help"></textarea>
+        <p class="field__help" id="message-help">A short overview is enough. Do not include customer lists, employee records or proprietary documents.</p>
+      </div>
+    </div>
+
+    <div class="honeypot" aria-hidden="true">
+      <label for="company-fax">Company fax</label>
+      <input id="company-fax" name="companyFax" type="text" tabindex="-1" autocomplete="off" />
+    </div>
+
+    <div class="field field--check">
+      <input id="acknowledgement" name="acknowledgement" type="checkbox" value="true" required />
+      <label for="acknowledgement">
+        I understand that this form does not create an NDA, an offer or an obligation for either party. <span aria-hidden="true">*</span>
+      </label>
+    </div>
+
+    <div class="form-actions">
+      <button class="submit-button" type="submit" data-submit-button>
+        <span data-submit-label>Send acquisition inquiry</span>
+        <svg viewBox="0 0 18 18" aria-hidden="true">
+          <path d="M3 9h11M10 5l4 4-4 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" />
+        </svg>
+      </button>
+      <p>Fields marked * are required.</p>
+    </div>
+  </form>
+</div>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-inquiry-form]');
+  const summary = document.querySelector<HTMLElement>('[data-form-summary]');
+  const submitButton = document.querySelector<HTMLButtonElement>('[data-submit-button]');
+  const submitLabel = document.querySelector<HTMLElement>('[data-submit-label]');
+
+  const setLoading = (loading: boolean) => {
+    if (!submitButton || !submitLabel) return;
+    submitButton.disabled = loading;
+    submitButton.setAttribute('aria-busy', String(loading));
+    submitLabel.textContent = loading ? 'Sending securely…' : 'Send acquisition inquiry';
+  };
+
+  const showError = (message: string) => {
+    if (!summary) return;
+    summary.textContent = message;
+    summary.hidden = false;
+    summary.focus();
+  };
+
+  form?.addEventListener('submit', async (event) => {
+    if (!form.checkValidity()) return;
+    event.preventDefault();
+    if (summary) summary.hidden = true;
+    setLoading(true);
+
+    const data = Object.fromEntries(new FormData(form).entries());
+    data.acknowledgement = (form.elements.namedItem('acknowledgement') as HTMLInputElement).checked ? 'true' : 'false';
+
+    try {
+      const response = await fetch(form.action, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(data),
+      });
+      const result = await response.json().catch(() => ({ message: 'The server returned an unexpected response.' }));
+
+      if (!response.ok) {
+        showError(result.message || 'Your inquiry could not be delivered. Please review the form and try again.');
+        return;
+      }
+
+      window.location.assign('/thank-you');
+    } catch {
+      showError('We could not reach the secure inquiry service. No information was delivered. Please try again later.');
+    } finally {
+      setLoading(false);
+    }
+  });
+</script>
+
+<style>
+  .inquiry-shell {
+    position: relative;
+    padding: clamp(1.2rem, 1rem + 1vw, 2rem);
+    border: 0.875rem solid transparent;
+    border-radius: var(--radius-lg);
+    background-color: var(--color-white);
+    background-image:
+      var(--texture-paper),
+      linear-gradient(var(--color-white), var(--color-white)),
+      var(--texture-leather);
+    background-blend-mode: normal, normal, normal, screen, normal, soft-light;
+    background-clip: padding-box, padding-box, padding-box, border-box, border-box, border-box;
+    background-origin: padding-box, padding-box, padding-box, border-box, border-box, border-box;
+    background-position: center;
+    background-repeat: no-repeat, repeat, no-repeat, no-repeat, no-repeat, no-repeat;
+    background-size: auto, auto, 100% 100%, auto, auto, cover;
+    box-shadow:
+      0 1.25rem 4rem rgba(11, 27, 54, 0.14),
+      inset 0 0 0 1px rgba(199, 168, 91, 0.3),
+      0 0 0 1px rgba(199, 168, 91, 0.42);
+  }
+
+  .inquiry-shell::before {
+    position: absolute;
+    inset: -0.75rem;
+    border: 0;
+    border-radius: calc(var(--radius-lg) - 0.15rem);
+    background: var(--stitch-frame-panel);
+    box-shadow: var(--stitch-channel-shadow);
+    content: '';
+    opacity: 0.94;
+    pointer-events: none;
+  }
+
+  .form-grid {
+    display: grid;
+    gap: var(--space-md);
+  }
+
+  .field {
+    display: grid;
+    gap: 0.48rem;
+  }
+
+  .field label {
+    color: var(--color-midnight);
+    font-size: 0.88rem;
+    font-weight: 690;
+  }
+
+  .field__optional {
+    margin-left: 0.35rem;
+    color: var(--color-slate);
+    font-size: 0.72rem;
+    font-weight: 500;
+  }
+
+  input,
+  select,
+  textarea {
+    width: 100%;
+    border: 1px solid rgba(11, 27, 54, 0.28);
+    border-radius: var(--radius-sm);
+    background-color: #fff;
+    background-image: linear-gradient(180deg, rgba(11, 27, 54, 0.025), transparent 35%);
+    color: var(--color-midnight);
+    box-shadow: inset 0 1px 2px rgba(11, 27, 54, 0.055);
+  }
+
+  input,
+  select {
+    min-height: 3.35rem;
+    padding-inline: 0.9rem;
+  }
+
+  textarea {
+    min-height: 9rem;
+    padding: 0.85rem 0.9rem;
+    resize: vertical;
+  }
+
+  input:hover,
+  select:hover,
+  textarea:hover {
+    border-color: rgba(11, 27, 54, 0.55);
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus {
+    border-color: var(--color-forest);
+    outline: 3px solid rgba(39, 72, 61, 0.18);
+    outline-offset: 1px;
+  }
+
+  .field__help,
+  .form-actions p {
+    margin: 0;
+    color: var(--color-slate);
+    font-size: 0.76rem;
+    line-height: 1.5;
+  }
+
+  .field--check {
+    grid-template-columns: 1.3rem 1fr;
+    align-items: start;
+    margin-top: var(--space-md);
+  }
+
+  .field--check input {
+    width: 1.15rem;
+    min-height: 1.15rem;
+    margin: 0.22rem 0 0;
+    accent-color: var(--color-forest);
+  }
+
+  .field--check label {
+    font-weight: 520;
+    line-height: 1.55;
+  }
+
+  .honeypot {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .form-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    margin-top: var(--space-md);
+  }
+
+  .submit-button {
+    position: relative;
+    display: inline-flex;
+    min-height: 3.4rem;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 0.8rem 1.15rem 0.8rem 1.35rem;
+    overflow: hidden;
+    border: 3px solid rgba(199, 168, 91, 0.72);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-midnight);
+    background-image: var(--texture-leather);
+    color: var(--color-midnight);
+    cursor: pointer;
+    font-weight: 720;
+    isolation: isolate;
+    box-shadow: var(--leather-depth);
+    transition: transform 180ms var(--ease-out), background-color 180ms var(--ease-out);
+  }
+
+  .submit-button::before {
+    position: absolute;
+    z-index: 1;
+    inset: 2px;
+    border: 0;
+    border-radius: calc(var(--radius-sm) - 2px);
+    background: var(--stitch-frame-compact);
+    box-shadow: var(--stitch-channel-shadow);
+    content: '';
+    pointer-events: none;
+  }
+
+  .submit-button::after {
+    position: absolute;
+    z-index: 0;
+    inset: 0.44rem;
+    border: 1px solid rgba(255, 244, 194, 0.52);
+    border-radius: 0.08rem;
+    background:
+      linear-gradient(115deg, rgba(255, 250, 214, 0.34), transparent 38%, rgba(91, 67, 23, 0.16)),
+      var(--color-brass);
+    box-shadow: var(--brass-bevel);
+    content: '';
+    pointer-events: none;
+  }
+
+  .submit-button > span,
+  .submit-button > svg {
+    position: relative;
+    z-index: 2;
+  }
+
+  .submit-button:hover:not(:disabled)::after {
+    background: #d3b768;
+  }
+
+  .submit-button:hover:not(:disabled) {
+    transform: translateY(-1px);
+  }
+
+  .submit-button:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+
+  .submit-button:disabled {
+    cursor: wait;
+    opacity: 0.7;
+  }
+
+  .submit-button svg {
+    width: 1rem;
+  }
+
+  .form-summary,
+  .form-notice {
+    padding: 0.9rem 1rem;
+    border-left: 3px solid var(--color-error);
+    margin-bottom: var(--space-md);
+    background: rgba(161, 58, 50, 0.08);
+    color: #762a25;
+    font-size: 0.9rem;
+  }
+
+  .form-summary[hidden] {
+    display: none;
+  }
+
+  @media (min-width: 46rem) {
+    .form-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .field--wide {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

@@ -1,0 +1,241 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import CtaBand from '../components/CtaBand.astro';
+---
+
+<BaseLayout
+  title="Privacy Notice | Hyperboards"
+  description="A pre-launch overview of the information Hyperboards expects to collect through this website and how it is intended to be handled."
+  noindex={true}
+>
+  <PageHero
+    eyebrow="Privacy"
+    title="A careful approach to the information you share."
+    intro="This page describes the intended handling of website inquiries while the final legal entity, privacy contact and jurisdiction-specific terms are being confirmed."
+    marker="P"
+  />
+
+  <section class="section legal-page">
+    <div class="container">
+      <aside class="legal-status" role="note" aria-labelledby="privacy-status-title" data-reveal>
+        <p class="eyebrow">Pre-launch status</p>
+        <h2 id="privacy-status-title">This is a general interim notice, not a final privacy policy.</h2>
+        <p>
+          Before production launch, Hyperboards must confirm the responsible legal entity, privacy
+          contact, service providers, retention periods, applicable legal bases and governing
+          jurisdictions. Until those details are approved, this page should not be treated as a
+          complete statement of legal rights or obligations.
+        </p>
+      </aside>
+
+      <div class="legal-layout">
+        <aside class="legal-index" aria-labelledby="privacy-index-title" data-reveal>
+          <h2 id="privacy-index-title">On this page</h2>
+          <nav aria-label="Privacy notice sections">
+            <a href="#scope">Scope</a>
+            <a href="#information">Information submitted</a>
+            <a href="#use">Intended use</a>
+            <a href="#sharing">Sharing and service providers</a>
+            <a href="#retention">Retention and security</a>
+            <a href="#rights">Choices and rights</a>
+            <a href="#contact">Responsible entity and contact</a>
+          </nav>
+        </aside>
+
+        <article class="legal-copy" data-reveal>
+          <section id="scope">
+            <h2>Scope</h2>
+            <p>
+              This interim notice applies to information submitted through the Hyperboards website,
+              including owner, intermediary and investor-relationship inquiries. It does not yet
+              describe every practice of the entity that will operate the website.
+            </p>
+          </section>
+
+          <section id="information">
+            <h2>Information you choose to submit</h2>
+            <p>
+              An inquiry may include your name, business email, phone number, company, website,
+              industry, location, broad EBITDA range and the message you provide. Technical security
+              records may also be generated when the form is used.
+            </p>
+            <div class="note">
+              Please do not include customer lists, employee records, account credentials, tax
+              records or other highly sensitive documents in an initial inquiry. A website form does
+              not itself create a non-disclosure agreement.
+            </div>
+          </section>
+
+          <section id="use">
+            <h2>How information is intended to be used</h2>
+            <p>Information submitted through the website is expected to be used to:</p>
+            <ul>
+              <li>review and respond to an introduction;</li>
+              <li>consider broad alignment with the published acquisition profile;</li>
+              <li>coordinate an appropriate next conversation;</li>
+              <li>protect the website, prevent misuse and maintain necessary records; and</li>
+              <li>meet legal or regulatory requirements that apply to the responsible entity.</li>
+            </ul>
+            <p>
+              The final notice will identify the applicable legal bases where required by law.
+            </p>
+          </section>
+
+          <section id="sharing">
+            <h2>Sharing and service providers</h2>
+            <p>
+              Inquiry information may need to be handled by the Hyperboards team and limited service
+              providers that support hosting, security, form delivery or professional review. The
+              final policy must identify the relevant categories, contractual safeguards and any
+              cross-border handling after the operating setup is confirmed.
+            </p>
+            <p>
+              Hyperboards should not describe inquiry data as being sold or used for unrelated
+              advertising unless the implemented data flow has been reviewed and the final notice
+              accurately reflects it.
+            </p>
+          </section>
+
+          <section id="retention">
+            <h2>Retention and security</h2>
+            <p>
+              The production service should retain inquiry information only for an approved business,
+              legal or security purpose and protect it with controls appropriate to its sensitivity.
+              Specific retention periods and deletion practices remain to be confirmed before launch.
+            </p>
+          </section>
+
+          <section id="rights">
+            <h2>Your choices and legal rights</h2>
+            <p>
+              Depending on where you live, you may have rights to ask about, access, correct or delete
+              personal information, or to object to certain uses. The final notice will explain which
+              rights apply, how to exercise them and any appeal or regulator-contact process required
+              by the governing jurisdiction.
+            </p>
+          </section>
+
+          <section id="contact">
+            <h2>Responsible entity and privacy contact</h2>
+            <p>
+              The legal name and address of the responsible entity, together with a monitored privacy
+              email or other contact channel, have not yet been approved for publication. These are
+              launch-blocking details and must replace this interim disclosure before the website is
+              publicly indexed or used to collect production inquiries.
+            </p>
+          </section>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand
+    eyebrow="Before you share details"
+    title="Start with only the broad facts."
+    body="The inquiry page explains what is useful at the introduction stage and what should wait for a protected conversation."
+    href="/contact"
+    label="Review contact guidance"
+  />
+</BaseLayout>
+
+<style>
+  .legal-page {
+    background: var(--color-white);
+  }
+
+  .legal-status {
+    max-width: 64rem;
+    margin-bottom: var(--space-xl);
+    padding: var(--space-lg);
+    border: 1px solid rgba(199, 168, 91, 0.45);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-paper);
+    background-image: var(--texture-paper);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .legal-status h2 {
+    max-width: 22ch;
+    margin-bottom: var(--space-sm);
+    font-size: var(--step-3);
+  }
+
+  .legal-status > p:last-child {
+    max-width: 53rem;
+  }
+
+  .legal-layout {
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  .legal-index {
+    align-self: start;
+    padding-top: var(--space-xs);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .legal-index h2 {
+    margin-bottom: var(--space-sm);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .legal-index nav {
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .legal-index a {
+    color: var(--color-slate);
+    font-size: var(--step--1);
+    text-decoration-color: transparent;
+  }
+
+  .legal-index a:hover {
+    color: var(--color-midnight);
+    text-decoration-color: currentColor;
+  }
+
+  .legal-copy {
+    max-width: 49rem;
+  }
+
+  .legal-copy section {
+    scroll-margin-top: 7rem;
+  }
+
+  .legal-copy section + section {
+    margin-top: var(--space-xl);
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .legal-copy h2 {
+    margin-bottom: var(--space-md);
+    font-size: var(--step-3);
+  }
+
+  .legal-copy li + li {
+    margin-top: var(--space-xs);
+  }
+
+  .legal-copy .note {
+    margin-block: var(--space-md);
+  }
+
+  @media (min-width: 62rem) {
+    .legal-layout {
+      grid-template-columns: minmax(12rem, 0.32fr) minmax(0, 1fr);
+    }
+
+    .legal-index {
+      position: sticky;
+      top: 7rem;
+    }
+  }
+</style>

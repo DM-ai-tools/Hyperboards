@@ -1,0 +1,179 @@
+<div class="hero-art" aria-hidden="true">
+  <svg viewBox="0 0 680 720">
+    <defs>
+      <linearGradient id="hbFade" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#C7A85B" stop-opacity=".45" />
+        <stop offset="1" stop-color="#C7A85B" stop-opacity="0" />
+      </linearGradient>
+      <pattern id="hbMinorGrid" width="24" height="24" patternUnits="userSpaceOnUse">
+        <path d="M24 0H0V24" fill="none" stroke="#FBFAF6" stroke-opacity=".12" stroke-width=".7" />
+      </pattern>
+      <pattern id="hbMajorGrid" width="96" height="96" patternUnits="userSpaceOnUse">
+        <path d="M96 0H0V96" fill="none" stroke="#C7A85B" stroke-opacity=".18" stroke-width="1" />
+      </pattern>
+    </defs>
+    <rect class="hero-art__minor-grid" x="20" y="40" width="640" height="576" fill="url(#hbMinorGrid)" />
+    <rect class="hero-art__major-grid" x="20" y="40" width="640" height="576" fill="url(#hbMajorGrid)" />
+    <g class="hero-art__grid" fill="none" stroke="#FBFAF6" stroke-opacity=".16" stroke-width="1">
+      <path d="M20 40h640M20 136h640M20 232h640M20 328h640M20 424h640M20 520h640M20 616h640" />
+      <path d="M52 0v700M148 0v700M244 0v700M340 0v700M436 0v700M532 0v700M628 0v700" />
+    </g>
+    <g class="hero-art__axes" fill="none" stroke="#FBFAF6" stroke-opacity=".32" stroke-width="1">
+      <path d="M52 568V64M52 568H628" />
+      <path d="M47 472h10M47 376h10M47 280h10M47 184h10M47 88h10M148 563v10M244 563v10M340 563v10M436 563v10M532 563v10M628 563v10" />
+    </g>
+    <g class="hero-art__axis-labels" fill="#FBFAF6" fill-opacity=".42">
+      <text x="30" y="91">04</text><text x="30" y="187">03</text><text x="30" y="283">02</text><text x="30" y="379">01</text><text x="30" y="475">00</text>
+      <text x="143" y="590">01</text><text x="239" y="590">02</text><text x="335" y="590">03</text><text x="431" y="590">04</text><text x="527" y="590">05</text>
+    </g>
+    <g class="hero-art__blocks" fill="none" stroke="#F3EFE6" stroke-width="1.4">
+      <path d="M92 568V284h128v284" />
+      <path d="M276 568V184h128v384" />
+      <path d="M460 568V354h128v214" />
+      <path d="M64 568h552" />
+      <path d="M116 324h80M116 368h80M116 412h80M116 456h80M116 500h80" opacity=".48" />
+      <path d="M300 232h80M300 276h80M300 320h80M300 364h80M300 408h80M300 452h80M300 496h80" opacity=".48" />
+      <path d="M484 394h80M484 438h80M484 482h80" opacity=".48" />
+    </g>
+    <path class="hero-art__path" d="M48 630C136 596 168 620 242 575s130-5 204-63 122-52 186-98" fill="none" stroke="#C7A85B" stroke-width="2" />
+    <g fill="#C7A85B">
+      <rect class="hero-art__node hero-art__node--1" x="235" y="568" width="14" height="14" transform="rotate(45 242 575)" />
+      <rect class="hero-art__node hero-art__node--2" x="439" y="505" width="14" height="14" transform="rotate(45 446 512)" />
+      <rect class="hero-art__node hero-art__node--3" x="625" y="407" width="14" height="14" transform="rotate(45 632 414)" />
+    </g>
+    <path d="M340 35v112" stroke="url(#hbFade)" stroke-width="1" />
+    <circle cx="340" cy="164" r="5" fill="#C7A85B" />
+  </svg>
+  <div class="hero-art__caption">
+    <span>Owner-built</span>
+    <span>Thoughtfully transitioned</span>
+  </div>
+</div>
+
+<style>
+  .hero-art {
+    position: relative;
+    width: min(100%, 42rem);
+    padding: clamp(1rem, 2.5vw, 2rem);
+    overflow: hidden;
+    border: 1px solid rgba(199, 168, 91, 0.52);
+    border-radius: var(--radius-md);
+    background-color: rgba(7, 20, 42, 0.42);
+    background-image: var(--texture-leather);
+    box-shadow:
+      inset 0 0 0 1px rgba(251, 250, 246, 0.06),
+      inset 0 1.1rem 2.8rem rgba(0, 0, 0, 0.16),
+      0 2rem 5rem rgba(0, 0, 0, 0.16);
+    justify-self: end;
+  }
+
+  .hero-art::before {
+    position: absolute;
+    inset: 0.68rem;
+    border: 0;
+    border-radius: calc(var(--radius-md) - 0.18rem);
+    background: var(--stitch-frame-panel);
+    box-shadow: var(--stitch-channel-shadow);
+    content: '';
+    opacity: 0.92;
+    pointer-events: none;
+  }
+
+  .hero-art::after {
+    position: absolute;
+    top: 0.4rem;
+    right: 0.4rem;
+    width: 2.1rem;
+    height: 2.1rem;
+    border-top: 2px solid var(--color-brass);
+    border-right: 2px solid var(--color-brass);
+    border-radius: 0 0.45rem 0 0;
+    content: '';
+    opacity: 0.78;
+    pointer-events: none;
+  }
+
+  .hero-art svg {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+  }
+
+  .hero-art__path {
+    stroke-dasharray: 8 8;
+    animation:
+      path-reveal 780ms var(--ease-out) 180ms both,
+      path-drift 24s linear 960ms infinite;
+  }
+
+  .hero-art__minor-grid {
+    opacity: 0.62;
+  }
+
+  .hero-art__major-grid {
+    opacity: 0.72;
+  }
+
+  .hero-art__axis-labels {
+    font-family: var(--font-mono);
+    font-size: 8px;
+    letter-spacing: 0.08em;
+  }
+
+  .hero-art__blocks {
+    transform-origin: center bottom;
+    animation: chart-settle 720ms var(--ease-out) 120ms both;
+  }
+
+  .hero-art__node {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: node-pulse 4.8s var(--ease-out) infinite;
+  }
+
+  .hero-art__node--2 { animation-delay: 320ms; }
+  .hero-art__node--3 { animation-delay: 640ms; }
+
+  .hero-art__caption {
+    position: absolute;
+    right: 2%;
+    bottom: 7%;
+    display: grid;
+    gap: 0.2rem;
+    padding: 0.8rem 1rem;
+    border: 3px solid rgba(7, 20, 42, 0.92);
+    border-radius: var(--radius-sm);
+    background:
+      linear-gradient(120deg, rgba(255, 248, 213, 0.2), transparent 45%),
+      rgba(199, 168, 91, 0.94);
+    color: rgba(251, 250, 246, 0.66);
+    box-shadow: var(--brass-bevel);
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .hero-art__caption span:last-child {
+    color: var(--color-midnight);
+  }
+
+  @keyframes path-drift {
+    to { stroke-dashoffset: -160; }
+  }
+
+  @keyframes path-reveal {
+    from { opacity: 0; stroke-dashoffset: 80; }
+    to { opacity: 1; stroke-dashoffset: 0; }
+  }
+
+  @keyframes chart-settle {
+    from { opacity: 0; transform: translateY(1rem) scaleY(0.94); }
+    to { opacity: 1; transform: translateY(0) scaleY(1); }
+  }
+
+  @keyframes node-pulse {
+    0%, 82%, 100% { opacity: 0.82; scale: 1; }
+    90% { opacity: 1; scale: 1.16; }
+  }
+</style>

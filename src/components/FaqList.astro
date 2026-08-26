@@ -1,0 +1,103 @@
+---
+import { faqs } from '../data/site';
+
+interface Props {
+  items?: typeof faqs;
+}
+
+const { items = faqs } = Astro.props;
+---
+
+<div class="faq-list">
+  {items.map((item, index) => (
+    <details data-reveal>
+      <summary>
+        <span class="faq-list__number">0{index + 1}</span>
+        <span>{item.question}</span>
+        <span class="faq-list__icon" aria-hidden="true"></span>
+      </summary>
+      <div class="faq-list__answer">
+        <p>{item.answer}</p>
+      </div>
+    </details>
+  ))}
+</div>
+
+<style>
+  .faq-list {
+    display: grid;
+    gap: 0.65rem;
+  }
+
+  .faq-list details {
+    overflow: hidden;
+    border: 1px solid rgba(11, 27, 54, 0.14);
+    border-radius: var(--radius-md);
+    background-color: rgba(251, 250, 246, 0.62);
+    background-image: var(--texture-paper);
+    box-shadow: var(--paper-tile-shadow);
+    transition: border-color 220ms var(--ease-out), box-shadow 220ms var(--ease-out), transform 220ms var(--ease-out);
+  }
+
+  .faq-list details[open] {
+    border-color: rgba(199, 168, 91, 0.58);
+    box-shadow: var(--paper-tile-shadow-hover), inset 0 3px 0 rgba(199, 168, 91, 0.78);
+    transform: translateY(-0.12rem);
+  }
+
+  .faq-list summary {
+    display: grid;
+    min-height: 5.4rem;
+    grid-template-columns: 2.5rem 1fr 1.5rem;
+    gap: var(--space-sm);
+    align-items: center;
+    padding: var(--space-sm) var(--space-md);
+    color: var(--color-midnight);
+    cursor: pointer;
+    font-size: var(--step-1);
+    font-weight: 650;
+    list-style: none;
+  }
+
+  .faq-list summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-list__number {
+    color: var(--color-forest);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+  }
+
+  .faq-list__icon {
+    position: relative;
+    width: 1.2rem;
+    height: 1.2rem;
+  }
+
+  .faq-list__icon::before,
+  .faq-list__icon::after {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--color-midnight);
+    content: '';
+    transition: transform 180ms var(--ease-out);
+  }
+
+  .faq-list__icon::after {
+    transform: rotate(90deg);
+  }
+
+  details[open] .faq-list__icon::after {
+    transform: rotate(0);
+  }
+
+  .faq-list__answer {
+    max-width: 48rem;
+    padding: 0 var(--space-lg) var(--space-md) calc(2.5rem + var(--space-md) + var(--space-sm));
+    color: var(--color-slate);
+  }
+</style>

@@ -1,0 +1,182 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import CtaBand from '../components/CtaBand.astro';
+---
+
+<BaseLayout
+  title="Website Terms | Hyperboards"
+  description="Interim website-use principles for Hyperboards, pending confirmation of the operating entity and final legal review."
+  noindex={true}
+>
+  <PageHero
+    eyebrow="Website terms"
+    title="Clear boundaries for an introductory website."
+    intro="This website is designed to begin direct acquisition conversations. Final terms must be issued by the confirmed operating entity before production launch."
+    marker="T"
+  />
+
+  <section class="section legal-page">
+    <div class="container">
+      <aside class="legal-status" role="note" aria-labelledby="terms-status-title" data-reveal>
+        <p class="eyebrow">Pre-launch status</p>
+        <h2 id="terms-status-title">These are provisional website-use principles.</h2>
+        <p>
+          They are not complete legal terms. The operating entity, effective date, jurisdiction,
+          intellectual-property ownership, liability language and official contact must be confirmed
+          by qualified counsel before the site is publicly indexed or used for production inquiries.
+        </p>
+      </aside>
+
+      <article class="legal-copy" data-reveal>
+        <section>
+          <p class="section-number">01 / Purpose</p>
+          <h2>Information and introductions</h2>
+          <p>
+            The website provides general information about the kinds of businesses Hyperboards may
+            consider acquiring and offers a route for an introductory conversation. Website content
+            is not financial, legal, tax, accounting, brokerage or investment advice.
+          </p>
+        </section>
+
+        <section>
+          <p class="section-number">02 / No transaction commitment</p>
+          <h2>Published criteria are guidelines.</h2>
+          <p>
+            The $750K–$2M target EBITDA range and approximately $2M–$6M typical deal-value range are
+            acquisition guidelines only. They are not an offer, valuation, promise to transact,
+            financing commitment or assurance that a particular business will qualify.
+          </p>
+          <p>
+            Any transaction would depend on mutual interest, verification, diligence, negotiated
+            documents, required approvals and business-specific considerations.
+          </p>
+        </section>
+
+        <section>
+          <p class="section-number">03 / Confidentiality</p>
+          <h2>An inquiry is not an NDA.</h2>
+          <p>
+            Hyperboards intends to handle initial conversations discreetly, but submitting a website
+            form does not by itself create a fiduciary relationship, agency relationship or
+            non-disclosure agreement. Highly sensitive documents should not be sent until appropriate
+            protections and a secure sharing method are in place.
+          </p>
+        </section>
+
+        <section>
+          <p class="section-number">04 / Investor relationships</p>
+          <h2>No securities offering.</h2>
+          <p>
+            General references to aligned capital partners are relationship-oriented and should not
+            be understood as an offer to sell, or a solicitation of an offer to buy, any security or
+            investment product. Any future opportunity would require separate, authorized materials
+            and applicable legal review.
+          </p>
+        </section>
+
+        <section>
+          <p class="section-number">05 / Website use</p>
+          <h2>Responsible use and content ownership</h2>
+          <p>
+            Visitors should use the website lawfully and should not attempt to disrupt, probe, scrape
+            at harmful volume, gain unauthorized access to, or misuse the site or its forms. Final
+            terms must identify the owner or authorized licensee of the Hyperboards name, website
+            design, copy and other materials before asserting enforceable ownership rights.
+          </p>
+        </section>
+
+        <section>
+          <p class="section-number">06 / Availability and external links</p>
+          <h2>No guarantee of uninterrupted access</h2>
+          <p>
+            Website availability, accuracy and completeness may change. Links to third-party services
+            do not by themselves imply endorsement. Production terms should contain counsel-approved
+            warranty and liability language suited to the actual entity, technology and jurisdiction.
+          </p>
+        </section>
+
+        <section>
+          <p class="section-number">07 / Entity and governing law</p>
+          <h2>Required before launch</h2>
+          <p>
+            The legal entity providing this website, its business address, official contact, effective
+            date, governing law and dispute provisions have not yet been approved for publication.
+            Those details are launch blockers and must replace this interim section following legal
+            review.
+          </p>
+        </section>
+      </article>
+    </div>
+  </section>
+
+  <CtaBand
+    eyebrow="Acquisition criteria"
+    title="See whether the broad profile fits."
+    body="Review the financial guidelines, target sectors and characteristics Hyperboards considers before sharing business details."
+    href="/what-we-acquire"
+    label="View what we acquire"
+  />
+</BaseLayout>
+
+<style>
+  .legal-page {
+    background: var(--color-white);
+  }
+
+  .legal-status {
+    max-width: 64rem;
+    margin-bottom: var(--space-2xl);
+    padding: var(--space-lg);
+    border: 1px solid rgba(199, 168, 91, 0.45);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-paper);
+    background-image: var(--texture-paper);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .legal-status h2 {
+    max-width: 22ch;
+    margin-bottom: var(--space-sm);
+    font-size: var(--step-3);
+  }
+
+  .legal-status > p:last-child {
+    max-width: 53rem;
+  }
+
+  .legal-copy {
+    max-width: 54rem;
+  }
+
+  .legal-copy section {
+    scroll-margin-top: 7rem;
+  }
+
+  .legal-copy section + section {
+    margin-top: var(--space-xl);
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .legal-copy h2 {
+    max-width: 25ch;
+    margin-bottom: var(--space-md);
+    font-size: var(--step-3);
+  }
+
+  .section-number {
+    margin-bottom: var(--space-sm);
+    color: var(--color-forest);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  @media (min-width: 62rem) {
+    .legal-copy {
+      margin-left: clamp(2rem, 11vw, 11rem);
+    }
+  }
+</style>

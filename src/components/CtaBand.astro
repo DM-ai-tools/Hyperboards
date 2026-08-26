@@ -1,0 +1,100 @@
+---
+import ButtonLink from './ButtonLink.astro';
+
+interface Props {
+  eyebrow?: string;
+  title?: string;
+  body?: string;
+  href?: string;
+  label?: string;
+}
+
+const {
+  eyebrow = 'Speak with the buyer',
+  title = 'Considering selling your business?',
+  body = 'Begin with a confidential, no-obligation conversation directly with Hyperboards.',
+  href = '/contact',
+  label = 'Discuss selling your business',
+} = Astro.props;
+---
+
+<section class="cta-band">
+  <div class="cta-band__inner container-wide" data-reveal>
+    <div>
+      <p class="eyebrow">{eyebrow}</p>
+      <h2>{title}</h2>
+    </div>
+    <div class="cta-band__action">
+      <p>{body}</p>
+      <ButtonLink href={href} variant="primary">{label}</ButtonLink>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta-band {
+    padding-block: var(--space-xl);
+    background-color: var(--color-navy);
+    background-image: var(--texture-leather);
+    color: rgba(251, 250, 246, 0.72);
+  }
+
+  .cta-band__inner {
+    position: relative;
+    display: grid;
+    gap: var(--space-lg);
+    align-items: end;
+    padding: clamp(1.6rem, 2.5vw, 3rem);
+    overflow: hidden;
+    border: 1px solid rgba(199, 168, 91, 0.45);
+    border-radius: var(--radius-lg);
+    background: rgba(7, 20, 42, 0.32);
+    box-shadow:
+      inset 0 0 0 1px rgba(251, 250, 246, 0.045),
+      inset 0 -2px 0 rgba(0, 0, 0, 0.28),
+      0 1.5rem 4rem rgba(7, 20, 42, 0.18);
+  }
+
+  .cta-band__inner::before {
+    position: absolute;
+    inset: 0.65rem;
+    border: 0;
+    border-radius: calc(var(--radius-lg) - 0.3rem);
+    background: var(--stitch-frame-panel);
+    box-shadow: var(--stitch-channel-shadow);
+    content: '';
+    opacity: 0.92;
+    pointer-events: none;
+  }
+
+  .cta-band__inner > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .cta-band h2 {
+    max-width: 13ch;
+    margin: 0;
+    color: var(--color-white);
+  }
+
+  .cta-band__action {
+    display: grid;
+    justify-items: start;
+    gap: var(--space-md);
+  }
+
+  .cta-band__action p {
+    max-width: 32rem;
+  }
+
+  .cta-band :global(.eyebrow) {
+    color: var(--color-brass-light);
+  }
+
+  @media (min-width: 54rem) {
+    .cta-band__inner {
+      grid-template-columns: minmax(0, 1.25fr) minmax(20rem, 0.75fr);
+    }
+  }
+</style>

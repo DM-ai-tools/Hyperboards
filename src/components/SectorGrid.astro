@@ -1,0 +1,159 @@
+---
+import { sectors } from '../data/site';
+
+interface Props {
+  compact?: boolean;
+}
+
+const { compact = false } = Astro.props;
+---
+
+<ol class:list={['sector-grid', { 'sector-grid--compact': compact }]}>
+  {sectors.map((sector) => (
+    <li data-reveal>
+      <span class="sector-grid__number">{sector.number}</span>
+      <div>
+        <h3>{sector.name}</h3>
+        <p>{sector.summary}</p>
+      </div>
+      <span class="sector-grid__mark" aria-hidden="true">↗</span>
+    </li>
+  ))}
+</ol>
+
+<style>
+  .sector-grid {
+    display: grid;
+    padding: 0;
+    margin: 0;
+    gap: clamp(0.8rem, 1.5vw, 1.25rem);
+    list-style: none;
+  }
+
+  .sector-grid li {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: var(--space-sm);
+    align-items: start;
+    min-height: 12rem;
+    padding: var(--space-lg) var(--space-md);
+    overflow: hidden;
+    border: 1px solid rgba(11, 27, 54, 0.15);
+    border-radius: var(--radius-md);
+    background-color: rgba(251, 250, 246, 0.78);
+    background-image: var(--texture-paper);
+    box-shadow: var(--paper-tile-shadow);
+    transition: border-color 220ms var(--ease-out), box-shadow 220ms var(--ease-out), transform 220ms var(--ease-out);
+  }
+
+  .sector-grid li::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 2.8rem;
+    height: 2.8rem;
+    border-top: 2px solid rgba(199, 168, 91, 0.76);
+    border-left: 2px solid rgba(199, 168, 91, 0.76);
+    border-radius: var(--radius-md) 0 0;
+    content: '';
+    pointer-events: none;
+  }
+
+  .sector-grid li::after {
+    position: absolute;
+    right: 0.7rem;
+    bottom: 0.65rem;
+    width: 1.8rem;
+    border-top: 1px solid rgba(39, 72, 61, 0.32);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.74);
+    content: '';
+    transform: rotate(-45deg);
+    transform-origin: right center;
+  }
+
+  .sector-grid li:hover {
+    border-color: rgba(199, 168, 91, 0.56);
+    box-shadow: var(--paper-tile-shadow-hover);
+    transform: translateY(-0.22rem);
+  }
+
+  .sector-grid__number {
+    display: grid;
+    width: 2rem;
+    height: 2rem;
+    border: 1px solid rgba(93, 69, 24, 0.48);
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #f0dfa6, var(--color-brass) 58%, #8a682c);
+    color: var(--color-midnight);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    box-shadow: var(--brass-bevel);
+    place-items: center;
+  }
+
+  .sector-grid h3 {
+    margin-bottom: 0.65rem;
+    font-family: var(--font-sans);
+    font-size: var(--step-1);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+  }
+
+  .sector-grid p {
+    max-width: 28rem;
+    color: var(--color-slate);
+    font-size: 0.94rem;
+  }
+
+  .sector-grid__mark {
+    color: var(--color-brass);
+    transition: transform 180ms var(--ease-out);
+  }
+
+  .sector-grid li:hover .sector-grid__mark {
+    transform: translate(0.2rem, -0.2rem);
+  }
+
+  @media (min-width: 48rem) {
+    .sector-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .sector-grid li:nth-child(odd) {
+      padding-right: var(--space-md);
+    }
+
+    .sector-grid li:nth-child(even) {
+      padding-left: var(--space-md);
+    }
+
+    .sector-grid li:last-child {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (min-width: 76rem) {
+    .sector-grid:not(.sector-grid--compact) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .sector-grid:not(.sector-grid--compact) li {
+      padding-inline: var(--space-md);
+    }
+
+    .sector-grid:not(.sector-grid--compact) li:nth-child(3n + 1) {
+      padding-left: var(--space-md);
+    }
+
+    .sector-grid:not(.sector-grid--compact) li:nth-child(3n) {
+      padding-right: 0;
+      padding-right: var(--space-md);
+    }
+
+    .sector-grid:not(.sector-grid--compact) li:last-child {
+      grid-column: auto;
+      padding-right: var(--space-md);
+    }
+  }
+</style>

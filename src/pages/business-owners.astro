@@ -1,0 +1,313 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionIntro from '../components/SectionIntro.astro';
+import ProcessSteps from '../components/ProcessSteps.astro';
+import ButtonLink from '../components/ButtonLink.astro';
+import CtaBand from '../components/CtaBand.astro';
+
+const reasons = [
+  ['01', 'Planning succession', 'You are considering retirement or the next generation is taking a different path.'],
+  ['02', 'Starting a new chapter', 'You are ready to redirect your time, energy or entrepreneurial attention.'],
+  ['03', 'Reducing responsibility', 'You want to reduce personal concentration or day-to-day operating demands.'],
+  ['04', 'Preparing for growth', 'The company has reached a point where its next stage may benefit from a new ownership structure.'],
+];
+
+const transitionPaths = [
+  {
+    title: 'Complete exit',
+    body: 'For owners ready to step away after an agreed handover period.',
+  },
+  {
+    title: 'Phased handover',
+    body: 'For owners who want to transfer relationships and operating knowledge over time.',
+  },
+  {
+    title: 'Continued involvement',
+    body: 'Where appropriate, an ongoing role may be considered when it supports both parties and the business.',
+  },
+];
+---
+
+<BaseLayout
+  title="For Business Owners | Hyperboards"
+  description="Speak directly with Hyperboards as a prospective buyer about selling your established business."
+>
+  <PageHero
+    eyebrow="Sell directly to Hyperboards"
+    title="Explore your options without committing to a sale."
+    intro="You may be ready to sell, planning several years ahead or simply wondering whether the right buyer exists. With Hyperboards, you speak directly with the prospective buyer—not a broker or adviser."
+    marker="02"
+  />
+
+  <section class="first-step section">
+    <div class="first-step__grid container-wide">
+      <div data-reveal>
+        <p class="eyebrow">A private first step</p>
+        <h2>Speak directly with the people who may buy your business.</h2>
+      </div>
+      <div class="first-step__copy" data-reveal>
+        <p class="lede">
+          Hyperboards approaches the conversation as a buyer. We begin with broad fit and what matters to you—not a mandate to represent you or a demand for a complete sale package.
+        </p>
+        <p>
+          An introduction does not oblige either party to continue. Its purpose is to establish whether there is enough alignment for a more detailed discussion.
+        </p>
+        <div class="cluster">
+          <ButtonLink href="/contact">Begin a confidential conversation</ButtonLink>
+          <ButtonLink href="/what-we-acquire" variant="secondary">Review our criteria</ButtonLink>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="reasons section section--paper">
+    <div class="container-wide">
+      <SectionIntro
+        eyebrow="Why owners reach out"
+        title="There is no single reason to consider a transition."
+        intro="You do not need a final decision or a public listing to learn whether Hyperboards may be a suitable buyer."
+        align="split"
+      />
+      <ol class="reasons__grid">
+        {reasons.map(([number, title, body]) => (
+          <li data-reveal>
+            <span>{number}</span>
+            <h3>{title}</h3>
+            <p>{body}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="process-section section section--navy">
+    <div class="container-wide">
+      <SectionIntro
+        eyebrow="What to expect"
+        title="A clear path from introduction to transition."
+        intro="Each transaction is different, but the work should remain understandable at every stage."
+        align="split"
+      />
+      <ProcessSteps />
+    </div>
+  </section>
+
+  <section class="transition section">
+    <div class="container-wide">
+      <SectionIntro
+        eyebrow="Your role after closing"
+        title="The transition should fit the owner and the business."
+        intro="The right handover depends on your objectives, the needs of the company and the structure ultimately agreed by both parties."
+        align="split"
+      />
+
+      <div class="transition__grid">
+        {transitionPaths.map((path, index) => (
+          <article data-reveal>
+            <span>0{index + 1}</span>
+            <h3>{path.title}</h3>
+            <p>{path.body}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="confidentiality section section--compact section--paper">
+    <div class="confidentiality__inner container" data-reveal>
+      <div class="confidentiality__mark" aria-hidden="true">H</div>
+      <div>
+        <p class="eyebrow">A note on confidentiality</p>
+        <h2>Share enough to establish fit—not every sensitive detail.</h2>
+        <p>
+          Please do not send customer lists, detailed employee information, proprietary documents or other highly sensitive material through the initial contact form. Appropriate confidentiality arrangements can be established before detailed diligence.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand
+    eyebrow="Speak with the buyer"
+    title="Considering selling your business?"
+    body="Tell Hyperboards where you are in the process and what a good outcome would look like."
+    label="Discuss selling your business"
+  />
+</BaseLayout>
+
+<style>
+  .first-step__grid {
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  .first-step h2 {
+    max-width: 13ch;
+  }
+
+  .first-step__copy {
+    max-width: 43rem;
+  }
+
+  .first-step__copy .cluster {
+    margin-top: var(--space-lg);
+  }
+
+  .reasons__grid {
+    display: grid;
+    padding: 0;
+    margin: 0;
+    gap: var(--space-sm);
+    list-style: none;
+  }
+
+  .reasons__grid li {
+    position: relative;
+    min-height: 17rem;
+    padding: var(--space-lg) var(--space-md);
+    border: 1px solid rgba(11, 27, 54, 0.14);
+    border-radius: var(--radius-md);
+    background-color: rgba(251, 250, 246, 0.7);
+    background-image: var(--texture-paper);
+    box-shadow: var(--paper-tile-shadow);
+  }
+
+  .reasons__grid span,
+  .transition article > span {
+    display: block;
+    margin-bottom: var(--space-lg);
+    color: var(--color-forest);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+  }
+
+  .reasons__grid h3,
+  .transition h3 {
+    margin-bottom: var(--space-sm);
+    font-family: var(--font-sans);
+    font-size: var(--step-1);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+  }
+
+  .reasons__grid p,
+  .transition article p {
+    color: var(--color-slate);
+    font-size: 0.95rem;
+  }
+
+  .transition__grid {
+    display: grid;
+    gap: var(--space-sm);
+  }
+
+  .transition article {
+    position: relative;
+    min-height: 17rem;
+    padding: var(--space-md);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background-color: var(--color-white);
+    background-image: var(--texture-paper);
+    box-shadow: var(--paper-tile-shadow);
+    transition: transform 220ms var(--ease-out), box-shadow 220ms var(--ease-out);
+  }
+
+  .transition article:hover {
+    box-shadow: var(--paper-tile-shadow-hover);
+    transform: translateY(-0.3rem);
+  }
+
+  .transition article > span {
+    color: var(--color-brass);
+  }
+
+  .confidentiality__inner {
+    display: grid;
+    gap: var(--space-lg);
+    align-items: center;
+    padding: var(--space-lg);
+    border: 1px solid rgba(11, 27, 54, 0.15);
+    border-radius: var(--radius-lg);
+    background: rgba(251, 250, 246, 0.58);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.68), 0 1rem 2.5rem rgba(11, 27, 54, 0.055);
+  }
+
+  .confidentiality__mark {
+    display: grid;
+    width: clamp(7rem, 16vw, 12rem);
+    aspect-ratio: 1;
+    place-items: center;
+    border: 1px solid var(--color-brass);
+    border-radius: 50%;
+    color: var(--color-midnight);
+    font-family: var(--font-display);
+    font-size: var(--step-4);
+  }
+
+  .confidentiality h2 {
+    max-width: 15ch;
+    font-size: var(--step-3);
+  }
+
+  .confidentiality p:last-child {
+    max-width: 49rem;
+  }
+
+  @media (min-width: 42rem) {
+    .reasons__grid,
+    .transition__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .reasons__grid li:nth-child(odd) {
+      padding-right: var(--space-lg);
+    }
+
+    .reasons__grid li:nth-child(even) {
+      padding-left: var(--space-lg);
+    }
+
+    .transition article:last-child {
+      grid-column: 1 / -1;
+    }
+
+    .confidentiality__inner {
+      grid-template-columns: auto 1fr;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .first-step__grid {
+      grid-template-columns: minmax(0, 1fr) minmax(30rem, 0.8fr);
+    }
+
+    .reasons__grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .reasons__grid li,
+    .reasons__grid li:nth-child(odd),
+    .reasons__grid li:nth-child(even) {
+      padding-inline: var(--space-md);
+      border: 1px solid rgba(11, 27, 54, 0.14);
+    }
+
+    .reasons__grid li:first-child {
+      padding-left: var(--space-md);
+    }
+
+    .reasons__grid li:last-child {
+      padding-right: 0;
+      padding-right: var(--space-md);
+    }
+
+    .transition__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .transition article:last-child {
+      grid-column: auto;
+    }
+  }
+</style>

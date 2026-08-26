@@ -1,0 +1,316 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionIntro from '../components/SectionIntro.astro';
+import ButtonLink from '../components/ButtonLink.astro';
+import CtaBand from '../components/CtaBand.astro';
+
+const principles = [
+  {
+    number: '01',
+    title: 'Listen before proposing',
+    body: 'We first seek to understand the company, the owner’s priorities and what a responsible transition requires.',
+  },
+  {
+    number: '02',
+    title: 'Underwrite with discipline',
+    body: 'Interest must be supported by financial, commercial, operational and legal diligence.',
+  },
+  {
+    number: '03',
+    title: 'Structure with context',
+    body: 'Price, timing and transition terms should reflect the circumstances of the specific opportunity.',
+  },
+  {
+    number: '04',
+    title: 'Protect continuity',
+    body: 'Employees, customers, operating knowledge and critical relationships matter throughout a handover.',
+  },
+  {
+    number: '05',
+    title: 'Communicate clearly',
+    body: 'We aim to raise important questions early and keep expectations understandable at every stage.',
+  },
+];
+
+const underwritingLens = [
+  'Quality and sustainability of earnings',
+  'Recurring and repeat revenue',
+  'Customer and supplier concentration',
+  'Management depth and owner dependence',
+  'Working-capital and capital-expenditure requirements',
+  'Competitive position and operational risks',
+  'Practical opportunities for future growth',
+  'The transition required after closing',
+];
+---
+
+<BaseLayout
+  title="Our Acquisition Approach | Hyperboards"
+  description="Learn how Hyperboards acts as a direct buyer, evaluating businesses and working with owners from introduction through transition."
+>
+  <PageHero
+    eyebrow="Our approach"
+    title="Thoughtful decisions, made business by business."
+    intro="As the prospective acquirer, we evaluate each business directly. We consider the quality of the company, the owner’s objectives and the realities of a successful transition."
+    marker="03"
+  />
+
+  <section class="principal section section--paper">
+    <div class="principal__grid container-wide">
+      <div class="principal__statement" data-reveal>
+        <span>Direct acquisition</span>
+        <h2>We are the buyer. We do not represent the seller.</h2>
+      </div>
+      <div class="principal__copy" data-reveal>
+        <p class="lede">
+          Hyperboards evaluates, negotiates and—when both parties agree—acquires the business. We do not provide investment-banking, brokerage or sell-side advisory services, and we do not market your company to third-party buyers.
+        </p>
+        <p>
+          On selected transactions, we may involve aligned capital partners. That does not change our role: Hyperboards remains the direct prospective buyer and the accountable relationship for the owner.
+        </p>
+        <ButtonLink href="/business-owners" variant="secondary">What owners can expect</ButtonLink>
+      </div>
+    </div>
+  </section>
+
+  <section class="principles section">
+    <div class="container-wide">
+      <SectionIntro
+        eyebrow="Operating principles"
+        title="A considered process needs clear standards."
+        intro="These principles guide how we learn, evaluate and communicate. They do not replace the judgment required for each individual business."
+        align="split"
+      />
+      <ol class="principles__list">
+        {principles.map((principle) => (
+          <li data-reveal>
+            <span>{principle.number}</span>
+            <div>
+              <h3>{principle.title}</h3>
+              <p>{principle.body}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="lens section section--navy">
+    <div class="lens__grid container-wide">
+      <div class="lens__intro" data-reveal>
+        <p class="eyebrow">Our underwriting lens</p>
+        <h2>We look beyond the income statement.</h2>
+        <p>
+          Financial performance matters, but so do the relationships, operating systems and risks behind it. Our review is designed to understand both.
+        </p>
+      </div>
+      <ul>
+        {underwritingLens.map((item, index) => (
+          <li data-reveal>
+            <span>{String(index + 1).padStart(2, '0')}</span>
+            {item}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="conditional section">
+    <div class="conditional__inner container" data-reveal>
+      <div aria-hidden="true">∴</div>
+      <div>
+        <p class="eyebrow">Important context</p>
+        <h2>Every acquisition remains conditional.</h2>
+        <p class="lede">
+          Any indication of interest is subject to satisfactory diligence, required approvals, agreed financing where applicable and definitive legal documentation. Published criteria are guidelines, not offers or commitments.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand
+    eyebrow="Speak with the buyer"
+    title="See whether the fit is worth exploring."
+    body="Start with the broad facts of the business and what you are considering."
+    label="Discuss a potential sale"
+  />
+</BaseLayout>
+
+<style>
+  .principal__grid,
+  .lens__grid {
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  .principal__statement {
+    position: relative;
+    min-height: 22rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: var(--space-lg);
+    overflow: hidden;
+    border: 1px solid rgba(199, 168, 91, 0.52);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-midnight);
+    background-image: var(--texture-leather);
+    box-shadow: var(--deboss-shadow), 0 1.5rem 3.5rem rgba(11, 27, 54, 0.16);
+  }
+
+  .principal__statement::after {
+    position: absolute;
+    inset: 0.62rem;
+    border: 0;
+    border-radius: calc(var(--radius-lg) - 0.3rem);
+    background: var(--stitch-frame-panel);
+    box-shadow: var(--stitch-channel-shadow);
+    content: '';
+    opacity: 0.92;
+    pointer-events: none;
+  }
+
+  .principal__statement > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .principal__statement span {
+    color: var(--color-brass-light);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .principal__statement h2 {
+    max-width: 9ch;
+    margin: 0;
+    color: var(--color-white);
+    font-size: var(--step-3);
+  }
+
+  .principal__copy {
+    align-self: center;
+    max-width: 43rem;
+  }
+
+  .principal__copy .button {
+    margin-top: var(--space-md);
+  }
+
+  .principles__list {
+    display: grid;
+    padding: 0;
+    margin: 0;
+    gap: var(--space-sm);
+    list-style: none;
+  }
+
+  .principles__list li {
+    display: grid;
+    grid-template-columns: 3.25rem 1fr;
+    gap: var(--space-md);
+    padding: var(--space-lg);
+    border: 1px solid rgba(11, 27, 54, 0.13);
+    border-radius: var(--radius-md);
+    background-color: rgba(251, 250, 246, 0.66);
+    background-image: var(--texture-paper);
+    box-shadow: var(--paper-tile-shadow);
+  }
+
+  .principles__list li > span,
+  .lens li span {
+    color: var(--color-forest);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+  }
+
+  .principles__list h3 {
+    margin-bottom: 0.7rem;
+    font-family: var(--font-sans);
+    font-size: var(--step-1);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+  }
+
+  .principles__list p {
+    max-width: 41rem;
+    color: var(--color-slate);
+  }
+
+  .lens__intro h2 {
+    max-width: 10ch;
+  }
+
+  .lens__intro > p:last-child {
+    max-width: 38rem;
+  }
+
+  .lens ul {
+    display: grid;
+    padding: 0;
+    border-top: 1px solid var(--color-border-dark);
+    margin: 0;
+    list-style: none;
+  }
+
+  .lens li {
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    gap: var(--space-sm);
+    padding-block: var(--space-sm);
+    border-bottom: 1px solid var(--color-border-dark);
+    color: var(--color-white);
+  }
+
+  .lens li span {
+    color: var(--color-brass);
+  }
+
+  .conditional__inner {
+    display: grid;
+    gap: var(--space-lg);
+    align-items: start;
+  }
+
+  .conditional__inner > div:first-child {
+    color: var(--color-brass);
+    font-family: var(--font-display);
+    font-size: var(--step-5);
+    line-height: 0.7;
+  }
+
+  .conditional h2 {
+    max-width: 14ch;
+    font-size: var(--step-3);
+  }
+
+  @media (min-width: 48rem) {
+    .conditional__inner {
+      grid-template-columns: auto 1fr;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .principal__grid {
+      grid-template-columns: minmax(18rem, 0.65fr) minmax(28rem, 1.35fr);
+    }
+
+    .principles__list li {
+      grid-template-columns: 5rem minmax(0, 1fr);
+      padding-left: 50%;
+    }
+
+    .lens__grid {
+      grid-template-columns: minmax(0, 0.9fr) minmax(30rem, 1.1fr);
+    }
+
+    .lens__intro {
+      position: sticky;
+      top: 8rem;
+      align-self: start;
+    }
+  }
+</style>

@@ -1,0 +1,102 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import InquiryForm from '../components/InquiryForm.astro';
+import PageHero from '../components/PageHero.astro';
+
+const status = Astro.url.searchParams.get('status');
+---
+
+<BaseLayout
+  title="Contact Hyperboards | Confidential Business Conversation"
+  description="Contact Hyperboards privately to discuss a potential business acquisition or ownership transition."
+>
+  <PageHero
+    eyebrow="Contact the buyer directly"
+    title="Start with a confidential introduction."
+    intro="This inquiry goes directly to Hyperboards as the prospective buyer—not to an investment bank, broker or adviser. Tell us a little about the business and what you are considering."
+    marker="C"
+  />
+
+  <section class="section contact-section">
+    <div class="contact-grid container">
+      <aside data-reveal>
+        <p class="eyebrow">Before you submit</p>
+        <h2>Broad facts are enough.</h2>
+        <p>We use the initial information only to understand broad fit and how to respond. Detailed diligence belongs later, under appropriate protections.</p>
+
+        <div class="contact-note">
+          <h3>Please do not attach or include</h3>
+          <ul>
+            <li>Customer lists or contracts</li>
+            <li>Employee records</li>
+            <li>Proprietary documents</li>
+            <li>Passwords or account details</li>
+          </ul>
+        </div>
+
+        <p class="fine-print">Submitting this form does not create a non-disclosure agreement, an offer or an obligation for either party.</p>
+      </aside>
+
+      <InquiryForm status={status} />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .contact-section {
+    background: var(--color-paper);
+  }
+
+  .contact-grid {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: start;
+  }
+
+  .contact-grid aside {
+    position: sticky;
+    top: 2rem;
+  }
+
+  .contact-grid aside h2 {
+    margin-bottom: var(--space-md);
+    font-size: var(--step-3);
+  }
+
+  .contact-grid aside > p:not(.eyebrow) {
+    color: var(--color-slate);
+  }
+
+  .contact-note {
+    margin-block: var(--space-lg);
+    padding: var(--space-md);
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .contact-note h3 {
+    margin-bottom: 0.8rem;
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0;
+  }
+
+  .contact-note ul {
+    padding-left: 1.2rem;
+    color: var(--color-slate);
+    font-size: 0.9rem;
+  }
+
+  @media (min-width: 62rem) {
+    .contact-grid {
+      grid-template-columns: minmax(17rem, 0.65fr) minmax(34rem, 1.35fr);
+    }
+  }
+
+  @media (max-width: 61.99rem) {
+    .contact-grid aside {
+      position: static;
+    }
+  }
+</style>

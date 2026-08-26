@@ -1,0 +1,117 @@
+---
+import { processSteps } from '../data/site';
+
+interface Props {
+  condensed?: boolean;
+}
+
+const { condensed = false } = Astro.props;
+---
+
+<ol class:list={['process', { 'process--condensed': condensed }]}>
+  {processSteps.map((step) => (
+    <li data-reveal>
+      <div class="process__number">{step.number}</div>
+      <div>
+        <h3>{step.title}</h3>
+        <p>{step.summary}</p>
+      </div>
+    </li>
+  ))}
+</ol>
+
+<style>
+  .process {
+    display: grid;
+    padding: 0.65rem;
+    border: 1px solid rgba(199, 168, 91, 0.36);
+    border-radius: var(--radius-lg);
+    margin: 0;
+    gap: 0.55rem;
+    background-color: rgba(7, 20, 42, 0.42);
+    background-image: var(--texture-leather);
+    box-shadow: var(--deboss-shadow), 0 1.8rem 4rem rgba(0, 0, 0, 0.12);
+    list-style: none;
+  }
+
+  .process li {
+    position: relative;
+    display: grid;
+    grid-template-columns: 3.2rem 1fr;
+    gap: var(--space-sm);
+    padding: var(--space-lg) var(--space-md);
+    border: 1px solid rgba(251, 250, 246, 0.12);
+    border-radius: var(--radius-md);
+    background: rgba(19, 42, 74, 0.42);
+    box-shadow: inset 0 1px 0 rgba(251, 250, 246, 0.045);
+  }
+
+  .process li::after {
+    position: absolute;
+    inset: 0.45rem;
+    border: 0;
+    border-radius: calc(var(--radius-md) - 0.2rem);
+    background: var(--stitch-frame-compact);
+    box-shadow: var(--stitch-channel-shadow);
+    content: '';
+    opacity: 0.58;
+    pointer-events: none;
+  }
+
+  .process__number {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    width: 2rem;
+    height: 2rem;
+    border: 1px solid rgba(99, 74, 27, 0.72);
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #f2e2ab, var(--color-brass) 58%, #886629);
+    color: var(--color-midnight);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    box-shadow: var(--brass-bevel);
+    place-items: center;
+  }
+
+  .process li > div:last-child {
+    position: relative;
+    z-index: 1;
+  }
+
+  .process h3 {
+    margin-bottom: 0.75rem;
+    color: var(--color-white);
+    font-family: var(--font-sans);
+    font-size: var(--step-1);
+    font-weight: 680;
+    letter-spacing: -0.025em;
+  }
+
+  .process p {
+    max-width: 34rem;
+    color: rgba(251, 250, 246, 0.68);
+    font-size: 0.95rem;
+  }
+
+  @media (min-width: 62rem) {
+    .process:not(.process--condensed) {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+
+    .process:not(.process--condensed) li {
+      min-height: 21rem;
+      grid-template-columns: 1fr;
+      align-content: space-between;
+      padding: var(--space-md);
+    }
+
+    .process:not(.process--condensed) li:first-child {
+      padding-left: var(--space-md);
+    }
+
+    .process:not(.process--condensed) li:last-child {
+      padding-right: var(--space-md);
+    }
+  }
+</style>

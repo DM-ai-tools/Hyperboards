@@ -1,0 +1,151 @@
+---
+interface Props {
+  href: string;
+  variant?: 'primary' | 'secondary' | 'light' | 'quiet';
+  class?: string;
+}
+
+const { href, variant = 'primary', class: className } = Astro.props;
+---
+
+<a class:list={['button', `button--${variant}`, className]} href={href}>
+  <span><slot /></span>
+  <svg viewBox="0 0 18 18" aria-hidden="true">
+    <path d="M3 9h11M10 5l4 4-4 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" />
+  </svg>
+</a>
+
+<style>
+  .button {
+    position: relative;
+    display: inline-flex;
+    overflow: hidden;
+    min-height: 3.25rem;
+    align-items: center;
+    justify-content: center;
+    gap: 1.1rem;
+    padding: 0.82rem 1.15rem 0.82rem 1.35rem;
+    border: 3px solid transparent;
+    border-radius: var(--radius-sm);
+    isolation: isolate;
+    font-size: 0.94rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-decoration: none;
+    transition:
+      background-color 180ms var(--ease-out),
+      border-color 180ms var(--ease-out),
+      color 180ms var(--ease-out),
+      transform 180ms var(--ease-out);
+  }
+
+  .button::before {
+    position: absolute;
+    z-index: 0;
+    inset: 2px;
+    border: 0;
+    border-radius: calc(var(--radius-sm) - 2px);
+    box-shadow:
+      inset 0 0 0 1px rgba(11, 27, 54, 0.34),
+      0 1px 0 rgba(255, 255, 255, 0.22);
+    content: '';
+    opacity: 0.9;
+    pointer-events: none;
+  }
+
+  .button > span,
+  .button > svg {
+    position: relative;
+    z-index: 2;
+  }
+
+  .button:hover {
+    transform: translateY(-2px);
+  }
+
+  .button:active {
+    transform: translateY(1px);
+  }
+
+  .button svg {
+    width: 1.05rem;
+    flex: 0 0 auto;
+    transition: transform 180ms var(--ease-out);
+  }
+
+  .button:hover svg {
+    transform: translateX(0.2rem);
+  }
+
+  .button--primary {
+    border-color: rgba(199, 168, 91, 0.72);
+    background-color: var(--color-midnight);
+    background-image: var(--texture-leather);
+    color: var(--color-midnight);
+    box-shadow: var(--leather-depth);
+  }
+
+  .button--primary::before {
+    z-index: 1;
+    background: var(--stitch-frame-compact);
+    box-shadow: var(--stitch-channel-shadow);
+  }
+
+  .button--primary::after {
+    position: absolute;
+    z-index: 0;
+    inset: 0.44rem;
+    border: 1px solid rgba(255, 244, 194, 0.52);
+    border-radius: 0.08rem;
+    background:
+      linear-gradient(115deg, rgba(255, 250, 214, 0.34), transparent 38%, rgba(91, 67, 23, 0.16)),
+      var(--color-brass);
+    box-shadow: var(--brass-bevel);
+    content: '';
+    pointer-events: none;
+  }
+
+  .button--primary:hover::after {
+    background: #d3b768;
+  }
+
+  .button--secondary {
+    border-color: var(--color-border);
+    background: rgba(251, 250, 246, 0.52);
+    color: var(--color-midnight);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.42);
+  }
+
+  .button--secondary:hover {
+    border-color: var(--color-midnight);
+  }
+
+  .button--light {
+    border-color: rgba(199, 168, 91, 0.46);
+    background-color: rgba(7, 20, 42, 0.5);
+    background-image: var(--texture-leather);
+    color: var(--color-white);
+    box-shadow: var(--deboss-shadow);
+  }
+
+  .button--light::before {
+    background: var(--stitch-frame-compact);
+    box-shadow: var(--stitch-channel-shadow);
+  }
+
+  .button--light:hover {
+    border-color: var(--color-white);
+    background: rgba(251, 250, 246, 0.07);
+  }
+
+  .button--quiet {
+    min-height: auto;
+    justify-content: flex-start;
+    padding: 0.25rem 0;
+    color: inherit;
+  }
+
+  .button--quiet::before {
+    display: none;
+  }
+</style>

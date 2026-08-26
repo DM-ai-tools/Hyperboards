@@ -1,0 +1,268 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionIntro from '../components/SectionIntro.astro';
+import ButtonLink from '../components/ButtonLink.astro';
+import CtaBand from '../components/CtaBand.astro';
+
+const workingPrinciples = [
+  ['Selective relationships', 'We develop a limited set of relationships around alignment—not broad distribution.'],
+  ['Transaction by transaction', 'Participation, structure and fit are considered separately for each acquisition.'],
+  ['Clear roles', 'Economics, governance and responsibilities must be documented before participation.'],
+  ['Seller confidentiality', 'Information is shared only at the appropriate stage and under suitable protections.'],
+];
+---
+
+<BaseLayout
+  title="Investor Relationships | Hyperboards"
+  description="Hyperboards selectively develops relationships with aligned investors for direct private-business acquisitions."
+  noindex={true}
+>
+  <PageHero
+    eyebrow="Investor relationships"
+    title="Aligned capital for carefully selected acquisitions."
+    intro="Hyperboards is the direct prospective buyer. For select transactions, we may work with investment partners who share a disciplined, relationship-led approach; those relationships do not turn the seller conversation into a brokerage or auction process."
+    marker="IR"
+  />
+
+  <section class="position section">
+    <div class="position__grid container-wide">
+      <div data-reveal>
+        <p class="eyebrow">Intentionally discreet</p>
+        <h2>The seller relationship remains central.</h2>
+      </div>
+      <div data-reveal>
+        <p class="lede">
+          Investor relationships support selected acquisitions; they do not define the public-facing seller experience. Hyperboards remains responsible for maintaining a clear line of communication with the owner.
+        </p>
+        <p>
+          We welcome private introductions from family offices and investors experienced in private-company acquisitions whose objectives align with our mandate.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="working section section--paper">
+    <div class="container-wide">
+      <SectionIntro
+        eyebrow="How we work"
+        title="Alignment before participation."
+        intro="Any relationship must be suitable for the specific acquisition, transparent in its expectations and respectful of seller confidentiality."
+        align="split"
+      />
+      <div class="working__grid">
+        {workingPrinciples.map(([title, body], index) => (
+          <article data-reveal>
+            <span>0{index + 1}</span>
+            <h3>{title}</h3>
+            <p>{body}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="profile section section--navy">
+    <div class="profile__grid container-wide">
+      <div data-reveal>
+        <p class="eyebrow">Acquisition context</p>
+        <h2>A defined operating mandate.</h2>
+        <p>
+          Our acquisition focus centers on established businesses with approximately $750K–$2M in EBITDA and typical deal values of $2M–$6M. These are target guidelines, not an offer, allocation or assurance that a transaction will proceed.
+        </p>
+        <ButtonLink href="/what-we-acquire" variant="light">Review the acquisition profile</ButtonLink>
+      </div>
+      <aside data-reveal aria-label="Investor relationship principles">
+        <p>Relationships remain:</p>
+        <ul>
+          <li>Selective</li>
+          <li>Deal-specific</li>
+          <li>Confidential</li>
+          <li>Subject to documentation</li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+
+  <section class="disclaimer section section--compact">
+    <div class="disclaimer__inner container" data-reveal>
+      <span aria-hidden="true">§</span>
+      <div>
+        <p class="eyebrow">Important notice</p>
+        <h2>This page is not an investment offering.</h2>
+        <p>
+          Nothing on this website constitutes investment advice, an offer to sell or a solicitation of an offer to buy any security. Any potential participation would be subject to eligibility, separate diligence, formal documentation and applicable law.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand
+    eyebrow="Private introductions"
+    title="Interested in beginning a relationship?"
+    body="Introduce your investment background and the types of private-company opportunities you consider."
+    href="/contact"
+    label="Introduce yourself"
+  />
+</BaseLayout>
+
+<style>
+  .position__grid,
+  .profile__grid {
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  .position h2,
+  .profile h2 {
+    max-width: 12ch;
+  }
+
+  .position__grid > div:last-child {
+    max-width: 44rem;
+  }
+
+  .working__grid {
+    display: grid;
+    gap: var(--space-sm);
+  }
+
+  .working article {
+    min-height: 16rem;
+    padding: var(--space-lg) var(--space-md);
+    border: 1px solid rgba(11, 27, 54, 0.14);
+    border-radius: var(--radius-md);
+    background-color: rgba(251, 250, 246, 0.68);
+    background-image: var(--texture-paper);
+    box-shadow: var(--paper-tile-shadow);
+  }
+
+  .working article span {
+    display: block;
+    margin-bottom: var(--space-lg);
+    color: var(--color-brass);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+  }
+
+  .working h3 {
+    margin-bottom: var(--space-sm);
+    font-family: var(--font-sans);
+    font-size: var(--step-1);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+  }
+
+  .working article p {
+    color: var(--color-slate);
+  }
+
+  .profile__grid > div > p:not(.eyebrow) {
+    max-width: 42rem;
+  }
+
+  .profile .button {
+    margin-top: var(--space-md);
+  }
+
+  .profile aside {
+    position: relative;
+    align-self: start;
+    padding: var(--space-lg);
+    border: 1px solid rgba(199, 168, 91, 0.42);
+    border-radius: var(--radius-lg);
+    background-color: rgba(7, 20, 42, 0.34);
+    background-image: var(--texture-leather);
+    box-shadow: var(--deboss-shadow);
+  }
+
+  .profile aside > p {
+    color: rgba(251, 250, 246, 0.55);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    text-transform: uppercase;
+  }
+
+  .profile ul {
+    padding: 0;
+    margin: var(--space-md) 0 0;
+    list-style: none;
+  }
+
+  .profile li {
+    padding-block: var(--space-sm);
+    border-top: 1px solid var(--color-border-dark);
+    color: var(--color-white);
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    letter-spacing: -0.03em;
+  }
+
+  .disclaimer__inner {
+    display: grid;
+    gap: var(--space-lg);
+    align-items: start;
+  }
+
+  .disclaimer__inner > span {
+    color: var(--color-brass);
+    font-family: var(--font-display);
+    font-size: var(--step-5);
+    line-height: 0.8;
+  }
+
+  .disclaimer h2 {
+    max-width: 16ch;
+    font-size: var(--step-3);
+  }
+
+  .disclaimer p:last-child {
+    max-width: 52rem;
+    color: var(--color-slate);
+  }
+
+  @media (min-width: 42rem) {
+    .working__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .working article:nth-child(odd) {
+      padding-right: var(--space-lg);
+    }
+
+    .working article:nth-child(even) {
+      padding-left: var(--space-lg);
+    }
+
+    .disclaimer__inner {
+      grid-template-columns: auto 1fr;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .position__grid,
+    .profile__grid {
+      grid-template-columns: minmax(0, 1fr) minmax(30rem, 0.85fr);
+    }
+
+    .working__grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .working article,
+    .working article:nth-child(odd),
+    .working article:nth-child(even) {
+      padding-inline: var(--space-md);
+      border: 1px solid rgba(11, 27, 54, 0.14);
+    }
+
+    .working article:first-child {
+      padding-left: var(--space-md);
+    }
+
+    .working article:last-child {
+      padding-right: 0;
+      padding-right: var(--space-md);
+    }
+  }
+</style>

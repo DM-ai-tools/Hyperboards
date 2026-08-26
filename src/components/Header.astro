@@ -1,0 +1,261 @@
+---
+import ButtonLink from './ButtonLink.astro';
+import Logo from './Logo.astro';
+import { primaryNav, site } from '../data/site';
+
+interface Props {
+  currentPath: string;
+}
+
+const { currentPath } = Astro.props;
+const isActive = (href: string) => currentPath === href || currentPath.startsWith(`${href}/`);
+---
+
+<header class="site-header" data-header>
+  <div class="site-header__inner container-wide">
+    <div class="site-header__brand">
+      <Logo inverse />
+      <span class="buyer-badge desktop-only">Direct buyer</span>
+    </div>
+
+    <nav class="desktop-nav desktop-only" aria-label="Primary navigation">
+      <ul>
+        {primaryNav.map((item) => (
+          <li>
+            <a class:list={{ active: isActive(item.href) }} href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
+              {item.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="desktop-only">
+      <ButtonLink href={site.primaryCta.href} variant="primary">Discuss a sale</ButtonLink>
+    </div>
+
+    <button class="menu-toggle mobile-only" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open navigation" data-menu-toggle>
+      <span></span><span></span>
+    </button>
+  </div>
+
+  <div class="mobile-menu mobile-only" id="mobile-menu" data-mobile-menu hidden>
+    <nav aria-label="Mobile navigation">
+      <ul>
+        {primaryNav.map((item, index) => (
+          <li>
+            <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined} data-menu-first={index === 0 ? '' : undefined}>
+              <span class="mobile-menu__number">0{index + 1}</span>
+              {item.label}
+            </a>
+          </li>
+        ))}
+        <li>
+          <a href="/contact">
+            <span class="mobile-menu__number">05</span>
+            Contact
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <div class="mobile-menu__footer">
+      <p>Considering selling your business—now or later?</p>
+      <ButtonLink href="/contact" variant="primary">Speak directly with the buyer</ButtonLink>
+    </div>
+  </div>
+</header>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const menu = document.querySelector<HTMLElement>('[data-mobile-menu]');
+
+  if (toggle && menu) {
+    const setMenu = (open: boolean) => {
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
+      menu.hidden = !open;
+      document.body.classList.toggle('menu-open', open);
+      if (open) menu.querySelector<HTMLAnchorElement>('a')?.focus();
+      else toggle.focus();
+    };
+
+    toggle.addEventListener('click', () => setMenu(toggle.getAttribute('aria-expanded') !== 'true'));
+    menu.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => setMenu(false)));
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') setMenu(false);
+    });
+    window.matchMedia('(min-width: 48rem)').addEventListener('change', (event) => {
+      if (event.matches && toggle.getAttribute('aria-expanded') === 'true') setMenu(false);
+    });
+  }
+</script>
+
+<style>
+  .site-header {
+    position: relative;
+    z-index: 100;
+    background-color: var(--color-midnight);
+    background-image: var(--texture-leather);
+    color: var(--color-white);
+    box-shadow: inset 0 -1px 0 rgba(232, 217, 167, 0.16), var(--deboss-shadow);
+  }
+
+  .site-header__inner {
+    display: grid;
+    min-height: 5.5rem;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: var(--space-lg);
+    border-bottom: 1px solid var(--color-border-dark);
+  }
+
+  .site-header__brand {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+  }
+
+  .buyer-badge {
+    padding: 0.35rem 0.5rem;
+    border: 1px solid rgba(199, 168, 91, 0.38);
+    border-radius: 0.15rem;
+    background: linear-gradient(115deg, rgba(199, 168, 91, 0.16), rgba(199, 168, 91, 0.04));
+    color: var(--color-brass-light);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .desktop-nav {
+    justify-self: center;
+  }
+
+  .desktop-nav ul {
+    display: flex;
+    gap: clamp(1rem, 2.2vw, 2.4rem);
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .desktop-nav a {
+    position: relative;
+    display: block;
+    padding-block: 1rem;
+    color: rgba(251, 250, 246, 0.75);
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 180ms var(--ease-out);
+  }
+
+  .desktop-nav a::after {
+    position: absolute;
+    right: 0;
+    bottom: 0.55rem;
+    left: 0;
+    height: 2px;
+    transform: scaleX(0);
+    background: linear-gradient(90deg, transparent, var(--color-brass) 16% 84%, transparent);
+    content: '';
+    transition: transform 180ms var(--ease-out);
+  }
+
+  .desktop-nav a:hover,
+  .desktop-nav a.active {
+    color: var(--color-white);
+  }
+
+  .desktop-nav a:hover::after,
+  .desktop-nav a.active::after {
+    transform: scaleX(1);
+  }
+
+  .menu-toggle {
+    display: grid;
+    width: 3rem;
+    height: 3rem;
+    padding: 0.85rem;
+    border: 1px solid var(--color-border-dark);
+    border-radius: 50%;
+    background: transparent;
+    color: var(--color-white);
+    cursor: pointer;
+    place-content: center;
+    gap: 0.35rem;
+  }
+
+  .menu-toggle span {
+    display: block;
+    width: 1.2rem;
+    height: 1px;
+    background: currentColor;
+    transition: transform 180ms var(--ease-out);
+  }
+
+  .menu-toggle[aria-expanded='true'] span:first-child {
+    transform: translateY(0.175rem) rotate(45deg);
+  }
+
+  .menu-toggle[aria-expanded='true'] span:last-child {
+    transform: translateY(-0.175rem) rotate(-45deg);
+  }
+
+  .mobile-menu {
+    position: fixed;
+    inset: 5.5rem 0 0;
+    overflow-y: auto;
+    padding: var(--space-lg) var(--gutter);
+    background-color: var(--color-midnight);
+    background-image: var(--texture-leather);
+  }
+
+  .mobile-menu[hidden] {
+    display: none;
+  }
+
+  .mobile-menu ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .mobile-menu li {
+    border-bottom: 1px solid var(--color-border-dark);
+  }
+
+  .mobile-menu nav a {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    padding-block: 1rem;
+    color: var(--color-white);
+    font-family: var(--font-display);
+    font-size: clamp(1.7rem, 7vw, 2.5rem);
+    line-height: 1.1;
+    text-decoration: none;
+  }
+
+  .mobile-menu__number {
+    color: var(--color-brass);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+  }
+
+  .mobile-menu__footer {
+    display: grid;
+    gap: 1rem;
+    margin-top: var(--space-lg);
+  }
+
+  .mobile-menu__footer p {
+    color: rgba(251, 250, 246, 0.66);
+  }
+
+  @media (max-width: 47.99rem) {
+    .site-header__inner {
+      grid-template-columns: 1fr auto;
+    }
+  }
+</style>
