@@ -1,0 +1,265 @@
+---
+const groups = [
+  {
+    key: 'contact',
+    number: '01',
+    label: 'Your details',
+    title: 'A direct line to the buyer.',
+    body: 'Share the best way for Hyperboards to reply. These details help us respond to you—not market the opportunity to third parties.',
+    fields: ['fullName', 'email', 'phone'],
+  },
+  {
+    key: 'profile',
+    number: '02',
+    label: 'Business profile',
+    title: 'Broad facts establish fit.',
+    body: 'A company name, location, sector and approximate EBITDA range are enough for an initial view. Estimates are appropriate at this stage.',
+    fields: ['company', 'companyWebsite', 'location', 'industry', 'ebitda', 'role'],
+  },
+  {
+    key: 'message',
+    number: '03',
+    label: 'Your perspective',
+    title: 'Context matters more than polish.',
+    body: 'Briefly describe what you are considering, the timing in mind and any role you may want after a transaction. A short, candid note is useful.',
+    fields: ['message', 'acknowledgement'],
+  },
+] as const;
+---
+
+<aside class="intake-guidance" data-intake-guidance data-active="contact" aria-label="Inquiry guidance">
+  <div class="intake-guidance__heading">
+    <p>Private intake folio</p>
+    <span>HB / 06</span>
+  </div>
+
+  <ol class="intake-guidance__steps">
+    {groups.map((group) => (
+      <li data-guide-step={group.key}>
+        <span>{group.number}</span>
+        <span>{group.label}</span>
+      </li>
+    ))}
+  </ol>
+
+  <div class="intake-guidance__live" aria-live="polite" aria-atomic="true">
+    <p class="intake-guidance__kicker" data-guide-kicker>{groups[0].label}</p>
+    <h2 data-guide-title>{groups[0].title}</h2>
+    <p data-guide-body>{groups[0].body}</p>
+  </div>
+
+  <div class="intake-guidance__warning">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 3.4 20.1 7v5.7c0 4.2-2.8 7.2-8.1 8.5-5.3-1.3-8.1-4.3-8.1-8.5V7L12 3.4Z" fill="none" stroke="currentColor" stroke-width="1.4" />
+      <path d="M8.7 12.2 11 14.4l4.7-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.4" />
+    </svg>
+    <p><strong>Keep the first note broad.</strong> Do not include customer lists, employee records, contracts, passwords or proprietary documents.</p>
+  </div>
+
+  <script is:inline type="application/json" data-guidance-groups set:html={JSON.stringify(groups)}></script>
+</aside>
+
+<script>
+  type GuidanceGroup = {
+    key: string;
+    label: string;
+    title: string;
+    body: string;
+    fields: string[];
+  };
+
+  document.querySelectorAll<HTMLElement>('[data-intake-guidance]').forEach((guidance) => {
+    const workspace = guidance.closest<HTMLElement>('[data-intake-workspace]');
+    const source = guidance.querySelector<HTMLScriptElement>('[data-guidance-groups]');
+    if (!workspace || !source) return;
+
+    const groups = JSON.parse(source.textContent ?? '[]') as GuidanceGroup[];
+    const kicker = guidance.querySelector<HTMLElement>('[data-guide-kicker]');
+    const title = guidance.querySelector<HTMLElement>('[data-guide-title]');
+    const body = guidance.querySelector<HTMLElement>('[data-guide-body]');
+
+    const activate = (group: GuidanceGroup) => {
+      guidance.dataset.active = group.key;
+      if (kicker) kicker.textContent = group.label;
+      if (title) title.textContent = group.title;
+      if (body) body.textContent = group.body;
+      guidance.querySelectorAll<HTMLElement>('[data-guide-step]').forEach((step) => {
+        step.toggleAttribute('data-current', step.dataset.guideStep === group.key);
+      });
+    };
+
+    workspace.addEventListener('focusin', (event) => {
+      const field = (event.target as HTMLElement).closest<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>('input, select, textarea');
+      if (!field?.name) return;
+      const group = groups.find((candidate) => candidate.fields.includes(field.name));
+      if (group) activate(group);
+    });
+
+    if (groups[0]) activate(groups[0]);
+  });
+</script>
+
+<style>
+  .intake-guidance {
+    position: sticky;
+    top: 1.25rem;
+    min-width: 0;
+    padding: clamp(1.5rem, 3vw, 2.8rem);
+    border: 1px solid rgba(199, 168, 91, 0.48);
+    border-radius: var(--radius-lg);
+    background-color: #0a1b38;
+    background-image: var(--texture-leather);
+    background-blend-mode: screen, normal, soft-light;
+    box-shadow: var(--leather-depth);
+    color: rgba(251, 250, 246, 0.7);
+    isolation: isolate;
+  }
+
+  .intake-guidance::after {
+    position: absolute;
+    z-index: -1;
+    inset: 0.62rem;
+    border-radius: calc(var(--radius-lg) - 0.2rem);
+    background: var(--stitch-frame-panel);
+    box-shadow: var(--stitch-channel-shadow);
+    content: '';
+    pointer-events: none;
+  }
+
+  .intake-guidance__heading {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    color: var(--color-brass-light);
+    font-family: var(--font-mono);
+    font-size: 0.63rem;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+  }
+
+  .intake-guidance__heading p {
+    margin: 0;
+  }
+
+  .intake-guidance__steps {
+    display: grid;
+    gap: 0;
+    margin: clamp(2rem, 4vw, 3.5rem) 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .intake-guidance__steps li {
+    display: grid;
+    grid-template-columns: 2rem 1fr;
+    gap: 0.7rem;
+    align-items: center;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid rgba(251, 250, 246, 0.1);
+    color: rgba(251, 250, 246, 0.46);
+    transition: color 220ms var(--ease-out), transform 220ms var(--ease-out);
+  }
+
+  .intake-guidance__steps li[data-current] {
+    color: var(--color-white);
+    transform: translateX(0.35rem);
+  }
+
+  .intake-guidance__steps li > span:first-child {
+    color: var(--color-brass-light);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+  }
+
+  .intake-guidance__live {
+    min-height: 12rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(199, 168, 91, 0.36);
+  }
+
+  .intake-guidance__kicker {
+    margin-bottom: 0.65rem;
+    color: var(--color-brass-light);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .intake-guidance__live h2 {
+    max-width: 13ch;
+    color: var(--color-white);
+    font-size: clamp(2rem, 4vw, 3.3rem);
+    line-height: 0.98;
+  }
+
+  .intake-guidance__live > p:last-child {
+    margin-top: 1.1rem;
+    color: rgba(251, 250, 246, 0.65);
+    line-height: 1.65;
+  }
+
+  .intake-guidance__warning {
+    display: grid;
+    grid-template-columns: 1.6rem 1fr;
+    gap: 0.8rem;
+    margin-top: 2rem;
+    padding: 1rem;
+    border: 1px solid rgba(199, 168, 91, 0.28);
+    background: rgba(199, 168, 91, 0.075);
+    font-size: 0.77rem;
+    line-height: 1.55;
+  }
+
+  .intake-guidance__warning svg {
+    width: 1.5rem;
+    color: var(--color-brass-light);
+  }
+
+  .intake-guidance__warning p {
+    margin: 0;
+  }
+
+  .intake-guidance__warning strong {
+    color: var(--color-white);
+  }
+
+  @media (max-width: 68rem) {
+    .intake-guidance {
+      position: relative;
+      top: auto;
+    }
+
+    .intake-guidance__steps {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .intake-guidance__steps li {
+      grid-template-columns: auto 1fr;
+      border-right: 1px solid rgba(251, 250, 246, 0.1);
+      border-bottom: 0;
+      padding: 0.7rem;
+    }
+
+    .intake-guidance__live {
+      min-height: 9rem;
+    }
+  }
+
+  @media (max-width: 36rem) {
+    .intake-guidance__steps {
+      display: none;
+    }
+
+    .intake-guidance__live {
+      min-height: 0;
+      margin-top: 2rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .intake-guidance__steps li {
+      transition: none;
+    }
+  }
+</style>

@@ -1,7 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import InquiryForm from '../components/InquiryForm.astro';
-import PageHero from '../components/PageHero.astro';
+import FolioLabel from '../components/folios/FolioLabel.astro';
+import IntakeGuidance from '../components/folios/IntakeGuidance.astro';
 
 const status = Astro.url.searchParams.get('status');
 ---
@@ -10,93 +11,202 @@ const status = Astro.url.searchParams.get('status');
   title="Contact Hyperboards | Confidential Business Conversation"
   description="Contact Hyperboards privately to discuss a potential business acquisition or ownership transition."
 >
-  <PageHero
-    eyebrow="Contact the buyer directly"
-    title="Start with a confidential introduction."
-    intro="This inquiry goes directly to Hyperboards as the prospective buyer—not to an investment bank, broker or adviser. Tell us a little about the business and what you are considering."
-    marker="C"
-  />
-
-  <section class="section contact-section">
-    <div class="contact-grid container">
-      <aside data-reveal>
-        <p class="eyebrow">Before you submit</p>
-        <h2>Broad facts are enough.</h2>
-        <p>We use the initial information only to understand broad fit and how to respond. Detailed diligence belongs later, under appropriate protections.</p>
-
-        <div class="contact-note">
-          <h3>Please do not attach or include</h3>
-          <ul>
-            <li>Customer lists or contracts</li>
-            <li>Employee records</li>
-            <li>Proprietary documents</li>
-            <li>Passwords or account details</li>
-          </ul>
+  <main class="intake" data-intake-workspace>
+    <section class="intake__intro">
+      <div class="intake__intro-grid container-wide">
+        <div>
+          <FolioLabel index="06" label="Confidential intake" note="Owner-to-buyer correspondence" />
+          <h1>Introduce the business—privately and directly.</h1>
         </div>
+        <div class="intake__promise">
+          <span aria-hidden="true">H</span>
+          <p>
+            This inquiry goes to Hyperboards as the prospective buyer—not to an investment bank, broker or adviser.
+          </p>
+        </div>
+      </div>
+    </section>
 
-        <p class="fine-print">Submitting this form does not create a non-disclosure agreement, an offer or an obligation for either party.</p>
-      </aside>
+    <section class="intake__desk">
+      <div class="intake__desk-grid container-wide">
+        <IntakeGuidance />
 
-      <InquiryForm status={status} />
-    </div>
-  </section>
+        <div class="intake__form">
+          <header>
+            <p class="eyebrow">Acquisition inquiry</p>
+            <h2>Broad facts are enough to begin.</h2>
+            <p>
+              Tell us about the company and what you are considering. Detailed diligence belongs later, under appropriate protections.
+            </p>
+          </header>
+          <InquiryForm status={status} />
+          <footer>
+            <span>Confidential introduction</span>
+            <p>Submitting this form does not create an NDA, an offer or an obligation for either party.</p>
+          </footer>
+        </div>
+      </div>
+    </section>
+  </main>
 </BaseLayout>
 
 <style>
-  .contact-section {
-    background: var(--color-paper);
+  .intake {
+    overflow: clip;
+    background-color: var(--color-paper);
+    background-image: var(--texture-paper);
   }
 
-  .contact-grid {
+  .intake__intro {
+    position: relative;
+    padding: clamp(5rem, 10vw, 9rem) 0 clamp(4rem, 8vw, 7rem);
+    overflow: hidden;
+    background-color: var(--color-midnight);
+    background-image: var(--texture-leather);
+    background-blend-mode: screen, normal, soft-light;
+    color: rgba(251, 250, 246, 0.72);
+  }
+
+  .intake__intro::after {
+    position: absolute;
+    right: -12rem;
+    bottom: -17rem;
+    width: 42rem;
+    aspect-ratio: 1;
+    border: 1px solid rgba(199, 168, 91, 0.14);
+    border-radius: 50%;
+    box-shadow:
+      0 0 0 3.5rem rgba(199, 168, 91, 0.025),
+      0 0 0 8rem rgba(199, 168, 91, 0.018);
+    content: '';
+    pointer-events: none;
+  }
+
+  .intake__intro-grid {
+    position: relative;
+    z-index: 1;
     display: grid;
-    gap: var(--space-xl);
+    gap: clamp(2.5rem, 7vw, 8rem);
+    align-items: end;
+  }
+
+  .intake h1 {
+    max-width: 13ch;
+    margin-top: clamp(2rem, 4vw, 3.8rem);
+    color: var(--color-white);
+    font-size: clamp(3.25rem, 7.8vw, 8.2rem);
+    letter-spacing: -0.058em;
+    line-height: 0.9;
+    text-wrap: balance;
+  }
+
+  .intake__promise {
+    display: grid;
+    grid-template-columns: 4rem 1fr;
+    gap: 1.2rem;
+    align-items: start;
+    padding-top: 1.4rem;
+    border-top: 1px solid rgba(199, 168, 91, 0.42);
+  }
+
+  .intake__promise span {
+    display: grid;
+    aspect-ratio: 1;
+    place-items: center;
+    border: 1px solid rgba(199, 168, 91, 0.58);
+    border-radius: 50%;
+    color: var(--color-brass-light);
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+  }
+
+  .intake__promise p {
+    margin: 0;
+    color: rgba(251, 250, 246, 0.7);
+    line-height: 1.65;
+  }
+
+  .intake__desk {
+    padding: clamp(4rem, 8vw, 8.5rem) 0;
+  }
+
+  .intake__desk-grid {
+    display: grid;
+    gap: clamp(2rem, 4vw, 4rem);
     align-items: start;
   }
 
-  .contact-grid aside {
-    position: sticky;
-    top: 2rem;
+  .intake__form {
+    min-width: 0;
   }
 
-  .contact-grid aside h2 {
-    margin-bottom: var(--space-md);
-    font-size: var(--step-3);
+  .intake__form > header {
+    display: grid;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1.7rem;
+    border-bottom: 1px solid rgba(11, 27, 54, 0.16);
   }
 
-  .contact-grid aside > p:not(.eyebrow) {
+  .intake__form > header h2 {
+    max-width: 14ch;
+    font-size: clamp(2.5rem, 5.5vw, 5.2rem);
+    line-height: 0.94;
+  }
+
+  .intake__form > header > p:last-child {
+    max-width: 46rem;
     color: var(--color-slate);
   }
 
-  .contact-note {
-    margin-block: var(--space-lg);
-    padding: var(--space-md);
-    border-top: 1px solid var(--color-border);
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  .contact-note h3 {
-    margin-bottom: 0.8rem;
-    font-family: var(--font-sans);
-    font-size: 0.95rem;
-    font-weight: 700;
-    letter-spacing: 0;
-  }
-
-  .contact-note ul {
-    padding-left: 1.2rem;
+  .intake__form > footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+    margin-top: 1.5rem;
+    padding: 1rem 0;
+    border-top: 1px solid rgba(11, 27, 54, 0.14);
     color: var(--color-slate);
-    font-size: 0.9rem;
+    font-size: 0.72rem;
   }
 
-  @media (min-width: 62rem) {
-    .contact-grid {
-      grid-template-columns: minmax(17rem, 0.65fr) minmax(34rem, 1.35fr);
+  .intake__form > footer span {
+    color: var(--color-forest);
+    font-family: var(--font-mono);
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+
+  .intake__form > footer p {
+    max-width: 33rem;
+    margin: 0;
+  }
+
+  @media (min-width: 68.01rem) {
+    .intake__intro-grid {
+      grid-template-columns: minmax(0, 1.45fr) minmax(18rem, 0.55fr);
+    }
+
+    .intake__desk-grid {
+      grid-template-columns: minmax(19rem, 0.68fr) minmax(0, 1.32fr);
     }
   }
 
-  @media (max-width: 61.99rem) {
-    .contact-grid aside {
-      position: static;
+  @media (max-width: 40rem) {
+    .intake__intro {
+      padding-top: 4rem;
+    }
+
+    .intake h1 {
+      font-size: clamp(3rem, 15vw, 4.7rem);
+    }
+
+    .intake__promise {
+      grid-template-columns: 3rem 1fr;
+    }
+
+    .intake__form > footer {
+      flex-direction: column;
     }
   }
 </style>

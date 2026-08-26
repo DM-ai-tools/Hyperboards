@@ -120,3 +120,36 @@ test('About distinguishes the direct buyer through a neutral Role Comparator', a
   assert.match(comparator, /label: 'Adviser'/);
   assert.match(comparator, /aria-selected={index === 0/);
 });
+
+test('Contact preserves the inquiry contract inside a guided Confidential Intake', async () => {
+  const [page, guidance, form] = await Promise.all([
+    readFile('src/pages/contact.astro', 'utf8'),
+    readFile('src/components/folios/IntakeGuidance.astro', 'utf8'),
+    readFile('src/components/InquiryForm.astro', 'utf8'),
+  ]);
+
+  assert.doesNotMatch(page, /PageHero/);
+  assert.match(page, /IntakeGuidance/);
+  assert.match(page, /InquiryForm/);
+  assert.match(page, /prospective buyer/);
+  for (const field of [
+    'fullName',
+    'email',
+    'phone',
+    'company',
+    'companyWebsite',
+    'location',
+    'industry',
+    'ebitda',
+    'role',
+    'message',
+    'companyFax',
+    'acknowledgement',
+  ]) {
+    assert.match(form, new RegExp(`name=["']${field}["']`), field);
+  }
+  assert.match(guidance, /data-intake-guidance/);
+  assert.match(guidance, /aria-live="polite"/);
+  assert.match(guidance, /Do not include customer lists/i);
+  assert.match(guidance, /focusin/);
+});
