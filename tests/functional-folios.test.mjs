@@ -24,3 +24,24 @@ test('homepage-owned source remains byte-for-byte frozen during the folio redesi
     assert.equal(digest, expected, file);
   }
 });
+
+test('shared folio foundation provides a semantic cover and keyboard-safe controller', async () => {
+  const [shell, label, controls] = await Promise.all([
+    readFile('src/components/folios/FolioShell.astro', 'utf8'),
+    readFile('src/components/folios/FolioLabel.astro', 'utf8'),
+    readFile('src/scripts/folio-controls.ts', 'utf8'),
+  ]);
+
+  assert.match(shell, /data-folio-cover/);
+  assert.equal((shell.match(/<h1/g) ?? []).length, 1);
+  assert.match(shell, /<slot name="visual"/);
+  assert.match(shell, /<slot name="actions"/);
+  assert.match(shell, /prefers-reduced-motion/);
+  assert.match(label, /folio-label/);
+  assert.match(controls, /ArrowLeft/);
+  assert.match(controls, /ArrowRight/);
+  assert.match(controls, /Home/);
+  assert.match(controls, /End/);
+  assert.match(controls, /aria-selected/);
+  assert.match(controls, /panel\.hidden/);
+});
