@@ -1,106 +1,87 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import PageHero from '../components/PageHero.astro';
-import SectionIntro from '../components/SectionIntro.astro';
-import SectorGrid from '../components/SectorGrid.astro';
 import ButtonLink from '../components/ButtonLink.astro';
 import CtaBand from '../components/CtaBand.astro';
-import { criteria, exclusions } from '../data/site';
+import FolioShell from '../components/folios/FolioShell.astro';
+import MandateExplorer from '../components/folios/MandateExplorer.astro';
+import { exclusions } from '../data/site';
 
 const preferredCharacteristics = [
-  'Recurring, contracted or repeat customer demand',
-  'Defensible customer and supplier relationships',
-  'Consistent, understandable earnings',
-  'Capable employees and transferable operating processes',
-  'Sensible working-capital and capital-expenditure needs',
-  'Practical opportunities for continued growth',
-];
+  ['Repeat demand', 'Recurring, contracted or repeat customer demand.'],
+  ['Defensible ties', 'Durable customer and supplier relationships.'],
+  ['Clear earnings', 'Consistent, understandable financial performance.'],
+  ['Transferable operations', 'Capable employees and operating processes that can transition.'],
+  ['Sensible capital needs', 'Practical working-capital and capital-expenditure requirements.'],
+  ['Room to continue', 'Credible opportunities for measured future growth.'],
+] as const;
 ---
 
 <BaseLayout
   title="What We Acquire | Hyperboards"
   description="See the financial profile, characteristics and industries of businesses Hyperboards may buy directly from their owners."
 >
-  <PageHero
-    eyebrow="What we buy"
-    title="Established businesses with durable foundations."
-    intro="These are the companies Hyperboards considers buying directly: profitable businesses with repeat demand, transferable operations and meaningful potential for continued growth."
-    marker="01"
-  />
-
-  <section class="profile section section--paper">
-    <div class="container-wide">
-      <SectionIntro
-        eyebrow="The broad fit"
-        title="A focused mandate, considered business by business."
-        intro="The figures below define where we concentrate our attention as a buyer. They are guidelines—not an automatic decision or a commitment to transact."
-        align="split"
-      />
-
-      <dl class="profile__grid" aria-label="Acquisition profile">
-        {criteria.map((item) => (
-          <div data-reveal>
-            <dt>{item.label}</dt>
-            <dd>{item.value}</dd>
-          </div>
-        ))}
-      </dl>
-
-      <p class="profile__note fine-print">
-        Typical deal value depends on earnings quality, transaction structure and the valuation supported by the specific business.
-      </p>
+  <FolioShell
+    eyebrow="What we acquire"
+    index="01"
+    title="The acquisition mandate."
+    intro="Hyperboards buys established, profitable companies directly from their owners. The figures are guidelines—not an automatic decision or a commitment to transact."
+  >
+    <div slot="visual">
+      <MandateExplorer />
     </div>
-  </section>
+    <div slot="actions">
+      <ButtonLink href="/contact">Discuss a potential sale</ButtonLink>
+      <ButtonLink href="#quality-docket" variant="light">Review what matters</ButtonLink>
+    </div>
+  </FolioShell>
 
-  <section class="characteristics section">
-    <div class="characteristics__grid container-wide">
-      <div class="characteristics__intro" data-reveal>
-        <p class="eyebrow">What matters beyond size</p>
+  <section class="quality-docket section" id="quality-docket">
+    <div class="quality-docket__layout container-wide">
+      <header class="quality-docket__header" data-reveal>
+        <p class="eyebrow">Beyond the ranges</p>
         <h2>Quality we can understand. Strength we can preserve.</h2>
-        <p class="lede">
+        <p>
           Financial fit starts the conversation. The durability of the company—and how well it can transition—determines whether it should continue.
         </p>
         <ButtonLink href="/our-approach" variant="secondary">How we evaluate a business</ButtonLink>
-      </div>
+      </header>
 
-      <ol class="characteristics__list">
-        {preferredCharacteristics.map((item, index) => (
+      <ol class="quality-docket__entries" aria-label="Preferred business characteristics">
+        {preferredCharacteristics.map(([title, body], index) => (
           <li data-reveal>
             <span>{String(index + 1).padStart(2, '0')}</span>
-            <p>{item}</p>
+            <div>
+              <h3>{title}</h3>
+              <p>{body}</p>
+            </div>
           </li>
         ))}
       </ol>
     </div>
   </section>
 
-  <section class="sectors section section--paper">
-    <div class="container-wide">
-      <SectionIntro
-        eyebrow="Target industries"
-        title="Nine sectors chosen for durable demand."
-        intro="We are interested in sectors where repeat use, established relationships or transferable operating capabilities can support continued performance."
-        align="split"
-      />
-      <SectorGrid />
-      <p class="sectors__qualification fine-print" data-reveal>
-        Sector inclusion does not imply allocation. Every opportunity must independently satisfy our acquisition and underwriting criteria.
-      </p>
-    </div>
-  </section>
-
-  <section class="exclusions section section--navy">
-    <div class="exclusions__grid container-wide">
-      <div data-reveal>
+  <section class="mandate-boundaries section section--navy">
+    <div class="mandate-boundaries__layout container-wide">
+      <div class="mandate-boundaries__copy" data-reveal>
         <p class="eyebrow">Current boundaries</p>
-        <h2>Outside our present mandate.</h2>
+        <h2>A focused mandate allows a candid answer.</h2>
         <p>
-          A clear mandate helps us respond candidly and focus our diligence where we have genuine acquisition interest.
+          We concentrate our diligence where we have genuine acquisition interest. Sector inclusion never replaces business-specific underwriting.
         </p>
+        <div class="mandate-boundaries__stamp" aria-label="Mandate qualification">
+          <span>Every opportunity</span>
+          <strong>Independently reviewed</strong>
+        </div>
       </div>
-      <ul aria-label="Currently excluded industries">
-        {exclusions.map((item) => <li data-reveal>{item}</li>)}
-      </ul>
+
+      <div class="mandate-boundaries__exclusions" data-reveal>
+        <p>Outside our present mandate</p>
+        <ul aria-label="Currently excluded industries">
+          {exclusions.map((item, index) => (
+            <li><span>{String(index + 1).padStart(2, '0')}</span>{item}</li>
+          ))}
+        </ul>
+      </div>
     </div>
   </section>
 
@@ -113,183 +94,180 @@ const preferredCharacteristics = [
 </BaseLayout>
 
 <style>
-  .profile__grid {
-    display: grid;
-    padding: 0;
-    margin: 0;
-    gap: var(--space-sm);
-  }
-
-  .profile__grid > div {
-    display: flex;
-    min-height: 9.5rem;
-    flex-direction: column-reverse;
-    justify-content: space-between;
-    padding: var(--space-md);
-    border: 1px solid rgba(11, 27, 54, 0.14);
-    border-radius: var(--radius-md);
-    background-color: rgba(251, 250, 246, 0.68);
+  .quality-docket {
+    background-color: var(--color-paper);
     background-image: var(--texture-paper);
-    box-shadow: var(--paper-tile-shadow);
   }
 
-  .profile__grid > div:last-child {
-    border-bottom: 1px solid rgba(11, 27, 54, 0.14);
-  }
-
-  .profile__grid dt {
-    color: var(--color-slate);
-    font-size: var(--step--1);
-  }
-
-  .profile__grid dd {
-    margin: 0;
-    color: var(--color-midnight);
-    font-family: var(--font-display);
-    font-size: var(--step-3);
-    letter-spacing: -0.04em;
-    line-height: 1;
-  }
-
-  .profile__note {
-    max-width: 48rem;
-    margin-top: var(--space-md);
-  }
-
-  .characteristics__grid {
+  .quality-docket__layout,
+  .mandate-boundaries__layout {
     display: grid;
     gap: var(--space-xl);
   }
 
-  .characteristics__intro h2 {
+  .quality-docket__header {
+    align-self: start;
+  }
+
+  .quality-docket__header h2 {
     max-width: 12ch;
+    margin-bottom: var(--space-md);
   }
 
-  .characteristics__intro .button {
+  .quality-docket__header > p:not(.eyebrow) {
+    max-width: 37rem;
+    color: var(--color-slate);
+  }
+
+  .quality-docket__header .button {
     margin-top: var(--space-md);
   }
 
-  .characteristics__list {
+  .quality-docket__entries {
     padding: 0;
-    border-top: 1px solid var(--color-border);
+    border-block: 1px solid var(--color-border);
     margin: 0;
     list-style: none;
   }
 
-  .characteristics__list li {
+  .quality-docket__entries li {
     display: grid;
-    grid-template-columns: 3rem 1fr;
-    gap: var(--space-sm);
-    align-items: baseline;
-    padding-block: var(--space-md);
+    grid-template-columns: 3.5rem minmax(0, 1fr);
+    gap: var(--space-md);
+    align-items: start;
+    padding: var(--space-md) 0;
     border-bottom: 1px solid var(--color-border);
+    transition: transform 220ms var(--ease-out);
   }
 
-  .characteristics__list span {
-    color: var(--color-forest);
+  .quality-docket__entries li:last-child {
+    border-bottom: 0;
+  }
+
+  .quality-docket__entries li:hover {
+    transform: translate3d(0.35rem, 0, 0);
+  }
+
+  .quality-docket__entries span,
+  .mandate-boundaries__exclusions span {
+    color: var(--color-brass-dark);
     font-family: var(--font-mono);
-    font-size: 0.7rem;
+    font-size: 0.63rem;
   }
 
-  .characteristics__list p {
-    color: var(--color-midnight);
+  .quality-docket__entries h3 {
+    margin-bottom: 0.35rem;
+    font-family: var(--font-sans);
     font-size: var(--step-1);
-    font-weight: 650;
+    font-weight: 720;
     letter-spacing: -0.025em;
-    line-height: 1.35;
   }
 
-  .sectors__qualification {
-    max-width: 50rem;
-    padding-left: var(--space-md);
-    border-left: 2px solid var(--color-brass);
+  .quality-docket__entries p {
+    color: var(--color-slate);
+  }
+
+  .mandate-boundaries {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .mandate-boundaries::before {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(rgba(251, 250, 246, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(251, 250, 246, 0.035) 1px, transparent 1px);
+    background-size: 5rem 5rem;
+    content: '';
+    mask-image: linear-gradient(90deg, transparent, #000);
+    pointer-events: none;
+  }
+
+  .mandate-boundaries__layout {
+    position: relative;
+  }
+
+  .mandate-boundaries h2 {
+    max-width: 11ch;
+  }
+
+  .mandate-boundaries__copy > p:last-of-type {
+    max-width: 38rem;
+  }
+
+  .mandate-boundaries__stamp {
+    display: inline-grid;
+    gap: 0.25rem;
     margin-top: var(--space-lg);
+    padding: 1rem 1.2rem;
+    border: 1px solid rgba(199, 168, 91, 0.6);
+    color: var(--color-brass-light);
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    transform: rotate(-1.5deg);
   }
 
-  .exclusions__grid {
-    display: grid;
-    gap: var(--space-xl);
+  .mandate-boundaries__stamp strong {
+    color: var(--color-white);
+    font-weight: 500;
   }
 
-  .exclusions h2 {
-    max-width: 10ch;
+  .mandate-boundaries__exclusions {
+    padding: clamp(1.25rem, 4vw, 2.5rem);
+    border: 1px solid rgba(199, 168, 91, 0.42);
+    border-radius: var(--radius-lg);
+    background: rgba(7, 20, 42, 0.48);
+    box-shadow: var(--deboss-shadow);
   }
 
-  .exclusions__grid > div > p:last-child {
-    max-width: 35rem;
+  .mandate-boundaries__exclusions > p {
+    margin-bottom: var(--space-md);
+    color: rgba(251, 250, 246, 0.55);
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
   }
 
-  .exclusions ul {
+  .mandate-boundaries__exclusions ul {
     display: grid;
     padding: 0;
-    border-top: 1px solid var(--color-border-dark);
     margin: 0;
     list-style: none;
   }
 
-  .exclusions li {
-    padding: 0.9rem 0;
-    border-bottom: 1px solid var(--color-border-dark);
+  .mandate-boundaries__exclusions li {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr;
+    gap: var(--space-sm);
+    padding-block: 0.72rem;
+    border-top: 1px solid var(--color-border-dark);
     color: var(--color-white);
   }
 
-  @media (min-width: 42rem) {
-    .profile__grid {
+  @media (min-width: 64rem) {
+    .quality-docket__layout,
+    .mandate-boundaries__layout {
+      grid-template-columns: minmax(0, 0.85fr) minmax(30rem, 1.15fr);
+    }
+
+    .quality-docket__header {
+      position: sticky;
+      top: 8rem;
+    }
+
+    .mandate-boundaries__exclusions ul {
       grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .profile__grid > div {
-      padding-inline: var(--space-md);
-    }
-
-    .profile__grid > div:nth-child(odd) {
-      padding-left: var(--space-md);
-    }
-
-    .profile__grid > div:nth-child(even) {
-      padding-right: var(--space-md);
-    }
-
-    .profile__grid > div:nth-last-child(-n + 2) {
-      border-bottom: 1px solid rgba(11, 27, 54, 0.14);
-    }
-
-    .exclusions ul {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      column-gap: var(--space-lg);
+      column-gap: var(--space-md);
     }
   }
 
-  @media (min-width: 64rem) {
-    .profile__grid {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-
-    .profile__grid > div,
-    .profile__grid > div:nth-child(odd),
-    .profile__grid > div:nth-child(even) {
-      padding-inline: var(--space-md);
-      border: 1px solid rgba(11, 27, 54, 0.14);
-    }
-
-    .profile__grid > div:first-child {
-      padding-left: var(--space-md);
-    }
-
-    .profile__grid > div:last-child {
-      padding-right: var(--space-md);
-      border-right: 1px solid rgba(11, 27, 54, 0.14);
-    }
-
-    .characteristics__grid,
-    .exclusions__grid {
-      grid-template-columns: minmax(0, 0.9fr) minmax(30rem, 1.1fr);
-    }
-
-    .characteristics__intro {
-      position: sticky;
-      top: 8rem;
-      align-self: start;
+  @media (prefers-reduced-motion: reduce) {
+    .quality-docket__entries li {
+      transition: none;
     }
   }
 </style>

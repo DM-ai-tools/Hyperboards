@@ -1,0 +1,423 @@
+---
+import { criteria, sectors } from '../../data/site';
+
+const mandateCriteria = [
+  {
+    key: 'ebitda',
+    label: 'EBITDA',
+    value: criteria[0].value,
+    body: 'We concentrate on established companies producing approximately $750K–$2M in EBITDA. Earnings quality and durability still matter more than a single reported figure.',
+    rail: 'earnings',
+  },
+  {
+    key: 'deal-value',
+    label: 'Deal value',
+    value: criteria[1].value,
+    body: 'Typical deal values are approximately $2M–$6M, depending on earnings quality, transaction structure and the valuation supported by the specific business.',
+    rail: 'value',
+  },
+  {
+    key: 'seller-role',
+    label: 'Our role',
+    value: criteria[3].value,
+    body: 'Hyperboards evaluates the opportunity as the prospective buyer. We do not represent the seller or market the company to third-party acquirers.',
+    rail: 'role',
+  },
+  {
+    key: 'geography',
+    label: 'Location',
+    value: 'Case by case',
+    body: 'Location and operating footprint are considered in the context of each opportunity. No broader public geographic commitment is implied.',
+    rail: 'location',
+  },
+] as const;
+---
+
+<div class="mandate" data-mandate-explorer>
+  <div class="mandate__folio">
+    <div class="mandate__header">
+      <span>Acquisition mandate</span>
+      <span>HB / 01</span>
+    </div>
+
+    <div class="mandate__tabs" role="tablist" aria-label="Acquisition criteria">
+      {mandateCriteria.map((item, index) => (
+        <button
+          type="button"
+          role="tab"
+          id={`mandate-tab-${item.key}`}
+          aria-controls={`mandate-panel-${item.key}`}
+          aria-selected={index === 0 ? 'true' : 'false'}
+          tabindex={index === 0 ? 0 : -1}
+          data-folio-option
+          data-value={item.key}
+        >
+          <span>0{index + 1}</span>
+          {item.label}
+        </button>
+      ))}
+    </div>
+
+    <div class="mandate__panels">
+      {mandateCriteria.map((item) => (
+        <article
+          class="mandate__panel"
+          role="tabpanel"
+          id={`mandate-panel-${item.key}`}
+          aria-labelledby={`mandate-tab-${item.key}`}
+          data-folio-panel
+          data-value={item.key}
+        >
+          <div>
+            <p>{item.label}</p>
+            <strong>{item.value}</strong>
+          </div>
+          <p>{item.body}</p>
+          <div class:list={['mandate__rail', `mandate__rail--${item.rail}`]} aria-hidden="true">
+            <span></span>
+            <i></i>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+
+  <div class="sector-tray" data-sector-explorer>
+    <div class="sector-tray__heading">
+      <span>Nine target sectors</span>
+      <small>Select a folio</small>
+    </div>
+    <div class="sector-tray__workspace">
+      <div class="sector-tray__tabs" role="tablist" aria-label="Target industries">
+        {sectors.map((sector, index) => (
+          <button
+            type="button"
+            role="tab"
+            id={`sector-tab-${sector.slug}`}
+            aria-controls={`sector-panel-${sector.slug}`}
+            aria-selected={index === 0 ? 'true' : 'false'}
+            tabindex={index === 0 ? 0 : -1}
+            data-folio-option
+            data-value={sector.slug}
+          >
+            {sector.number}
+          </button>
+        ))}
+      </div>
+      <div class="sector-tray__panels">
+        {sectors.map((sector) => (
+          <article
+            role="tabpanel"
+            id={`sector-panel-${sector.slug}`}
+            aria-labelledby={`sector-tab-${sector.slug}`}
+            data-folio-panel
+            data-value={sector.slug}
+          >
+            <span>{sector.number} / 09</span>
+            <h2>{sector.name}</h2>
+            <p>{sector.summary}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { initSingleSelect } from '../../scripts/folio-controls';
+
+  document.querySelectorAll<HTMLElement>('[data-mandate-explorer], [data-sector-explorer]')
+    .forEach((root) => initSingleSelect(root));
+</script>
+
+<style>
+  .mandate {
+    display: grid;
+    gap: 0.85rem;
+    container-type: inline-size;
+  }
+
+  .mandate__folio,
+  .sector-tray {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(199, 168, 91, 0.58);
+    border-radius: var(--radius-md);
+    background-color: rgba(244, 239, 226, 0.97);
+    background-image: var(--texture-paper);
+    color: var(--color-midnight);
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.72),
+      0 1.6rem 4rem rgba(0, 0, 0, 0.2);
+  }
+
+  .mandate__folio::before,
+  .sector-tray::before {
+    position: absolute;
+    inset: 0.38rem;
+    border: 1px solid rgba(11, 27, 54, 0.12);
+    border-radius: calc(var(--radius-md) - 0.2rem);
+    content: '';
+    pointer-events: none;
+  }
+
+  .mandate__header,
+  .sector-tray__heading {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 1.15rem;
+    border-bottom: 1px solid rgba(11, 27, 54, 0.14);
+    color: var(--color-forest);
+    font-family: var(--font-mono);
+    font-size: 0.61rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .mandate__tabs {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    border-bottom: 1px solid rgba(11, 27, 54, 0.14);
+  }
+
+  .mandate__tabs button,
+  .sector-tray__tabs button {
+    min-height: 3.25rem;
+    border: 0;
+    background: transparent;
+    color: var(--color-slate);
+    cursor: pointer;
+    font: 650 0.75rem/1 var(--font-sans);
+    transition: background 220ms var(--ease-out), color 220ms var(--ease-out), transform 220ms var(--ease-out);
+  }
+
+  .mandate__tabs button + button {
+    border-left: 1px solid rgba(11, 27, 54, 0.1);
+  }
+
+  .mandate__tabs button span {
+    display: block;
+    margin-bottom: 0.35rem;
+    color: var(--color-brass-dark);
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+  }
+
+  .mandate__tabs button[aria-selected='true'],
+  .sector-tray__tabs button[aria-selected='true'] {
+    background: var(--color-midnight);
+    color: var(--color-white);
+  }
+
+  .mandate__tabs button:focus-visible,
+  .sector-tray__tabs button:focus-visible {
+    outline: 2px solid var(--color-brass);
+    outline-offset: -4px;
+  }
+
+  .mandate__panels {
+    position: relative;
+    z-index: 1;
+    min-height: 15rem;
+  }
+
+  .mandate__panel {
+    display: grid;
+    gap: 1rem;
+    padding: clamp(1.3rem, 4vw, 2.2rem);
+    animation: mandate-sheet 280ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .mandate__panel[hidden],
+  .sector-tray__panels article[hidden] {
+    display: none;
+  }
+
+  .mandate__panel > div:first-child {
+    display: flex;
+    gap: 1rem;
+    align-items: end;
+    justify-content: space-between;
+  }
+
+  .mandate__panel > div:first-child p,
+  .mandate__panel > p {
+    margin: 0;
+  }
+
+  .mandate__panel > div:first-child p {
+    color: var(--color-forest);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .mandate__panel strong {
+    color: var(--color-midnight);
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3.3rem);
+    font-weight: 520;
+    letter-spacing: -0.045em;
+    line-height: 1;
+  }
+
+  .mandate__panel > p {
+    max-width: 38rem;
+    color: var(--color-slate);
+    font-size: 0.9rem;
+  }
+
+  .mandate__rail {
+    position: relative;
+    height: 2rem;
+    margin-top: 0.4rem;
+    border-top: 1px solid rgba(11, 27, 54, 0.2);
+  }
+
+  .mandate__rail::before,
+  .mandate__rail::after {
+    position: absolute;
+    top: -0.25rem;
+    width: 1px;
+    height: 0.5rem;
+    background: rgba(11, 27, 54, 0.35);
+    content: '';
+  }
+
+  .mandate__rail::before { left: 0; }
+  .mandate__rail::after { right: 0; }
+
+  .mandate__rail span {
+    position: absolute;
+    top: -0.19rem;
+    left: 21%;
+    width: 52%;
+    height: 0.38rem;
+    border-radius: 99px;
+    background: var(--color-brass);
+    box-shadow: 0 0.2rem 0.6rem rgba(164, 126, 37, 0.3);
+    transform: scaleX(0);
+    transform-origin: left;
+    animation: mandate-rail 620ms cubic-bezier(0.16, 1, 0.3, 1) 120ms forwards;
+  }
+
+  .mandate__rail--value span { left: 18%; width: 58%; }
+  .mandate__rail--role span { left: 0; width: 100%; }
+  .mandate__rail--location span { left: 34%; width: 32%; }
+
+  .mandate__rail i {
+    position: absolute;
+    top: -0.48rem;
+    left: 47%;
+    width: 0.92rem;
+    aspect-ratio: 1;
+    border: 2px solid var(--color-paper);
+    background: var(--color-midnight);
+    box-shadow: 0 0 0 1px var(--color-brass-dark);
+    transform: rotate(45deg);
+  }
+
+  .sector-tray__heading small {
+    color: var(--color-slate);
+    font: inherit;
+  }
+
+  .sector-tray__workspace {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 3.8rem minmax(0, 1fr);
+    min-height: 10rem;
+  }
+
+  .sector-tray__tabs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-right: 1px solid rgba(11, 27, 54, 0.14);
+  }
+
+  .sector-tray__tabs button {
+    min-width: 0;
+    min-height: 3.2rem;
+    border-right: 1px solid rgba(11, 27, 54, 0.08);
+    border-bottom: 1px solid rgba(11, 27, 54, 0.08);
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+  }
+
+  .sector-tray__panels article {
+    padding: 1.3rem 1.5rem;
+    animation: mandate-sheet 260ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .sector-tray__panels span {
+    color: var(--color-brass-dark);
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+  }
+
+  .sector-tray__panels h2 {
+    max-width: 16ch;
+    margin-block: 0.5rem 0.35rem;
+    color: var(--color-midnight);
+    font-size: var(--step-2);
+  }
+
+  .sector-tray__panels p {
+    color: var(--color-slate);
+    font-size: 0.82rem;
+  }
+
+  @keyframes mandate-sheet {
+    from { opacity: 0; transform: translate3d(0.7rem, 0, 0); }
+    to { opacity: 1; transform: translate3d(0, 0, 0); }
+  }
+
+  @keyframes mandate-rail {
+    to { transform: scaleX(1); }
+  }
+
+  @container (max-width: 32rem) {
+    .mandate__tabs {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .mandate__tabs button:nth-child(3) {
+      border-left: 0;
+      border-top: 1px solid rgba(11, 27, 54, 0.1);
+    }
+
+    .mandate__tabs button:nth-child(4) {
+      border-top: 1px solid rgba(11, 27, 54, 0.1);
+    }
+
+    .mandate__panel > div:first-child {
+      display: grid;
+    }
+
+    .sector-tray__workspace {
+      grid-template-columns: 1fr;
+    }
+
+    .sector-tray__tabs {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      border-right: 0;
+      border-bottom: 1px solid rgba(11, 27, 54, 0.14);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mandate__panel,
+    .sector-tray__panels article,
+    .mandate__rail span {
+      animation: none;
+      transform: none;
+    }
+  }
+</style>

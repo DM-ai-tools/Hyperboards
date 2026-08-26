@@ -45,3 +45,21 @@ test('shared folio foundation provides a semantic cover and keyboard-safe contro
   assert.match(controls, /aria-selected/);
   assert.match(controls, /panel\.hidden/);
 });
+
+test('What We Acquire exposes the Mandate Desk instead of the repeated page hero', async () => {
+  const [page, explorer] = await Promise.all([
+    readFile('src/pages/what-we-acquire.astro', 'utf8'),
+    readFile('src/components/folios/MandateExplorer.astro', 'utf8'),
+  ]);
+
+  assert.doesNotMatch(page, /PageHero/);
+  assert.match(page, /MandateExplorer/);
+  assert.match(page, /guidelines—not an automatic decision/);
+  assert.match(explorer, /criteria/);
+  assert.match(explorer, /sectors/);
+  assert.match(explorer, /role="tablist"/);
+  assert.match(explorer, /role="tab"/);
+  assert.match(explorer, /role="tabpanel"/);
+  assert.match(explorer, /aria-controls/);
+  assert.match(explorer, /data-mandate-explorer/);
+});
