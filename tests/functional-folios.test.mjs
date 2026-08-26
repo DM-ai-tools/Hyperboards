@@ -173,3 +173,42 @@ test('Investor Relationships presents a discreet four-part Alignment Ledger', as
   assert.match(ledger, /Clear roles/);
   assert.match(ledger, /Seller confidentiality/);
 });
+
+test('Privacy is an indexed document reader with the interim warning intact', async () => {
+  const page = await readFile('src/pages/privacy.astro', 'utf8');
+  assert.doesNotMatch(page, /PageHero/);
+  assert.match(page, /data-document-reader/);
+  assert.match(page, /initSectionTracker/);
+  assert.match(page, /aria-current="location"/);
+  assert.match(page, /This is a general interim notice, not a final privacy policy\./);
+  assert.equal((page.match(/<section id=/g) ?? []).length, 7);
+});
+
+test('Terms is a seven-clause native ledger with its provisional warning intact', async () => {
+  const page = await readFile('src/pages/terms.astro', 'utf8');
+  assert.doesNotMatch(page, /PageHero/);
+  assert.match(page, /data-terms-ledger/);
+  assert.match(page, /<details/);
+  assert.match(page, /open={index === 0}/);
+  assert.equal((page.match(/number: '/g) ?? []).length, 7);
+  assert.match(page, /These are provisional website-use principles\./);
+});
+
+test('Thank You is a compact receipt with three non-promissory review steps', async () => {
+  const page = await readFile('src/pages/thank-you.astro', 'utf8');
+  assert.doesNotMatch(page, /PageHero/);
+  assert.match(page, /data-review-receipt/);
+  assert.equal((page.match(/data-review-step/g) ?? []).length, 3);
+  assert.match(page, /your introduction was accepted/i);
+  assert.doesNotMatch(page, /within \d+ (hours|days)/i);
+});
+
+test('404 is a route index card with three immediate recovery links', async () => {
+  const page = await readFile('src/pages/404.astro', 'utf8');
+  assert.doesNotMatch(page, /PageHero/);
+  assert.match(page, /data-route-index/);
+  assert.equal((page.match(/data-recovery-link/g) ?? []).length, 3);
+  assert.match(page, /href="\/"/);
+  assert.match(page, /href="\/what-we-acquire"/);
+  assert.match(page, /href="\/business-owners"/);
+});
