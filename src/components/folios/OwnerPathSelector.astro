@@ -1,0 +1,425 @@
+---
+import { processSteps } from '../../data/site';
+
+const ownerStages = [
+  {
+    key: 'exploring',
+    label: 'Exploring',
+    title: 'Begin before the decision is final.',
+    body: 'You can test broad fit and timing without starting a formal sale process or committing to continue.',
+  },
+  {
+    key: 'preparing',
+    label: 'Preparing',
+    title: 'Clarify what a responsible transition needs.',
+    body: 'We can discuss owner priorities, company readiness and the information that would matter if both parties choose to proceed.',
+  },
+  {
+    key: 'ready',
+    label: 'Ready to discuss',
+    title: 'Start directly with the prospective buyer.',
+    body: 'Share the broad facts of the business and the outcome you are considering. Detailed diligence belongs later, under appropriate protections.',
+  },
+] as const;
+
+const transitionPaths = [
+  ['Complete exit', 'For an owner ready to step away after an agreed handover period.'],
+  ['Phased handover', 'For transferring relationships and operating knowledge over time.'],
+  ['Continued involvement', 'Where an ongoing role supports both parties and the business.'],
+] as const;
+---
+
+<div class="owner-map" data-owner-path data-active="exploring">
+  <div class="owner-map__heading">
+    <span>Owner transition map</span>
+    <span>Private working copy</span>
+  </div>
+
+  <div class="owner-map__stages" role="tablist" aria-label="Where you are in the process">
+    {ownerStages.map((stage, index) => (
+      <button
+        type="button"
+        role="tab"
+        id={`owner-stage-${stage.key}`}
+        aria-controls={`owner-stage-panel-${stage.key}`}
+        aria-selected={index === 0 ? 'true' : 'false'}
+        tabindex={index === 0 ? 0 : -1}
+        data-folio-option
+        data-value={stage.key}
+      >
+        <span>0{index + 1}</span>
+        {stage.label}
+      </button>
+    ))}
+    <i class="owner-map__marker" aria-hidden="true"></i>
+  </div>
+
+  <div class="owner-map__stage-copy">
+    {ownerStages.map((stage) => (
+      <article
+        role="tabpanel"
+        id={`owner-stage-panel-${stage.key}`}
+        aria-labelledby={`owner-stage-${stage.key}`}
+        data-folio-panel
+        data-value={stage.key}
+      >
+        <h2>{stage.title}</h2>
+        <p>{stage.body}</p>
+      </article>
+    ))}
+  </div>
+
+  <div class="owner-map__route" aria-label="Typical acquisition process">
+    <div class="owner-map__line" aria-hidden="true"></div>
+    {processSteps.map((step) => (
+      <div class="owner-map__stop">
+        <span>{step.number}</span>
+        <strong>{step.title}</strong>
+        <p>{step.summary}</p>
+      </div>
+    ))}
+  </div>
+
+  <div class="owner-map__transitions">
+    <p>Possible owner transitions</p>
+    <dl>
+      {transitionPaths.map(([title, body], index) => (
+        <div>
+          <dt><span>0{index + 1}</span>{title}</dt>
+          <dd>{body}</dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+</div>
+
+<script>
+  import { initSingleSelect } from '../../scripts/folio-controls';
+
+  document.querySelectorAll<HTMLElement>('[data-owner-path]')
+    .forEach((root) => initSingleSelect(root));
+</script>
+
+<style>
+  .owner-map {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(199, 168, 91, 0.6);
+    border-radius: var(--radius-lg);
+    background-color: rgba(244, 239, 226, 0.98);
+    background-image: var(--texture-paper);
+    color: var(--color-midnight);
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.7),
+      0 1.8rem 4.5rem rgba(0, 0, 0, 0.2);
+    container-type: inline-size;
+  }
+
+  .owner-map::before {
+    position: absolute;
+    inset: 0.45rem;
+    border: 1px solid rgba(11, 27, 54, 0.11);
+    border-radius: calc(var(--radius-lg) - 0.25rem);
+    content: '';
+    pointer-events: none;
+  }
+
+  .owner-map__heading {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid rgba(11, 27, 54, 0.14);
+    color: var(--color-forest);
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .owner-map__stages {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-bottom: 1px solid rgba(11, 27, 54, 0.14);
+  }
+
+  .owner-map__stages button {
+    min-height: 4.3rem;
+    padding: 0.7rem 0.85rem;
+    border: 0;
+    background: transparent;
+    color: var(--color-slate);
+    cursor: pointer;
+    font: 700 0.72rem/1.15 var(--font-sans);
+    text-align: left;
+    transition: color 220ms var(--ease-out), background 220ms var(--ease-out);
+  }
+
+  .owner-map__stages button + button {
+    border-left: 1px solid rgba(11, 27, 54, 0.1);
+  }
+
+  .owner-map__stages button span {
+    display: block;
+    margin-bottom: 0.35rem;
+    color: var(--color-brass-dark);
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+  }
+
+  .owner-map__stages button[aria-selected='true'] {
+    background: rgba(11, 27, 54, 0.06);
+    color: var(--color-midnight);
+  }
+
+  .owner-map__stages button:focus-visible {
+    outline: 2px solid var(--color-brass-dark);
+    outline-offset: -4px;
+  }
+
+  .owner-map__marker {
+    position: absolute;
+    bottom: -0.31rem;
+    left: calc(16.666% - 0.34rem);
+    width: 0.68rem;
+    aspect-ratio: 1;
+    border: 2px solid var(--color-paper);
+    background: var(--color-brass-dark);
+    box-shadow: 0 0 0 1px rgba(11, 27, 54, 0.4);
+    transform: translate3d(0, 0, 0) rotate(45deg);
+    transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .owner-map[data-active='preparing'] .owner-map__marker {
+    transform: translate3d(calc(33.333cqw), 0, 0) rotate(45deg);
+  }
+
+  .owner-map[data-active='ready'] .owner-map__marker {
+    transform: translate3d(calc(66.666cqw), 0, 0) rotate(45deg);
+  }
+
+  .owner-map__stage-copy {
+    position: relative;
+    z-index: 1;
+    min-height: 10.5rem;
+    padding: clamp(1.2rem, 4vw, 2.2rem);
+  }
+
+  .owner-map__stage-copy article {
+    animation: owner-sheet 260ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .owner-map__stage-copy article[hidden] {
+    display: none;
+  }
+
+  .owner-map__stage-copy h2 {
+    max-width: 18ch;
+    margin-bottom: 0.65rem;
+    font-size: var(--step-2);
+  }
+
+  .owner-map__stage-copy p {
+    max-width: 44rem;
+    color: var(--color-slate);
+    font-size: 0.88rem;
+  }
+
+  .owner-map__route {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    padding: 1.5rem 1.15rem;
+    border-block: 1px solid rgba(11, 27, 54, 0.14);
+  }
+
+  .owner-map__line {
+    position: absolute;
+    top: 2.28rem;
+    right: 10%;
+    left: 10%;
+    height: 1px;
+    background: var(--color-brass-dark);
+    transform: scaleX(0);
+    transform-origin: left;
+    animation: owner-route 780ms cubic-bezier(0.16, 1, 0.3, 1) 180ms forwards;
+  }
+
+  .owner-map__stop {
+    position: relative;
+    padding-inline: 0.55rem;
+  }
+
+  .owner-map__stop > span {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    width: 1.4rem;
+    aspect-ratio: 1;
+    place-items: center;
+    margin-bottom: 0.8rem;
+    border: 1px solid var(--color-brass-dark);
+    border-radius: 50%;
+    background: var(--color-paper);
+    color: var(--color-forest);
+    font: 0.5rem/1 var(--font-mono);
+  }
+
+  .owner-map__stop strong {
+    display: block;
+    min-height: 2.4rem;
+    font-size: 0.7rem;
+    line-height: 1.2;
+  }
+
+  .owner-map__stop p {
+    margin-top: 0.45rem;
+    color: var(--color-slate);
+    font-size: 0.65rem;
+    line-height: 1.4;
+  }
+
+  .owner-map__transitions {
+    position: relative;
+    z-index: 1;
+    padding: 1.1rem 1.25rem 1.35rem;
+  }
+
+  .owner-map__transitions > p {
+    margin-bottom: 0.75rem;
+    color: var(--color-forest);
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+
+  .owner-map__transitions dl {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    padding: 0;
+    margin: 0;
+  }
+
+  .owner-map__transitions dl > div {
+    padding-inline: 0.85rem;
+  }
+
+  .owner-map__transitions dl > div + div {
+    border-left: 1px solid rgba(11, 27, 54, 0.12);
+  }
+
+  .owner-map__transitions dt {
+    display: flex;
+    gap: 0.45rem;
+    align-items: baseline;
+    font-size: 0.72rem;
+    font-weight: 750;
+  }
+
+  .owner-map__transitions dt span {
+    color: var(--color-brass-dark);
+    font-family: var(--font-mono);
+    font-size: 0.52rem;
+  }
+
+  .owner-map__transitions dd {
+    margin: 0.35rem 0 0;
+    color: var(--color-slate);
+    font-size: 0.65rem;
+    line-height: 1.4;
+  }
+
+  @keyframes owner-sheet {
+    from { opacity: 0; transform: translate3d(0, 0.55rem, 0); }
+    to { opacity: 1; transform: translate3d(0, 0, 0); }
+  }
+
+  @keyframes owner-route {
+    to { transform: scaleX(1); }
+  }
+
+  @container (max-width: 38rem) {
+    .owner-map__stages {
+      grid-template-columns: 1fr;
+    }
+
+    .owner-map__stages button {
+      min-height: 3.6rem;
+    }
+
+    .owner-map__stages button + button {
+      border-top: 1px solid rgba(11, 27, 54, 0.1);
+      border-left: 0;
+    }
+
+    .owner-map__marker {
+      display: none;
+    }
+
+    .owner-map__route {
+      grid-template-columns: 1fr;
+      gap: 0;
+      padding-inline: 1.4rem;
+    }
+
+    .owner-map__line {
+      top: 2.15rem;
+      bottom: 2.15rem;
+      left: 2.1rem;
+      width: 1px;
+      height: auto;
+      transform: scaleY(0);
+      transform-origin: top;
+    }
+
+    .owner-map__stop {
+      display: grid;
+      grid-template-columns: 2.2rem 1fr;
+      min-height: 5.2rem;
+      padding: 0;
+    }
+
+    .owner-map__stop > span {
+      grid-row: 1 / 3;
+    }
+
+    .owner-map__stop strong {
+      min-height: 0;
+    }
+
+    .owner-map__stop p {
+      margin-top: 0.2rem;
+    }
+
+    .owner-map__transitions dl {
+      grid-template-columns: 1fr;
+    }
+
+    .owner-map__transitions dl > div {
+      padding: 0.8rem 0;
+      border-top: 1px solid rgba(11, 27, 54, 0.12);
+    }
+
+    .owner-map__transitions dl > div + div {
+      border-left: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .owner-map__marker,
+    .owner-map__stage-copy article,
+    .owner-map__line {
+      animation: none;
+      transition: none;
+    }
+
+    .owner-map__line {
+      transform: none;
+    }
+  }
+</style>

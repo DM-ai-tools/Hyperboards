@@ -63,3 +63,22 @@ test('What We Acquire exposes the Mandate Desk instead of the repeated page hero
   assert.match(explorer, /aria-controls/);
   assert.match(explorer, /data-mandate-explorer/);
 });
+
+test('For Business Owners exposes an owner-controlled Transition Map', async () => {
+  const [page, selector] = await Promise.all([
+    readFile('src/pages/business-owners.astro', 'utf8'),
+    readFile('src/components/folios/OwnerPathSelector.astro', 'utf8'),
+  ]);
+
+  assert.doesNotMatch(page, /PageHero/);
+  assert.doesNotMatch(page, /ProcessSteps/);
+  assert.match(page, /OwnerPathSelector/);
+  assert.match(page, /directly with the prospective buyer/);
+  assert.match(selector, /data-owner-path/);
+  assert.match(selector, /key: 'exploring'/);
+  assert.match(selector, /key: 'preparing'/);
+  assert.match(selector, /key: 'ready'/);
+  assert.match(selector, /Complete exit/);
+  assert.match(selector, /Phased handover/);
+  assert.match(selector, /Continued involvement/);
+});
