@@ -57,7 +57,7 @@ section[id] { scroll-margin-top: 82px; }
 .continuum-path__track { position: absolute; top: 0.9rem; bottom: 0.9rem; left: 50%; width: 1px; background: color-mix(in oklch, var(--continuum-violet) 52%, transparent); transform: translateX(-50%); }
 .continuum-path__track i { position: absolute; inset: 0; background: var(--continuum-signal); transform: scaleY(var(--continuum-progress)); transform-origin: top; transition: transform 620ms var(--continuum-ease); }
 .continuum-path b { position: relative; z-index: 1; display: grid; place-items: center; width: 1.75rem; height: 1.75rem; border: 1px solid var(--continuum-rule); border-radius: 50%; color: var(--continuum-muted); background: var(--continuum-mineral); font-family: var(--continuum-display); font-size: 0.52rem; font-weight: 600; transition: color 180ms ease, border-color 180ms ease, background-color 180ms ease, transform 220ms var(--continuum-ease); }
-.continuum-path b.is-active, .continuum-path b.is-passed { border-color: var(--continuum-signal); color: var(--continuum-mineral); background: var(--continuum-signal); }
+.continuum-path b.is-active, .continuum-path b.is-passed { border-color: var(--continuum-signal); color: var(--continuum-plum); background: var(--continuum-signal); }
 .continuum-path b.is-active { transform: scale(1.18); }
 
 .continuum-header {
@@ -92,13 +92,14 @@ section[id] { scroll-margin-top: 82px; }
 
 .continuum-eyebrow { display: flex; justify-content: space-between; gap: 1.5rem; margin: 0 0 1.5rem; font-size: 0.62rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; }
 .continuum-eyebrow b { color: var(--continuum-muted); font-weight: 500; }
-.continuum-hero { position: relative; min-height: calc(100vh - 82px); padding: clamp(4rem, 8vw, 8rem) var(--continuum-gutter) 0; color: var(--continuum-mineral); background: var(--continuum-plum); isolation: isolate; }
+.continuum-hero { position: relative; min-height: calc(100vh - 82px); padding: clamp(4rem, 8vw, 8rem) var(--continuum-gutter) 0; color: var(--continuum-mineral); background: var(--continuum-plum); isolation: isolate; overflow: clip; }
 .continuum-hero::before { content: ''; position: absolute; z-index: -1; top: 0; bottom: 0; left: 55%; width: 1px; background: color-mix(in oklch, var(--continuum-violet) 28%, transparent); }
 .continuum-topography { position: absolute; z-index: -1; right: -6vw; bottom: 2%; width: min(58vw, 850px); color: var(--continuum-violet); opacity: 0.25; transform: translate3d(var(--continuum-topo-x, 0), var(--continuum-topo-y, 0), 0) rotate(-9deg); transition: transform 280ms var(--continuum-ease); }
 .continuum-topography path { fill: none; stroke: currentColor; stroke-width: 0.8; }
 .continuum-hero__copy { width: min(62%, 920px); }
 .continuum-hero .continuum-eyebrow b { color: var(--continuum-violet); }
 .continuum-hero h1 { margin: 0; font-family: var(--continuum-display); font-size: clamp(4.8rem, 9vw, 10rem); font-weight: 440; line-height: 0.82; letter-spacing: -0.078em; }
+.continuum-hero h1 span { display: block; }
 .continuum-hero__lead { max-width: 720px; margin: clamp(2rem, 3vw, 3.2rem) 0 0; color: var(--continuum-violet); font-size: clamp(1rem, 1.35vw, 1.22rem); }
 .continuum-actions { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 2.2rem; }
 .continuum-button { display: inline-flex; justify-content: space-between; gap: 2rem; align-items: center; min-height: 54px; padding: 0.85rem 1rem; border: 1px solid transparent; border-radius: 1.35rem 0.35rem 1.35rem 0.35rem; font-size: 0.72rem; font-weight: 600; transition: transform 180ms var(--continuum-ease), color 180ms ease, background-color 180ms ease, border-color 180ms ease; }
@@ -216,7 +217,7 @@ section[id] { scroll-margin-top: 82px; }
 .continuum-questions details { border-bottom: 1px solid color-mix(in oklch, var(--continuum-violet) 50%, transparent); }
 .continuum-questions summary { display: grid; grid-template-columns: 3rem 1fr auto; gap: 0.8rem; align-items: center; min-height: 78px; padding: 1.3rem 0; cursor: pointer; list-style: none; }
 .continuum-questions summary::-webkit-details-marker { display: none; }
-.continuum-questions summary span { color: var(--continuum-signal); font-size: 0.56rem; }
+.continuum-questions summary span { color: var(--continuum-mineral); font-size: 0.56rem; }
 .continuum-questions summary i { width: 1.6rem; font-style: normal; text-align: center; transition: transform 180ms var(--continuum-ease); }
 .continuum-questions details[open] summary i { transform: rotate(45deg); }
 .continuum-questions details p { max-width: 660px; margin: -0.25rem 0 1.5rem 3.8rem; color: var(--continuum-violet); font-size: 0.82rem; }
