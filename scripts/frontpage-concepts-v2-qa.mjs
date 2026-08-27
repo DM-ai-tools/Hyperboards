@@ -18,6 +18,12 @@ const concepts = [
     nav: '[data-evergreen-nav]',
     reveal: '.evergreen-reveal',
     criteria: '.evergreen-profile',
+    interaction: {
+      control: '[data-evergreen-sector]',
+      stateAttribute: 'aria-pressed',
+      output: '[data-evergreen-sector-copy]',
+      name: 'sector context selection',
+    },
   },
   {
     route: '02-cobalt-standard',
@@ -27,6 +33,36 @@ const concepts = [
     nav: '[data-cobalt-nav]',
     reveal: '.cobalt-rise',
     criteria: '.cobalt-criteria-rail',
+  },
+  {
+    route: '03-blackline-office',
+    name: 'blackline-office',
+    h1: 'The buyer is already at the table',
+    menu: '[data-blackline-menu]',
+    nav: '[data-blackline-nav]',
+    reveal: '.blackline-rise',
+    criteria: '.blackline-brief',
+    interaction: {
+      control: '[data-blackline-mandate-tab]',
+      stateAttribute: 'aria-selected',
+      output: '[data-blackline-mandate-title]',
+      name: 'mandate view selection',
+    },
+  },
+  {
+    route: '04-continuum-house',
+    name: 'continuum-house',
+    h1: 'Ownership, carried forward',
+    menu: '[data-continuum-menu]',
+    nav: '[data-continuum-nav]',
+    reveal: '.continuum-arrive',
+    criteria: '.continuum-profile',
+    interaction: {
+      control: '[data-continuum-lens-button]',
+      stateAttribute: 'aria-pressed',
+      output: '[data-continuum-lens-title]',
+      name: 'acquisition lens selection',
+    },
   },
 ];
 
@@ -146,6 +182,20 @@ try {
       report.interactions.push({ concept: concept.name, viewport: viewportName, name: 'FAQ keyboard disclosure', passed: disclosureOpen });
       if (!disclosureOpen) failures.push(`${concept.name} ${viewportName} FAQ did not open from the keyboard`);
 
+      if (concept.interaction) {
+        const controls = page.locator(concept.interaction.control);
+        const output = page.locator(concept.interaction.output);
+        const before = (await output.textContent())?.trim() || '';
+        const secondControl = controls.nth(1);
+        await secondControl.scrollIntoViewIfNeeded();
+        await secondControl.click();
+        const selected = await secondControl.getAttribute(concept.interaction.stateAttribute);
+        const after = (await output.textContent())?.trim() || '';
+        const passed = selected === 'true' && Boolean(after) && after !== before;
+        report.interactions.push({ concept: concept.name, viewport: viewportName, name: concept.interaction.name, passed });
+        if (!passed) failures.push(`${concept.name} ${viewportName} failed ${concept.interaction.name}`);
+      }
+
       await page.addScriptTag({ content: axeCore.source });
       const violations = await page.evaluate(async () => {
         const result = await window.axe.run(document, { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'] } });
@@ -159,7 +209,7 @@ try {
 
       await page.evaluate((selector) => {
         if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
-        document.querySelectorAll(selector).forEach((element) => element.classList.add('is-visible', 'is-ready'));
+        document.querySelectorAll(selector).forEach((element) => element.classList.add('is-visible', 'is-ready', 'is-present'));
         const stickyHeader = document.querySelector('header');
         const skipLink = document.querySelector('body > a[href^="#"]');
         stickyHeader?.style.setProperty('position', 'relative', 'important');
