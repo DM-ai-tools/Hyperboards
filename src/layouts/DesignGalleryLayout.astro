@@ -1,0 +1,119 @@
+---
+import '@fontsource-variable/instrument-sans';
+import '@fontsource-variable/newsreader';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Hyperboards — Homepage Design Review',
+  description = 'Choose from six finalized Hyperboards homepage directions.',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#F1EFE8" />
+    <meta name="description" content={description} />
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <a class="gallery-skip" href="#gallery-content">Skip to design options</a>
+    <slot />
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    color-scheme: light;
+    --gallery-ink: #121914;
+    --gallery-muted: #626a63;
+    --gallery-paper: #f1efe8;
+    --gallery-surface: #faf9f5;
+    --gallery-rule: #d7d4ca;
+    --gallery-green: #173e33;
+    --gallery-brass: #b58f48;
+    --gallery-display: 'Newsreader Variable', Georgia, serif;
+    --gallery-sans: 'Instrument Sans Variable', 'Segoe UI', sans-serif;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    min-width: 320px;
+    background: var(--gallery-paper);
+    scroll-behavior: smooth;
+  }
+
+  body {
+    min-width: 320px;
+    min-height: 100vh;
+    margin: 0;
+    background:
+      linear-gradient(rgba(18, 25, 20, 0.032) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(18, 25, 20, 0.032) 1px, transparent 1px),
+      var(--gallery-paper);
+    background-size: 4rem 4rem;
+    color: var(--gallery-ink);
+    font-family: var(--gallery-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  a {
+    color: inherit;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+  }
+
+  .gallery-skip {
+    position: fixed;
+    z-index: 20;
+    top: 0.75rem;
+    left: 0.75rem;
+    padding: 0.65rem 0.8rem;
+    transform: translateY(-180%);
+    border: 1px solid var(--gallery-ink);
+    background: var(--gallery-surface);
+    font-size: 0.82rem;
+    font-weight: 700;
+  }
+
+  .gallery-skip:focus {
+    transform: translateY(0);
+  }
+
+  ::selection {
+    background: var(--gallery-green);
+    color: #fff;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+    }
+  }
+</style>

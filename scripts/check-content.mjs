@@ -6,6 +6,7 @@ export const PROJECT_ROOT = path.resolve(fileURLToPath(new URL('..', import.meta
 
 export const REQUIRED_FILES = [
   'src/pages/index.astro',
+  'src/components/home/LeatherHomepage.astro',
   'src/pages/what-we-acquire.astro',
   'src/pages/business-owners.astro',
   'src/pages/our-approach.astro',
@@ -44,7 +45,7 @@ export const APPROVED_RANGES = [
 
 export const BUYER_POSITIONING_REQUIREMENTS = {
   'src/data/site.ts': ['We Buy Established Businesses Directly'],
-  'src/pages/index.astro': [
+  'src/components/home/LeatherHomepage.astro': [
     'We buy established, profitable businesses directly from their owners.',
     'Not an investment bank.',
     'Not a broker.',

@@ -1,0 +1,193 @@
+---
+import type { DesignOption } from '../../data/designs';
+
+interface Props {
+  design: DesignOption;
+  index: number;
+}
+
+const { design, index } = Astro.props;
+const ordinal = String(index + 1).padStart(2, '0');
+---
+
+<article class="design-card" data-design={design.slug}>
+  <a href={`/designs/${design.slug}`} aria-label={`Open ${design.name} homepage preview`}>
+    <figure class="design-card__preview">
+      <img
+        src={design.thumbnail}
+        alt={`${design.name} homepage preview`}
+        width="960"
+        height="600"
+        loading={index === 0 ? 'eager' : 'lazy'}
+        decoding="async"
+      />
+      {design.original && <figcaption>Current approved site</figcaption>}
+    </figure>
+
+    <div class="design-card__body">
+      <span class="design-card__number" aria-hidden="true">{ordinal}</span>
+      <div>
+        <h2>{design.name}</h2>
+        <p>{design.descriptor}</p>
+      </div>
+      <span class="design-card__open">Open design <b aria-hidden="true">↗</b></span>
+    </div>
+  </a>
+</article>
+
+<style>
+  .design-card {
+    --card-accent: var(--gallery-green);
+    min-width: 0;
+  }
+
+  .design-card[data-design='hyperboards'] { --card-accent: #0b1b36; }
+  .design-card[data-design='evergreen-partner'] { --card-accent: #173e33; }
+  .design-card[data-design='blackline-office'] { --card-accent: #111; }
+  .design-card[data-design='cobalt-standard'] { --card-accent: #1748ad; }
+  .design-card[data-design='quiet-cinema'] { --card-accent: #5b2026; }
+  .design-card[data-design='operators-atlas'] { --card-accent: #394b40; }
+
+  a {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    border: 1px solid var(--gallery-rule);
+    border-radius: 0.18rem;
+    background: var(--gallery-surface);
+    box-shadow: 0 0.7rem 2rem rgba(18, 25, 20, 0.055);
+    text-decoration: none;
+    transition:
+      border-color 180ms ease,
+      box-shadow 180ms ease,
+      transform 180ms ease;
+  }
+
+  a::after {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    transform: scaleX(0);
+    transform-origin: left;
+    background: var(--card-accent);
+    content: '';
+    transition: transform 220ms ease;
+  }
+
+  a:hover {
+    border-color: color-mix(in srgb, var(--card-accent) 48%, var(--gallery-rule));
+    box-shadow: 0 1rem 2.8rem rgba(18, 25, 20, 0.1);
+    transform: translateY(-0.2rem);
+  }
+
+  a:hover::after {
+    transform: scaleX(1);
+  }
+
+  a:focus-visible {
+    outline: 3px solid var(--card-accent);
+    outline-offset: 4px;
+  }
+
+  .design-card__preview {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    margin: 0;
+    overflow: hidden;
+    border-bottom: 1px solid var(--gallery-rule);
+    background: #e3e1d9;
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  a:hover img {
+    transform: scale(1.018);
+  }
+
+  figcaption {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    padding: 0.34rem 0.52rem;
+    border: 1px solid rgba(255, 255, 255, 0.26);
+    background: rgba(11, 27, 54, 0.91);
+    color: #fff;
+    font-size: 0.61rem;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    backdrop-filter: blur(8px);
+  }
+
+  .design-card__body {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: start;
+    gap: clamp(0.85rem, 1.6vw, 1.35rem);
+    padding: clamp(1rem, 2vw, 1.45rem);
+  }
+
+  .design-card__number {
+    padding-top: 0.28rem;
+    color: var(--card-accent);
+    font-size: 0.64rem;
+    font-weight: 760;
+    letter-spacing: 0.08em;
+  }
+
+  h2 {
+    margin: 0;
+    font-family: var(--gallery-display);
+    font-size: clamp(1.35rem, 2.2vw, 1.85rem);
+    font-weight: 520;
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+  }
+
+  p {
+    margin: 0.35rem 0 0;
+    color: var(--gallery-muted);
+    font-size: 0.78rem;
+    line-height: 1.45;
+  }
+
+  .design-card__open {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding-top: 0.27rem;
+    color: var(--gallery-muted);
+    font-size: 0.7rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .design-card__open b {
+    color: var(--card-accent);
+    font-size: 0.88rem;
+    transition: transform 180ms ease;
+  }
+
+  a:hover .design-card__open b {
+    transform: translate(0.12rem, -0.12rem);
+  }
+
+  @media (max-width: 35rem) {
+    .design-card__body {
+      grid-template-columns: auto 1fr;
+    }
+
+    .design-card__open {
+      grid-column: 2;
+      padding-top: 0.25rem;
+    }
+  }
+</style>

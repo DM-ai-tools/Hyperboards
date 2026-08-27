@@ -41,12 +41,15 @@ test('acquisition-data checker requires the approved sectors and ranges', () => 
 });
 
 test('buyer-positioning checker requires explicit direct-buyer language', () => {
+  assert.ok(BUYER_POSITIONING_REQUIREMENTS['src/components/home/LeatherHomepage.astro']);
+  assert.equal(BUYER_POSITIONING_REQUIREMENTS['src/pages/index.astro'], undefined);
+
   const validSources = Object.fromEntries(
     Object.entries(BUYER_POSITIONING_REQUIREMENTS).map(([file, messages]) => [file, messages.join('\n')]),
   );
   assert.deepEqual(verifyBuyerPositioning(validSources), []);
 
-  const unclearSources = { ...validSources, 'src/pages/index.astro': 'We participate in acquisitions.' };
+  const unclearSources = { ...validSources, 'src/components/home/LeatherHomepage.astro': 'We participate in acquisitions.' };
   assert.ok(verifyBuyerPositioning(unclearSources).some((issue) => issue.code === 'buyer-positioning-missing'));
 });
 

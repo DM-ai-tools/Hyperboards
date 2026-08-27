@@ -52,3 +52,33 @@ test('preview publisher mirrors the latest canonical prototype bytes', async () 
     await rm(temporaryRoot, { recursive: true, force: true });
   }
 });
+
+test('root gallery delegates all six semantic links to one design-card component', async () => {
+  const [page, layout, card] = await Promise.all([
+    readFile(join(projectRoot, 'src', 'pages', 'index.astro'), 'utf8'),
+    readFile(join(projectRoot, 'src', 'layouts', 'DesignGalleryLayout.astro'), 'utf8'),
+    readFile(join(projectRoot, 'src', 'components', 'design-gallery', 'DesignCard.astro'), 'utf8'),
+  ]);
+
+  assert.match(page, /Choose a homepage direction\./i);
+  assert.match(page, /designs\.map/);
+  assert.match(page, /<DesignCard/);
+  assert.doesNotMatch(page, /BaseLayout/);
+  assert.equal((layout.match(/<main\b/g) || []).length, 0, 'the page owns the sole main landmark');
+  assert.match(layout, /noindex, nofollow/);
+  assert.match(layout, /Skip to design options/);
+  assert.match(card, /<a\b/);
+  assert.match(card, /href={`\/designs\/\$\{design\.slug\}`}/);
+  assert.match(card, /loading={index === 0 \? 'eager' : 'lazy'}/);
+  assert.match(card, /width="960"/);
+  assert.match(card, /height="600"/);
+});
+
+test('gallery ships one optimized local thumbnail for every design', async () => {
+  for (const [slug] of expectedDesigns) {
+    const image = await readFile(join(projectRoot, 'public', 'design-thumbnails', `${slug}.webp`));
+    assert.equal(image.subarray(0, 4).toString('ascii'), 'RIFF', `${slug} must be a WebP asset`);
+    assert.equal(image.subarray(8, 12).toString('ascii'), 'WEBP', `${slug} must be a WebP asset`);
+    assert.ok(image.length < 350_000, `${slug} thumbnail should stay below 350KB`);
+  }
+});
