@@ -1,0 +1,272 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&display=swap');
+
+:root {
+  /* Primitive tokens */
+  --evergreen-950: #0d2c25;
+  --evergreen-900: #123d33;
+  --evergreen-800: #1a5144;
+  --evergreen-200: #c9d8cf;
+  --evergreen-100: #e1e9e4;
+  --limestone-100: #f0ece3;
+  --limestone-50: #f8f6f0;
+  --paper-0: #fffefb;
+  --ink-950: #15201c;
+  --ink-700: #46544e;
+  --ink-500: #68736e;
+  --copper-700: #7e3d25;
+  --copper-600: #9b4d2d;
+  --rule-200: #d8d8cf;
+
+  /* Semantic tokens */
+  --color-bg: var(--limestone-50);
+  --color-surface: var(--paper-0);
+  --color-text: var(--ink-950);
+  --color-muted: var(--ink-700);
+  --color-primary: var(--evergreen-900);
+  --color-accent: var(--copper-700);
+  --color-rule: var(--rule-200);
+  --color-focus: var(--copper-600);
+  --font-sans: 'Inter', 'Aptos', 'Segoe UI', sans-serif;
+  --font-serif: 'Source Serif 4', Georgia, serif;
+  --shell: 1240px;
+  --gutter: clamp(1.25rem, 4vw, 4rem);
+  --section: clamp(5rem, 9vw, 9rem);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Component tokens */
+  --header-height: 82px;
+  --button-height: 52px;
+  --panel-radius: 2px;
+  --focus-ring: 3px solid var(--color-focus);
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  color: var(--color-text);
+  background: var(--color-bg);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.62;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+body, button, a, summary { -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration: none; }
+button { color: inherit; font: inherit; }
+svg { display: block; }
+
+.evergreen-shell { width: min(calc(100% - (2 * var(--gutter))), var(--shell)); margin-inline: auto; }
+.evergreen-skip {
+  position: fixed;
+  z-index: 1000;
+  top: 0.75rem;
+  left: 0.75rem;
+  padding: 0.7rem 1rem;
+  color: var(--paper-0);
+  background: var(--evergreen-950);
+  transform: translateY(-160%);
+  transition: transform 160ms ease;
+}
+.evergreen-skip:focus { transform: translateY(0); }
+:focus-visible { outline: var(--focus-ring); outline-offset: 4px; }
+
+.evergreen-header {
+  position: sticky;
+  z-index: 100;
+  top: 0;
+  min-height: var(--header-height);
+  border-bottom: 1px solid transparent;
+  background: color-mix(in srgb, var(--limestone-50) 94%, transparent);
+  backdrop-filter: blur(14px);
+  transition: min-height 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+.evergreen-header.is-compact { min-height: 68px; border-color: var(--color-rule); box-shadow: 0 10px 28px rgb(13 44 37 / 5%); }
+.evergreen-header__inner { min-height: inherit; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: clamp(2rem, 4vw, 4rem); }
+.evergreen-brand { display: inline-flex; align-items: center; gap: 0.72rem; font-size: 0.96rem; font-weight: 650; letter-spacing: -0.025em; }
+.evergreen-brand__mark { width: 27px; color: var(--evergreen-900); }
+.evergreen-brand__mark path { fill: none; stroke: currentColor; stroke-width: 3; }
+.evergreen-nav { display: flex; justify-content: center; gap: clamp(1.35rem, 2.6vw, 2.75rem); color: var(--ink-700); font-size: 0.78rem; font-weight: 600; }
+.evergreen-nav a, .evergreen-footer a { position: relative; }
+.evergreen-nav a::after, .evergreen-footer a::after { content: ''; position: absolute; right: 0; bottom: -0.35rem; left: 0; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: right; transition: transform 180ms ease; }
+.evergreen-nav a:hover::after, .evergreen-nav a:focus-visible::after, .evergreen-footer a:hover::after, .evergreen-footer a:focus-visible::after { transform: scaleX(1); transform-origin: left; }
+.evergreen-header__action { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0.7rem 1rem; border: 1px solid var(--evergreen-900); color: var(--evergreen-900); font-size: 0.74rem; font-weight: 650; transition: color 180ms ease, background-color 180ms ease; }
+.evergreen-header__action:hover { color: var(--paper-0); background: var(--evergreen-900); }
+.evergreen-menu { display: none; min-width: 44px; min-height: 44px; border: 0; background: transparent; cursor: pointer; }
+
+.evergreen-eyebrow { margin: 0 0 1.3rem; color: var(--color-accent); font-size: 0.68rem; font-weight: 650; letter-spacing: 0.16em; text-transform: uppercase; }
+.evergreen-hero { padding: clamp(4rem, 7vw, 7.5rem) 0 0; }
+.evergreen-hero__grid { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(320px, 0.75fr); gap: clamp(4rem, 8vw, 8rem); align-items: end; }
+.evergreen-hero__copy { padding-bottom: clamp(2rem, 5vw, 4rem); }
+.evergreen-hero h1 { max-width: 870px; margin: 0; font-family: var(--font-serif); font-size: clamp(3.45rem, 6.2vw, 6.6rem); font-weight: 500; line-height: 0.95; letter-spacing: -0.052em; text-wrap: balance; }
+.evergreen-hero__lede { max-width: 730px; margin: 2rem 0 0; color: var(--color-muted); font-size: clamp(1.03rem, 1.35vw, 1.22rem); line-height: 1.65; }
+.evergreen-actions { display: flex; flex-wrap: wrap; gap: 0.8rem 1.25rem; margin-top: 2rem; }
+.evergreen-button { display: inline-flex; align-items: center; justify-content: center; min-height: var(--button-height); padding: 0.85rem 1.2rem; font-size: 0.79rem; font-weight: 650; transition: transform 180ms var(--ease), color 180ms ease, background-color 180ms ease, border-color 180ms ease; }
+.evergreen-button:hover { transform: translateY(-2px); }
+.evergreen-button--primary { border: 1px solid var(--evergreen-900); color: var(--paper-0); background: var(--evergreen-900); }
+.evergreen-button--primary:hover { background: var(--evergreen-800); }
+.evergreen-button--quiet { gap: 0.65rem; color: var(--evergreen-900); }
+.evergreen-button--quiet span { transition: transform 180ms var(--ease); }
+.evergreen-button--quiet:hover span { transform: translateX(4px); }
+.evergreen-hero__note { display: flex; gap: 0.65rem; align-items: center; margin: 1.35rem 0 0; color: var(--ink-500); font-size: 0.73rem; }
+.evergreen-hero__note span { width: 6px; height: 6px; border-radius: 50%; background: var(--copper-600); }
+
+.evergreen-profile { border-top: 4px solid var(--evergreen-900); background: var(--color-surface); box-shadow: 0 18px 50px rgb(13 44 37 / 7%); }
+.evergreen-profile__head { display: flex; justify-content: space-between; gap: 1rem; padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--color-rule); }
+.evergreen-profile__head p, .evergreen-profile__head span { margin: 0; font-size: 0.68rem; font-weight: 650; letter-spacing: 0.12em; text-transform: uppercase; }
+.evergreen-profile__head span { color: var(--color-accent); }
+.evergreen-profile__rows { margin: 0; }
+.evergreen-profile__rows > div { display: grid; grid-template-columns: 1fr auto; gap: 1rem; align-items: center; min-height: 75px; padding: 1rem 1.5rem; border-bottom: 1px solid var(--color-rule); }
+.evergreen-profile dt { color: var(--ink-500); font-size: 0.72rem; }
+.evergreen-profile dd { margin: 0; text-align: right; font-family: var(--font-serif); font-size: clamp(1.12rem, 1.5vw, 1.35rem); font-weight: 600; line-height: 1.2; }
+.evergreen-profile__foot { margin: 0; padding: 1.1rem 1.5rem 1.35rem; color: var(--ink-500); font-size: 0.68rem; line-height: 1.5; }
+.evergreen-hero__statement { display: flex; justify-content: space-between; gap: 2rem; align-items: center; margin-top: clamp(3rem, 6vw, 6rem); padding-block: 1.3rem; border-top: 1px solid var(--color-rule); border-bottom: 1px solid var(--color-rule); }
+.evergreen-hero__statement p, .evergreen-hero__statement strong { margin: 0; font-size: clamp(0.78rem, 1vw, 0.9rem); }
+.evergreen-hero__statement p { color: var(--ink-500); }
+.evergreen-hero__statement strong { color: var(--evergreen-900); }
+
+.evergreen-role, .evergreen-acquire, .evergreen-stewardship, .evergreen-faq { padding-block: var(--section); }
+.evergreen-section-intro { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr); gap: clamp(3rem, 7vw, 7rem); align-items: end; }
+.evergreen-section-intro > .evergreen-eyebrow { grid-column: 1 / -1; margin-bottom: -1.5rem; }
+.evergreen-section-intro h2, .evergreen-stewardship h2, .evergreen-faq h2, .evergreen-contact h2 { max-width: 850px; margin: 0; font-family: var(--font-serif); font-size: clamp(2.7rem, 5vw, 5.25rem); font-weight: 500; line-height: 0.99; letter-spacing: -0.045em; text-wrap: balance; }
+.evergreen-section-intro > div, .evergreen-section-intro > p:last-child { color: var(--color-muted); }
+.evergreen-section-intro > div p, .evergreen-section-intro > p:last-child { margin: 0; }
+.evergreen-section-intro > div p + p { margin-top: 1rem; }
+.evergreen-owner-grid { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: clamp(4rem, 7vw, 6.5rem); border-top: 1px solid var(--color-rule); }
+.evergreen-owner-grid__item { min-width: 0; padding: 1.8rem clamp(1rem, 2.3vw, 2rem) 0 0; }
+.evergreen-owner-grid__item + .evergreen-owner-grid__item { padding-left: clamp(1rem, 2.3vw, 2rem); border-left: 1px solid var(--color-rule); }
+.evergreen-owner-grid__item span, .evergreen-acquire__criteria span { color: var(--color-accent); font-size: 0.65rem; font-weight: 650; letter-spacing: 0.12em; }
+.evergreen-owner-grid h3, .evergreen-acquire__criteria h3, .evergreen-process h3 { margin: 1.25rem 0 0.75rem; font-size: 1rem; line-height: 1.35; }
+.evergreen-owner-grid p, .evergreen-acquire__criteria p, .evergreen-process p { margin: 0; color: var(--color-muted); font-size: 0.82rem; line-height: 1.65; }
+
+.evergreen-acquire { background: var(--color-surface); }
+.evergreen-section-intro--compact { align-items: start; }
+.evergreen-acquire__criteria { display: grid; grid-template-columns: repeat(2, 1fr); margin-top: clamp(3.5rem, 6vw, 6rem); border-top: 1px solid var(--color-rule); }
+.evergreen-acquire__criteria > div { padding: 2rem 8% 2.2rem 0; border-bottom: 1px solid var(--color-rule); }
+.evergreen-acquire__criteria > div:nth-child(even) { padding-right: 0; padding-left: 8%; border-left: 1px solid var(--color-rule); }
+.evergreen-acquire__criteria h3 { margin-top: 0.8rem; font-family: var(--font-serif); font-size: clamp(1.5rem, 2vw, 2rem); font-weight: 600; }
+.evergreen-acquire__criteria p { max-width: 510px; }
+.evergreen-sectors { margin-top: clamp(4rem, 7vw, 7rem); }
+.evergreen-sectors__head { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: end; padding-bottom: 1.4rem; border-bottom: 2px solid var(--evergreen-900); }
+.evergreen-sectors__head .evergreen-eyebrow, .evergreen-sectors__head p { margin: 0; }
+.evergreen-sectors__head p:last-child { color: var(--color-muted); font-size: 0.8rem; }
+.evergreen-sector-index { display: grid; grid-template-columns: repeat(3, 1fr); margin: 0; padding: 0; list-style: none; }
+.evergreen-sector-index li { display: grid; grid-template-columns: auto 1fr; gap: 0.8rem; align-items: baseline; min-height: 76px; padding: 1.2rem 1rem 1.2rem 0; border-bottom: 1px solid var(--color-rule); font-size: 0.82rem; font-weight: 600; }
+.evergreen-sector-index li:nth-child(3n + 2), .evergreen-sector-index li:nth-child(3n + 3) { padding-left: 1rem; border-left: 1px solid var(--color-rule); }
+.evergreen-sector-index span { color: var(--color-accent); font-size: 0.62rem; }
+.evergreen-sectors__note { max-width: 760px; margin: 1.4rem 0 0; color: var(--ink-500); font-size: 0.68rem; }
+
+.evergreen-process { padding-block: var(--section); color: var(--paper-0); background: var(--evergreen-950); }
+.evergreen-section-intro--inverse { color: var(--paper-0); }
+.evergreen-section-intro--inverse > div, .evergreen-section-intro--inverse > p:last-child { color: var(--evergreen-200); }
+.evergreen-section-intro--inverse .evergreen-eyebrow { color: #d6946f; }
+.evergreen-process__steps { display: grid; grid-template-columns: repeat(4, 1fr); margin: clamp(4rem, 7vw, 7rem) 0 0; padding: 0; border-top: 1px solid rgb(255 255 255 / 24%); list-style: none; }
+.evergreen-process__steps li { min-height: 250px; padding: 1.5rem clamp(1.2rem, 2.5vw, 2.2rem) 0 0; }
+.evergreen-process__steps li + li { padding-left: clamp(1.2rem, 2.5vw, 2.2rem); border-left: 1px solid rgb(255 255 255 / 18%); }
+.evergreen-process__steps span { color: #d6946f; font-size: 0.68rem; }
+.evergreen-process__steps h3 { margin-top: 4rem; }
+.evergreen-process__steps p { color: var(--evergreen-200); }
+
+.evergreen-stewardship { background: var(--limestone-100); }
+.evergreen-stewardship__grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: clamp(3rem, 8vw, 8rem); }
+.evergreen-stewardship__copy { align-self: end; color: var(--color-muted); font-size: 1.02rem; }
+.evergreen-stewardship__copy p { margin: 0; }
+.evergreen-stewardship__copy p + p { margin-top: 1rem; }
+.evergreen-stewardship__principles { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(4, 1fr); margin: clamp(3.5rem, 7vw, 6.5rem) 0 0; padding: 0; border-top: 1px solid var(--color-rule); list-style: none; }
+.evergreen-stewardship__principles li { padding: 1.5rem 1.5rem 0 0; }
+.evergreen-stewardship__principles li + li { padding-left: 1.5rem; border-left: 1px solid var(--color-rule); }
+.evergreen-stewardship__principles span, .evergreen-stewardship__principles small { display: block; }
+.evergreen-stewardship__principles span { font-family: var(--font-serif); font-size: 1.45rem; font-weight: 600; }
+.evergreen-stewardship__principles small { margin-top: 0.55rem; color: var(--color-muted); font-size: 0.72rem; }
+
+.evergreen-faq__grid { display: grid; grid-template-columns: 0.72fr 1.28fr; gap: clamp(4rem, 8vw, 8rem); }
+.evergreen-faq__intro > p:last-child { max-width: 430px; margin: 1.5rem 0 0; color: var(--color-muted); }
+.evergreen-faq__items { border-top: 1px solid var(--ink-950); }
+.evergreen-faq details { border-bottom: 1px solid var(--color-rule); }
+.evergreen-faq summary { position: relative; min-height: 72px; padding: 1.45rem 3rem 1.2rem 0; font-size: 0.92rem; font-weight: 600; cursor: pointer; list-style: none; }
+.evergreen-faq summary::-webkit-details-marker { display: none; }
+.evergreen-faq summary::before, .evergreen-faq summary::after { content: ''; position: absolute; top: 50%; right: 0.25rem; width: 12px; height: 1px; background: var(--evergreen-900); transition: transform 160ms ease; }
+.evergreen-faq summary::after { transform: rotate(90deg); }
+.evergreen-faq details[open] summary::after { transform: rotate(0); }
+.evergreen-faq details p { max-width: 670px; margin: -0.35rem 0 1.45rem; color: var(--color-muted); font-size: 0.84rem; }
+
+.evergreen-contact { padding-block: clamp(4rem, 7vw, 6.5rem); color: var(--paper-0); background: var(--evergreen-800); }
+.evergreen-contact__inner { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: clamp(3rem, 8vw, 8rem); align-items: end; }
+.evergreen-contact .evergreen-eyebrow { color: #efb08c; }
+.evergreen-contact__inner > div:last-child p { margin: 0 0 1.5rem; color: var(--evergreen-100); }
+.evergreen-button--light { border: 1px solid var(--paper-0); color: var(--evergreen-950); background: var(--paper-0); }
+
+.evergreen-footer { padding: 4.5rem 0 1.5rem; color: var(--evergreen-100); background: var(--evergreen-950); }
+.evergreen-footer__grid { display: grid; grid-template-columns: 1fr auto auto; gap: clamp(3rem, 8vw, 8rem); }
+.evergreen-brand--footer { color: var(--paper-0); }
+.evergreen-brand--footer .evergreen-brand__mark { color: #d6946f; }
+.evergreen-footer__grid > div:first-child p { max-width: 390px; margin: 1.3rem 0 0; color: var(--evergreen-200); }
+.evergreen-footer__grid > div:not(:first-child) { display: flex; flex-direction: column; align-items: flex-start; gap: 0.8rem; min-width: 160px; font-size: 0.75rem; }
+.evergreen-footer__grid > div:not(:first-child) > p { margin: 0 0 0.45rem; color: #d6946f; font-size: 0.62rem; font-weight: 650; letter-spacing: 0.13em; text-transform: uppercase; }
+.evergreen-footer__legal { display: flex; justify-content: space-between; gap: 2rem; margin-top: 4rem; padding-top: 1.25rem; border-top: 1px solid rgb(255 255 255 / 15%); color: var(--evergreen-200); font-size: 0.62rem; }
+
+.evergreen-reveal { opacity: 1; transform: none; }
+.js .evergreen-reveal { opacity: 0; transform: translateY(12px); transition: opacity 420ms var(--ease), transform 420ms var(--ease); }
+.js .evergreen-reveal.is-visible { opacity: 1; transform: none; }
+
+@media (max-width: 1000px) {
+  .evergreen-header__inner { grid-template-columns: auto auto 1fr; }
+  .evergreen-menu { display: inline-flex; grid-column: 3; justify-self: end; align-items: center; gap: 0.7rem; font-size: 0.72rem; font-weight: 600; }
+  .evergreen-menu i, .evergreen-menu i::before { display: block; width: 18px; height: 1px; background: var(--evergreen-900); transition: transform 180ms ease; }
+  .evergreen-menu i { position: relative; }
+  .evergreen-menu i::before { content: ''; position: absolute; top: 5px; }
+  .evergreen-menu[aria-expanded='true'] i { transform: translateY(3px) rotate(45deg); }
+  .evergreen-menu[aria-expanded='true'] i::before { transform: translateY(-5px) rotate(-90deg); }
+  .evergreen-nav { grid-column: 1 / -1; grid-row: 2; justify-content: flex-start; flex-wrap: wrap; padding-bottom: 1rem; }
+  .js .evergreen-nav { display: none; }
+  .js .evergreen-nav.is-open { display: flex; }
+  .evergreen-header__action { grid-column: 2; grid-row: 1; }
+  .evergreen-hero__grid { grid-template-columns: 1fr; }
+  .evergreen-profile { width: min(100%, 720px); }
+  .evergreen-owner-grid, .evergreen-process__steps, .evergreen-stewardship__principles { grid-template-columns: repeat(2, 1fr); }
+  .evergreen-owner-grid__item:nth-child(3), .evergreen-owner-grid__item:nth-child(4), .evergreen-process__steps li:nth-child(3), .evergreen-process__steps li:nth-child(4), .evergreen-stewardship__principles li:nth-child(3), .evergreen-stewardship__principles li:nth-child(4) { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--color-rule); }
+  .evergreen-process__steps li:nth-child(3), .evergreen-process__steps li:nth-child(4) { border-top-color: rgb(255 255 255 / 18%); }
+}
+
+@media (max-width: 720px) {
+  :root { --header-height: 68px; --section: 4.75rem; }
+  .evergreen-header__inner { grid-template-columns: 1fr auto; gap: 0.75rem; }
+  .evergreen-header__action { display: none; }
+  .evergreen-menu { grid-column: 2; }
+  .evergreen-hero { padding-top: 3.5rem; }
+  .evergreen-hero h1 { font-size: clamp(3rem, 14vw, 4.5rem); }
+  .evergreen-actions { align-items: stretch; flex-direction: column; }
+  .evergreen-button { width: 100%; }
+  .evergreen-button--quiet { justify-content: space-between; padding-inline: 0; border-bottom: 1px solid var(--color-rule); }
+  .evergreen-profile__rows > div { grid-template-columns: 1fr; gap: 0.2rem; }
+  .evergreen-profile dd { text-align: left; }
+  .evergreen-hero__statement { align-items: flex-start; flex-direction: column; gap: 0.5rem; }
+  .evergreen-section-intro, .evergreen-stewardship__grid, .evergreen-faq__grid, .evergreen-contact__inner { grid-template-columns: 1fr; gap: 2rem; }
+  .evergreen-section-intro > .evergreen-eyebrow { margin-bottom: -0.5rem; }
+  .evergreen-section-intro h2, .evergreen-stewardship h2, .evergreen-faq h2, .evergreen-contact h2 { font-size: clamp(2.65rem, 13vw, 4rem); }
+  .evergreen-owner-grid, .evergreen-acquire__criteria, .evergreen-process__steps, .evergreen-stewardship__principles, .evergreen-sector-index { grid-template-columns: 1fr; }
+  .evergreen-owner-grid__item, .evergreen-owner-grid__item + .evergreen-owner-grid__item { min-height: 0; margin: 0; padding: 1.5rem 0; border-top: 0; border-right: 0; border-bottom: 1px solid var(--color-rule); border-left: 0; }
+  .evergreen-acquire__criteria > div, .evergreen-acquire__criteria > div:nth-child(even) { padding: 1.5rem 0; border-left: 0; }
+  .evergreen-sectors__head { grid-template-columns: 1fr; gap: 0.75rem; }
+  .evergreen-sector-index li, .evergreen-sector-index li:nth-child(3n + 2), .evergreen-sector-index li:nth-child(3n + 3) { min-height: 64px; padding: 1rem 0; border-left: 0; }
+  .evergreen-process__steps li, .evergreen-process__steps li + li, .evergreen-process__steps li:nth-child(3), .evergreen-process__steps li:nth-child(4) { min-height: 0; margin: 0; padding: 1.5rem 0 2rem; border-top: 0; border-bottom: 1px solid rgb(255 255 255 / 18%); border-left: 0; }
+  .evergreen-process__steps h3 { margin-top: 1.8rem; }
+  .evergreen-stewardship__principles { grid-column: auto; }
+  .evergreen-stewardship__principles li, .evergreen-stewardship__principles li + li, .evergreen-stewardship__principles li:nth-child(3), .evergreen-stewardship__principles li:nth-child(4) { margin: 0; padding: 1.2rem 0; border-top: 0; border-bottom: 1px solid var(--color-rule); border-left: 0; }
+  .evergreen-footer__grid { grid-template-columns: 1fr 1fr; }
+  .evergreen-footer__grid > div:first-child { grid-column: 1 / -1; }
+}
+
+@media (max-width: 430px) {
+  .evergreen-brand { font-size: 0.88rem; }
+  .evergreen-footer__grid { grid-template-columns: 1fr; }
+  .evergreen-footer__grid > div:first-child { grid-column: auto; }
+  .evergreen-footer__legal { align-items: flex-start; flex-direction: column; gap: 0.4rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
+  .js .evergreen-reveal { opacity: 1; transform: none; }
+}
