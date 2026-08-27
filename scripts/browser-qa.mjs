@@ -4,6 +4,7 @@ import axeCore from 'axe-core';
 import { chromium } from 'playwright-core';
 
 const baseUrl = process.env.QA_BASE_URL || 'http://127.0.0.1:4321';
+const leatherUrl = `${baseUrl}/design-content/hyperboards`;
 const artifactDir = resolve('artifacts', 'screenshots');
 await mkdir(artifactDir, { recursive: true });
 
@@ -138,7 +139,7 @@ try {
 
   await page.setViewportSize({ width: 1440, height: 1000 });
 
-  await page.goto(baseUrl, { waitUntil: 'networkidle' });
+  await page.goto(leatherUrl, { waitUntil: 'networkidle' });
   await page.screenshot({ path: resolve(artifactDir, 'home-hero-desktop.png') });
   await revealForScreenshot(page);
   await page.screenshot({ path: resolve(artifactDir, 'home-desktop.png'), fullPage: true });
@@ -220,7 +221,7 @@ try {
 
   const noScript = await browser.newContext({ viewport: { width: 1024, height: 800 }, javaScriptEnabled: false });
   const noScriptPage = await noScript.newPage();
-  await noScriptPage.goto(baseUrl, { waitUntil: 'load' });
+  await noScriptPage.goto(leatherUrl, { waitUntil: 'load' });
   if ((await noScriptPage.locator('h1').count()) !== 1) failures.push('Homepage content is not available without JavaScript');
   await noScriptPage.goto(`${baseUrl}/contact`, { waitUntil: 'load' });
   if ((await noScriptPage.locator('form[action="/api/inquiries"]').count()) !== 1) failures.push('Contact form is not available without JavaScript');
@@ -229,7 +230,7 @@ try {
 
   const reducedMotion = await browser.newContext({ viewport: { width: 1024, height: 800 }, reducedMotion: 'reduce' });
   const reducedMotionPage = await reducedMotion.newPage();
-  await reducedMotionPage.goto(baseUrl, { waitUntil: 'networkidle' });
+  await reducedMotionPage.goto(leatherUrl, { waitUntil: 'networkidle' });
   const reducedMotionContract = await reducedMotionPage.evaluate(() => ({
     hiddenRevealCount: [...document.querySelectorAll('[data-reveal]')].filter((element) => getComputedStyle(element).opacity === '0').length,
     longAnimations: document.getAnimations().filter((animation) => {
@@ -247,7 +248,7 @@ try {
 
   const mobile = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 1 });
   const mobilePage = await mobile.newPage();
-  await mobilePage.goto(baseUrl, { waitUntil: 'networkidle' });
+  await mobilePage.goto(leatherUrl, { waitUntil: 'networkidle' });
   const mobileOverflow = await mobilePage.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1);
   if (mobileOverflow) failures.push('Homepage overflows horizontally at 390px');
 

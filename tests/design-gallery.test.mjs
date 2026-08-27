@@ -100,3 +100,18 @@ test('preview shell isolates each design behind one tiny persistent return tab',
   assert.match(source, /left:\s*clamp\(/);
   assert.match(source, /:focus-visible/);
 });
+
+test('project exposes dedicated browser QA for the published design gallery', async () => {
+  const packageJson = JSON.parse(await readFile(join(projectRoot, 'package.json'), 'utf8'));
+  const qaSource = await readFile(join(projectRoot, 'scripts', 'design-gallery-qa.mjs'), 'utf8');
+
+  assert.equal(packageJson.scripts['qa:designs'], 'node scripts/design-gallery-qa.mjs');
+  assert.match(qaSource, /\/designs\/hyperboards/);
+  assert.match(qaSource, /\/designs\/evergreen-partner/);
+  assert.match(qaSource, /\/designs\/blackline-office/);
+  assert.match(qaSource, /\/designs\/cobalt-standard/);
+  assert.match(qaSource, /\/designs\/quiet-cinema/);
+  assert.match(qaSource, /\/designs\/operators-atlas/);
+  assert.match(qaSource, /axeCore\.source/);
+  assert.match(qaSource, /all-designs/);
+});

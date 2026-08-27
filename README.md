@@ -2,6 +2,32 @@
 
 A standalone, seller-first website for Hyperboards as a direct acquirer of established businesses.
 
+## Homepage design review
+
+The root route is a private, noindex design chooser with six finalized homepage directions. Each panel opens a full-viewport isolated preview, and the compact `All designs` tab in the top-left returns to the chooser.
+
+Published previews:
+
+- Hyperboards Original
+- Evergreen Partner
+- Blackline Office
+- Cobalt Standard
+- Quiet Cinema
+- Operators Atlas
+
+The five standalone prototype mirrors are refreshed from their canonical folders before every production build:
+
+```powershell
+npm run sync:designs
+```
+
+With the site running locally, refresh the gallery thumbnails or verify every preview at desktop and mobile sizes:
+
+```powershell
+npm run capture:design-thumbnails
+npm run qa:designs
+```
+
 ## What is included
 
 - Homepage plus five primary pillar pages
@@ -99,4 +125,3 @@ The proposed statement “Our team has handled transactions ranging from $2M-$7M
 ## Launch status
 
 The implementation is complete and verified locally. It is intentionally not production-launch-ready until the decisions in [LAUNCH_CHECKLIST.md](./LAUNCH_CHECKLIST.md) are resolved.
-
