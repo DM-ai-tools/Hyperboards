@@ -19,6 +19,8 @@ const concepts = [
       'evergreen-section-index',
       'evergreen-sector-ledger',
       'evergreen-process-line',
+      'evergreen-buyer-band',
+      'evergreen-mandate-band',
     ],
   },
   {
@@ -31,7 +33,14 @@ const concepts = [
     folder: '03-blackline-office',
     id: 'blackline-office',
     palette: ['--blackline-carbon', '--blackline-paper', '--blackline-fog'],
-    components: ['blackline-mandate', 'blackline-sector-matrix', 'blackline-process-track'],
+    components: [
+      'blackline-mandate',
+      'blackline-sector-matrix',
+      'blackline-process-track',
+      'blackline-signal-rail',
+      'blackline-hero-register',
+      'blackline-sector-response',
+    ],
   },
   {
     folder: '04-continuum-house',

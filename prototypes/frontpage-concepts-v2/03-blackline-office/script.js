@@ -13,6 +13,8 @@ const mandateTitle = document.querySelector('[data-blackline-mandate-title]');
 const mandateCopy = document.querySelector('[data-blackline-mandate-copy]');
 const sectorButtons = [...document.querySelectorAll('[data-blackline-sector]')];
 const sectorCopy = document.querySelector('[data-blackline-sector-copy]');
+const processTrack = document.querySelector('[data-blackline-process-track]');
+const processStages = [...document.querySelectorAll('[data-blackline-process-stage]')];
 
 const closeMenu = () => {
   menu?.setAttribute('aria-expanded', 'false');
@@ -100,6 +102,26 @@ sectorButtons.forEach((button) => {
     if (sectorCopy) sectorCopy.textContent = button.dataset.copy || '';
   });
 });
+
+const activateProcessStage = (stage) => {
+  const index = processStages.indexOf(stage);
+  if (index < 0) return;
+  processTrack?.style.setProperty('--blackline-process-progress', String((index + 1) / processStages.length));
+  processStages.forEach((candidate) => candidate.classList.toggle('is-active', candidate === stage));
+};
+
+processStages.forEach((stage) => {
+  stage.addEventListener('pointerenter', () => activateProcessStage(stage));
+  stage.addEventListener('focusin', () => activateProcessStage(stage));
+});
+
+if ('IntersectionObserver' in window && processStages.length) {
+  const processObserver = new IntersectionObserver((entries) => {
+    const active = entries.filter((entry) => entry.isIntersecting).at(-1);
+    if (active) activateProcessStage(active.target);
+  }, { rootMargin: '-22% 0px -32% 0px', threshold: 0.45 });
+  processStages.forEach((stage) => processObserver.observe(stage));
+}
 
 document.querySelectorAll('.blackline-questions details').forEach((detail) => {
   detail.addEventListener('toggle', () => {
