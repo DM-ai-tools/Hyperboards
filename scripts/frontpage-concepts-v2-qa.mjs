@@ -160,6 +160,10 @@ try {
       await page.evaluate((selector) => {
         if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
         document.querySelectorAll(selector).forEach((element) => element.classList.add('is-visible', 'is-ready'));
+        const stickyHeader = document.querySelector('header');
+        const skipLink = document.querySelector('body > a[href^="#"]');
+        stickyHeader?.style.setProperty('position', 'relative', 'important');
+        skipLink?.style.setProperty('display', 'none', 'important');
         window.scrollTo(0, 0);
       }, concept.reveal);
       await page.waitForTimeout(100);
