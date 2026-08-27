@@ -8,7 +8,7 @@
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23123d33'/%3E%3Cpath d='M8 6v20M24 6v20M8 16h16' stroke='%23fffefb' stroke-width='3' fill='none'/%3E%3C/svg%3E" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,500;7..72,600&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
     <script src="script.js" defer></script>
   </head>
@@ -40,6 +40,14 @@
       </div>
     </header>
 
+    <nav class="evergreen-section-index" aria-label="On this page" data-evergreen-index>
+      <a href="#top" data-evergreen-index-link aria-current="true"><span>01</span><em>Opening</em></a>
+      <a href="#role" data-evergreen-index-link><span>02</span><em>Relationship</em></a>
+      <a href="#profile" data-evergreen-index-link><span>03</span><em>Mandate</em></a>
+      <a href="#process" data-evergreen-index-link><span>04</span><em>Process</em></a>
+      <a href="#questions" data-evergreen-index-link><span>05</span><em>Questions</em></a>
+    </nav>
+
     <main id="evergreen-main">
       <section class="evergreen-hero" id="top" aria-labelledby="evergreen-title">
         <div class="evergreen-shell evergreen-hero__grid">
@@ -57,6 +65,10 @@
           </div>
 
           <aside class="evergreen-profile evergreen-reveal" aria-label="Acquisition profile">
+            <div class="evergreen-profile__status">
+              <span>Mandate status</span>
+              <strong><i aria-hidden="true"></i> Reviewing direct opportunities</strong>
+            </div>
             <div class="evergreen-profile__head">
               <p>Acquisition profile</p>
               <span>Current focus</span>
@@ -156,22 +168,26 @@
             </div>
           </div>
 
-          <div class="evergreen-sectors evergreen-reveal">
+          <div class="evergreen-sectors evergreen-sector-ledger evergreen-reveal">
             <div class="evergreen-sectors__head">
               <p class="evergreen-eyebrow">Target industries</p>
               <p>Nine areas where repeat demand and durable customer relationships are often present.</p>
             </div>
             <ol class="evergreen-sector-index">
-              <li><span>01</span>Building &amp; Construction</li>
-              <li><span>02</span>Communication &amp; Media</li>
-              <li><span>03</span>Entertainment &amp; Recreation</li>
-              <li><span>04</span>Financial Services</li>
-              <li><span>05</span>Health Care &amp; Fitness</li>
-              <li><span>06</span>Manufacturing</li>
-              <li><span>07</span>Online &amp; Technology</li>
-              <li><span>08</span>Service Businesses</li>
-              <li><span>09</span>Wholesale &amp; Distributors</li>
+              <li><button type="button" data-evergreen-sector data-rationale="Project backlogs, maintenance needs, and repeat commercial relationships can support durable demand." aria-pressed="false"><span>01</span><b>Building &amp; Construction</b><i aria-hidden="true">+</i></button></li>
+              <li><button type="button" data-evergreen-sector data-rationale="Contracted engagements and recurring client relationships can create visible, repeatable economics." aria-pressed="false"><span>02</span><b>Communication &amp; Media</b><i aria-hidden="true">+</i></button></li>
+              <li><button type="button" data-evergreen-sector data-rationale="Membership, participation, and recurring-use models may produce dependable customer behavior." aria-pressed="false"><span>03</span><b>Entertainment &amp; Recreation</b><i aria-hidden="true">+</i></button></li>
+              <li><button type="button" data-evergreen-sector data-rationale="Recurring revenue and transferable books of business can support continuity beyond the owner." aria-pressed="false"><span>04</span><b>Financial Services</b><i aria-hidden="true">+</i></button></li>
+              <li><button type="button" data-evergreen-sector data-rationale="Defensive demand and recurring service relationships can remain durable through operating cycles." aria-pressed="false"><span>05</span><b>Health Care &amp; Fitness</b><i aria-hidden="true">+</i></button></li>
+              <li><button type="button" data-evergreen-sector data-rationale="Established customer relationships, operating know-how, and tangible assets can support transferability." aria-pressed="false"><span>06</span><b>Manufacturing</b><i aria-hidden="true">+</i></button></li>
+              <li><button type="button" data-evergreen-sector data-rationale="Scalable operations and repeat usage can create attractive economics when customer demand is durable." aria-pressed="false"><span>07</span><b>Online &amp; Technology</b><i aria-hidden="true">+</i></button></li>
+              <li><button type="button" data-evergreen-sector data-rationale="Fragmented service categories may offer resilient local demand and thoughtful consolidation potential." aria-pressed="false"><span>08</span><b>Service Businesses</b><i aria-hidden="true">+</i></button></li>
+              <li><button type="button" data-evergreen-sector data-rationale="Recurring B2B needs and long-standing supplier relationships can underpin stable operating performance." aria-pressed="false"><span>09</span><b>Wholesale &amp; Distributors</b><i aria-hidden="true">+</i></button></li>
             </ol>
+            <div class="evergreen-sector-ledger__brief" aria-label="Selected industry context">
+              <span>Demand context</span>
+              <p data-evergreen-sector-copy>Choose an industry to see why it may align with repeat-demand acquisition criteria.</p>
+            </div>
             <p class="evergreen-sectors__note">Every opportunity must satisfy the full acquisition and underwriting criteria; sector inclusion does not imply fit.</p>
           </div>
         </div>
@@ -185,23 +201,28 @@
             <p>A business should be understood before terms are finalized. Our process builds detail as mutual interest grows.</p>
           </div>
 
+          <div class="evergreen-process-line" aria-hidden="true" data-evergreen-process-line>
+            <span></span>
+            <i>01</i><i>02</i><i>03</i><i>04</i>
+          </div>
+
           <ol class="evergreen-process__steps">
-            <li class="evergreen-reveal">
+            <li class="evergreen-reveal" data-evergreen-process-step>
               <span>01</span>
               <h3>Confidential introduction</h3>
               <p>Share the broad outline of the business and what is prompting the conversation.</p>
             </li>
-            <li class="evergreen-reveal">
+            <li class="evergreen-reveal" data-evergreen-process-step>
               <span>02</span>
               <h3>Initial fit</h3>
               <p>We compare the opportunity with our acquisition profile and your priorities.</p>
             </li>
-            <li class="evergreen-reveal">
+            <li class="evergreen-reveal" data-evergreen-process-step>
               <span>03</span>
               <h3>Business review</h3>
               <p>With mutual interest, we build a clearer view of earnings, operations, and context.</p>
             </li>
-            <li class="evergreen-reveal">
+            <li class="evergreen-reveal" data-evergreen-process-step>
               <span>04</span>
               <h3>Terms &amp; diligence</h3>
               <p>Potential structure, verification, documentation, and approvals are worked through directly.</p>
