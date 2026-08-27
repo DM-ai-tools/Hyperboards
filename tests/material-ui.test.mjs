@@ -3,6 +3,7 @@ import { after, before, test } from 'node:test';
 import { chromium } from 'playwright-core';
 
 const baseUrl = process.env.QA_BASE_URL || 'http://127.0.0.1:4321';
+const leatherUrl = `${baseUrl}/design-content/hyperboards`;
 let browser;
 let page;
 
@@ -17,7 +18,7 @@ after(async () => {
 });
 
 test('the case frame is decorative, stitched, and backed by local texture assets', async () => {
-  await page.goto(baseUrl, { waitUntil: 'networkidle' });
+  await page.goto(leatherUrl, { waitUntil: 'networkidle' });
 
   const frameContract = await page.evaluate(() => {
     const frames = document.querySelectorAll('.case-frame');
@@ -55,6 +56,8 @@ test('the case frame is decorative, stitched, and backed by local texture assets
     '/assets/leather-relief.jpg',
     '/assets/saddle-stitch-horizontal.svg',
     '/assets/saddle-stitch-vertical.svg',
+    '/assets/saddle-stitch-navy-horizontal.svg',
+    '/assets/saddle-stitch-navy-vertical.svg',
     '/assets/paper-grain.svg',
   ]) {
     const response = await page.request.get(`${baseUrl}${asset}`);
@@ -67,7 +70,7 @@ test('the case frame is decorative, stitched, and backed by local texture assets
 });
 
 test('primary dark and paper surfaces resolve the approved material textures', async () => {
-  await page.goto(baseUrl, { waitUntil: 'networkidle' });
+  await page.goto(leatherUrl, { waitUntil: 'networkidle' });
 
   const surfaces = await page.evaluate(() => {
     const background = (selector) => {
@@ -99,7 +102,7 @@ test('primary dark and paper surfaces resolve the approved material textures', a
 });
 
 test('conversion controls and core content modules expose tactile casework treatments', async () => {
-  await page.goto(baseUrl, { waitUntil: 'networkidle' });
+  await page.goto(leatherUrl, { waitUntil: 'networkidle' });
 
   const treatments = await page.evaluate(() => {
     const primary = document.querySelector('.button--primary');
@@ -113,6 +116,8 @@ test('conversion controls and core content modules expose tactile casework treat
       primaryStitchBorder: primary ? getComputedStyle(primary, '::before').borderTopStyle : '',
       primaryStitchSize: primary ? getComputedStyle(primary, '::before').backgroundSize : '',
       primaryCarrier: primary ? getComputedStyle(primary).backgroundImage : '',
+      primaryCarrierColor: primary ? getComputedStyle(primary).backgroundColor : '',
+      primaryInset: primary ? Number.parseFloat(getComputedStyle(primary, '::before').left) : 0,
       primaryPlate: primary ? getComputedStyle(primary, '::after').backgroundImage : '',
       primaryShadow: primary ? getComputedStyle(primary).boxShadow : 'none',
       heroBorder: heroArt ? getComputedStyle(heroArt).borderTopStyle : 'none',
@@ -122,12 +127,14 @@ test('conversion controls and core content modules expose tactile casework treat
     };
   });
 
-  assert.match(treatments.primaryStitch, /saddle-stitch-horizontal\.svg/);
-  assert.match(treatments.primaryStitch, /saddle-stitch-vertical\.svg/);
+  assert.match(treatments.primaryStitch, /saddle-stitch-navy-horizontal\.svg/);
+  assert.match(treatments.primaryStitch, /saddle-stitch-navy-vertical\.svg/);
   assert.equal(treatments.primaryStitchBorder, 'none');
   assert.match(treatments.primaryStitchSize, /^24px 4px/, 'control seams should be finer than panel seams');
-  assert.match(treatments.primaryCarrier, /leather-relief\.jpg/);
-  assert.notEqual(treatments.primaryPlate, 'none', 'the CTA should seat a brass plate inside its leather carrier');
+  assert.doesNotMatch(treatments.primaryCarrier, /leather-relief\.jpg/);
+  assert.equal(treatments.primaryCarrierColor, 'rgb(199, 168, 91)', 'the CTA carrier must be brass');
+  assert.ok(treatments.primaryInset >= 5, 'the navy saddle seam must sit inside the brass face');
+  assert.notEqual(treatments.primaryPlate, 'none', 'the CTA should retain a dimensional brass highlight');
   assert.notEqual(treatments.primaryShadow, 'none');
   assert.notEqual(treatments.heroBorder, 'none');
   assert.ok(treatments.sectorRadius >= 4, 'sector cards should have a tactile folio edge');
@@ -137,7 +144,7 @@ test('conversion controls and core content modules expose tactile casework treat
 
 test('the material frame preserves semantic structures and mobile width', async () => {
   await page.setViewportSize({ width: 320, height: 800 });
-  await page.goto(baseUrl, { waitUntil: 'networkidle' });
+  await page.goto(leatherUrl, { waitUntil: 'networkidle' });
 
   const mobileContract = await page.evaluate(() => {
     const frame = document.querySelector('.case-frame');
@@ -195,7 +202,7 @@ test('major leather pieces use dimensional saddle stitching instead of dashed bo
   await page.setViewportSize({ width: 1440, height: 1000 });
 
   const routeContracts = [
-    ['/', [
+    ['/design-content/hyperboards', [
       ['.owner-context__aside', '::before'],
       ['.cta-band__inner', '::before'],
       ['.hero-art', '::before'],
@@ -248,7 +255,7 @@ test('major leather pieces use dimensional saddle stitching instead of dashed bo
 
 test('paper tiles have layered depth and responsive lift without losing their material boundary', async () => {
   await page.setViewportSize({ width: 1440, height: 1000 });
-  await page.goto(baseUrl, { waitUntil: 'networkidle' });
+  await page.goto(leatherUrl, { waitUntil: 'networkidle' });
 
   const selectors = ['.principles article', '.sector-grid li', '.faq-list details'];
   for (const selector of selectors) {
@@ -273,7 +280,7 @@ test('paper tiles have layered depth and responsive lift without losing their ma
 
 test('brass corners and the acquisition chart expose realistic hardware, grid, and restrained motion', async () => {
   await page.setViewportSize({ width: 1440, height: 1000 });
-  await page.goto(baseUrl, { waitUntil: 'networkidle' });
+  await page.goto(leatherUrl, { waitUntil: 'networkidle' });
 
   const contract = await page.evaluate(() => {
     const corner = document.querySelector('.case-frame__corner');

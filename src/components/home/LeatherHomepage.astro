@@ -1,17 +1,15 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import ButtonLink from '../components/ButtonLink.astro';
-import CriteriaBand from '../components/CriteriaBand.astro';
-import CtaBand from '../components/CtaBand.astro';
-import FaqList from '../components/FaqList.astro';
-import HeroArtwork from '../components/HeroArtwork.astro';
-import ProcessSteps from '../components/ProcessSteps.astro';
-import SectionIntro from '../components/SectionIntro.astro';
-import SectorGrid from '../components/SectorGrid.astro';
+import ButtonLink from '../ButtonLink.astro';
+import CriteriaBand from '../CriteriaBand.astro';
+import CtaBand from '../CtaBand.astro';
+import FaqList from '../FaqList.astro';
+import HeroArtwork from '../HeroArtwork.astro';
+import ProcessSteps from '../ProcessSteps.astro';
+import SectionIntro from '../SectionIntro.astro';
+import SectorGrid from '../SectorGrid.astro';
 ---
 
-<BaseLayout>
-  <section class="hero">
+<section class="hero">
     <div class="hero__inner container-wide">
       <div class="hero__copy">
         <p class="eyebrow">Direct business buyer</p>
@@ -156,13 +154,12 @@ import SectorGrid from '../components/SectorGrid.astro';
     </div>
   </section>
 
-  <CtaBand
-    eyebrow="Speak with the buyer"
-    title="Considering selling your business?"
-    body="Begin with a private, no-obligation conversation directly with Hyperboards."
-    label="Discuss selling your business"
-  />
-</BaseLayout>
+<CtaBand
+  eyebrow="Speak with the buyer"
+  title="Considering selling your business?"
+  body="Begin with a private, no-obligation conversation directly with Hyperboards."
+  label="Discuss selling your business"
+/>
 
 <style>
   .hero {

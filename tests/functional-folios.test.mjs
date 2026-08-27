@@ -4,7 +4,6 @@ import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 
 const frozenHomeFiles = new Map([
-  ['src/pages/index.astro', 'ae51c4476877a9eff61fa6ac2705ab5a1ce0406ef127f9ffd25819a63cc2b9d6'],
   ['src/components/HeroArtwork.astro', 'f7cd2c53677768de55c7860fd59d6c737f02d511027b1229e238c854848a09a1'],
   ['src/components/CriteriaBand.astro', '1ca7bbadb992bbfcee6e85736a997f2785c227c595f99314c577dec49faeb456'],
   ['src/components/CtaBand.astro', '2e187cb634bfc21ecd7a54a69271fcace589bbbd833db28b5d1d375f96c6bdcb'],
@@ -17,12 +16,26 @@ const frozenHomeFiles = new Map([
   ['src/styles/global.css', '9b0e05f190f35a228d2a705530d69b1cb986d37321be94d296a52ea6ba45d4cd'],
 ]);
 
-test('homepage-owned source remains byte-for-byte frozen during the folio redesign', async () => {
+test('leather-home supporting source remains byte-for-byte frozen during gallery publishing', async () => {
   for (const [file, expected] of frozenHomeFiles) {
     const source = (await readFile(file, 'utf8')).replaceAll('\r\n', '\n');
     const digest = createHash('sha256').update(source).digest('hex');
     assert.equal(digest, expected, file);
   }
+});
+
+test('approved leather homepage has a dedicated reusable owner and preview route', async () => {
+  const [homepage, route] = await Promise.all([
+    readFile('src/components/home/LeatherHomepage.astro', 'utf8'),
+    readFile('src/pages/design-content/hyperboards.astro', 'utf8'),
+  ]);
+
+  assert.match(homepage, /A thoughtful next chapter for the business you built/);
+  assert.match(homepage, /We are the buyer—not the adviser finding one/);
+  assert.match(homepage, /<CriteriaBand\s*\/>/);
+  assert.match(homepage, /<CtaBand/);
+  assert.match(route, /<BaseLayout noindex>/);
+  assert.match(route, /<LeatherHomepage\s*\/>/);
 });
 
 test('shared folio foundation provides a semantic cover and keyboard-safe controller', async () => {
