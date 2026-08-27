@@ -15,7 +15,8 @@
     "test": "node --test tests/*.test.mjs",
     "test:content": "node scripts/check-content.mjs",
     "qa:browser": "node scripts/browser-qa.mjs",
-    "qa:concepts": "node scripts/frontpage-concepts-qa.mjs"
+    "qa:concepts": "node scripts/frontpage-concepts-qa.mjs",
+    "qa:concepts:v2": "node scripts/frontpage-concepts-v2-qa.mjs"
   },
   "dependencies": {
     "@astrojs/node": "11.1.4",
