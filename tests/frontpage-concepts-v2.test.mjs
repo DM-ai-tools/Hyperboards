@@ -12,13 +12,32 @@ const concepts = [
     folder: '01-evergreen-partner',
     id: 'evergreen-partner',
     palette: ['--evergreen-900', '--limestone-100', '--copper-600'],
-    components: ['evergreen-profile', 'evergreen-owner-grid', 'evergreen-sector-index'],
+    components: [
+      'evergreen-profile',
+      'evergreen-owner-grid',
+      'evergreen-sector-index',
+      'evergreen-section-index',
+      'evergreen-sector-ledger',
+      'evergreen-process-line',
+    ],
   },
   {
     folder: '02-cobalt-standard',
     id: 'cobalt-standard',
     palette: ['--cobalt-700', '--porcelain-50', '--terracotta-600'],
     components: ['cobalt-criteria-rail', 'cobalt-operating-field', 'cobalt-sector-index'],
+  },
+  {
+    folder: '03-blackline-office',
+    id: 'blackline-office',
+    palette: ['--blackline-carbon', '--blackline-paper', '--blackline-fog'],
+    components: ['blackline-mandate', 'blackline-sector-matrix', 'blackline-process-track'],
+  },
+  {
+    folder: '04-continuum-house',
+    id: 'continuum-house',
+    palette: ['--continuum-plum', '--continuum-mineral', '--continuum-signal'],
+    components: ['continuum-path', 'continuum-lens', 'continuum-sector-orbit'],
   },
 ];
 
@@ -132,10 +151,16 @@ for (const concept of concepts) {
   });
 }
 
-test('the two concepts use independent structural namespaces', async () => {
+test('all concepts use independent structural namespaces', async () => {
   const sources = await Promise.all(concepts.map(({ folder }) => loadConcept(folder)));
   const classSets = sources.map(({ html }) => new Set([...html.matchAll(/class=["']([^"']+)["']/g)].flatMap((match) => match[1].split(/\s+/))));
-  const shared = [...classSets[0]].filter((name) => classSets[1].has(name));
-
-  assert.ok(shared.length < 8, `concepts share too many structural classes: ${shared.join(', ')}`);
+  for (let left = 0; left < classSets.length; left += 1) {
+    for (let right = left + 1; right < classSets.length; right += 1) {
+      const shared = [...classSets[left]].filter((name) => classSets[right].has(name));
+      assert.ok(
+        shared.length < 8,
+        `${concepts[left].folder} and ${concepts[right].folder} share structural classes: ${shared.join(', ')}`,
+      );
+    }
+  }
 });
