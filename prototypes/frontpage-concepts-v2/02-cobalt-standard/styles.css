@@ -95,7 +95,7 @@ svg { display: block; }
 .cobalt-operating-field__footer { justify-content: center; }
 .cobalt-operating-field__footer i { width: clamp(70px, 9vw, 130px); height: 1px; background: rgb(255 255 255 / 45%); }
 
-.cobalt-criteria-rail { display: grid; grid-template-columns: repeat(4, 1fr); margin: clamp(4rem, 7vw, 7rem) auto 0; color: var(--white-0); background: var(--graphite-950); }
+.cobalt-criteria-rail { display: grid; grid-template-columns: repeat(4, 1fr); margin: clamp(2rem, 3vw, 3rem) auto 0; color: var(--white-0); background: var(--graphite-950); }
 .cobalt-criteria-rail > div { min-width: 0; padding: 1.45rem clamp(1.1rem, 2vw, 1.8rem); }
 .cobalt-criteria-rail > div + div { border-left: 1px solid rgb(255 255 255 / 18%); }
 .cobalt-criteria-rail dt { color: #abb7c5; font-size: 0.62rem; letter-spacing: 0.09em; text-transform: uppercase; }
