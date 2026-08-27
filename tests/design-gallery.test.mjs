@@ -96,7 +96,7 @@ test('preview shell isolates each design behind one tiny persistent return tab',
   assert.equal((source.match(/class="all-designs"/g) || []).length, 1);
   assert.match(source, /min-height:\s*24px/);
   assert.match(source, /max-width:\s*90px/);
-  assert.match(source, /top:\s*clamp\(/);
+  assert.match(source, /top:\s*36px/);
   assert.match(source, /left:\s*clamp\(/);
   assert.match(source, /:focus-visible/);
 });

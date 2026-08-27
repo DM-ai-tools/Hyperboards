@@ -145,8 +145,15 @@ try {
       report.previews.push({ design: design.name, viewport: viewport.name, status: response?.status() || 0, shell, content });
       if (response?.status() !== 200) failures.push(`${design.name} ${viewport.name} returned ${response?.status()}`);
       if (shell.backText !== 'All designs' || shell.backHref !== '/') failures.push(`${design.name} ${viewport.name} has an invalid return control`);
-      if (!shell.backBounds || shell.backBounds.width > 96 || shell.backBounds.height > 34 || shell.backBounds.x > 10 || shell.backBounds.y > 10) {
-        failures.push(`${design.name} ${viewport.name} return control is not compact in the top-left`);
+      if (
+        !shell.backBounds
+        || shell.backBounds.width > 96
+        || shell.backBounds.height > 34
+        || shell.backBounds.x > 10
+        || shell.backBounds.y < 35.5
+        || shell.backBounds.y > 36.5
+      ) {
+        failures.push(`${design.name} ${viewport.name} return control is not compact, left-aligned, and 36px from the top`);
       }
       if (shell.frameTitle !== `${design.name} homepage preview`) failures.push(`${design.name} ${viewport.name} iframe title is incorrect`);
       if (shell.robots !== 'noindex, nofollow') failures.push(`${design.name} ${viewport.name} shell is missing noindex`);

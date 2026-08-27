@@ -133,7 +133,10 @@ test('conversion controls and core content modules expose tactile casework treat
   assert.match(treatments.primaryStitchSize, /^24px 4px/, 'control seams should be finer than panel seams');
   assert.doesNotMatch(treatments.primaryCarrier, /leather-relief\.jpg/);
   assert.equal(treatments.primaryCarrierColor, 'rgb(199, 168, 91)', 'the CTA carrier must be brass');
-  assert.ok(treatments.primaryInset >= 5, 'the navy saddle seam must sit inside the brass face');
+  assert.ok(
+    treatments.primaryInset >= 3.75 && treatments.primaryInset <= 3.85,
+    'the navy saddle seam must sit 3.8px inside the brass face',
+  );
   assert.notEqual(treatments.primaryPlate, 'none', 'the CTA should retain a dimensional brass highlight');
   assert.notEqual(treatments.primaryShadow, 'none');
   assert.notEqual(treatments.heroBorder, 'none');
