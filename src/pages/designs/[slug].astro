@@ -1,0 +1,120 @@
+---
+import { designs, type DesignOption } from '../../data/designs';
+
+export const prerender = true;
+
+export function getStaticPaths() {
+  return designs.map((design) => ({
+    params: { slug: design.slug },
+    props: { design },
+  }));
+}
+
+interface Props {
+  design: DesignOption;
+}
+
+const { design } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#101713" />
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>{design.name} — Hyperboards Design Preview</title>
+  </head>
+  <body>
+    <a class="all-designs" href="/">All designs</a>
+    <iframe
+      src={design.contentUrl}
+      title={`${design.name} homepage preview`}
+      loading="eager"
+      referrerpolicy="same-origin"
+    ></iframe>
+  </body>
+</html>
+
+<style>
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    background: #101713;
+  }
+
+  iframe {
+    display: block;
+    width: 100dvw;
+    height: 100dvh;
+    border: 0;
+    background: #f4f2eb;
+  }
+
+  .all-designs {
+    position: fixed;
+    z-index: 20;
+    top: clamp(0.22rem, 0.52vw, 0.4rem);
+    left: clamp(0.22rem, 0.52vw, 0.4rem);
+    display: inline-flex;
+    width: fit-content;
+    max-width: 90px;
+    min-height: 24px;
+    align-items: center;
+    justify-content: center;
+    padding: 0.14rem 0.38rem;
+    border: 1px solid rgba(255, 255, 255, 0.44);
+    border-radius: 0.12rem;
+    background: rgba(10, 17, 14, 0.86);
+    box-shadow: 0 0.2rem 0.8rem rgba(0, 0, 0, 0.18);
+    color: rgba(255, 255, 255, 0.9);
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 0.575rem;
+    font-weight: 680;
+    letter-spacing: 0.065em;
+    line-height: 1;
+    text-decoration: none;
+    text-transform: uppercase;
+    white-space: nowrap;
+    backdrop-filter: blur(8px);
+    transition:
+      background-color 140ms ease,
+      border-color 140ms ease,
+      color 140ms ease;
+  }
+
+  .all-designs::before {
+    margin-right: 0.24rem;
+    content: '←';
+    font-size: 0.66rem;
+  }
+
+  .all-designs:hover {
+    border-color: rgba(255, 255, 255, 0.72);
+    background: rgba(10, 17, 14, 0.96);
+    color: #fff;
+  }
+
+  .all-designs:focus-visible {
+    outline: 2px solid #f4cf72;
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .all-designs {
+      transition: none;
+    }
+  }
+</style>

@@ -82,3 +82,21 @@ test('gallery ships one optimized local thumbnail for every design', async () =>
     assert.ok(image.length < 350_000, `${slug} thumbnail should stay below 350KB`);
   }
 });
+
+test('preview shell isolates each design behind one tiny persistent return tab', async () => {
+  const source = await readFile(join(projectRoot, 'src', 'pages', 'designs', '[slug].astro'), 'utf8');
+
+  assert.match(source, /getStaticPaths/);
+  assert.match(source, /designs\.map/);
+  assert.match(source, /title={`\$\{design\.name\} homepage preview`}/);
+  assert.match(source, /src={design\.contentUrl}/);
+  assert.match(source, /href="\/"/);
+  assert.match(source, />All designs</);
+  assert.equal((source.match(/<iframe\b/g) || []).length, 1);
+  assert.equal((source.match(/class="all-designs"/g) || []).length, 1);
+  assert.match(source, /min-height:\s*24px/);
+  assert.match(source, /max-width:\s*90px/);
+  assert.match(source, /top:\s*clamp\(/);
+  assert.match(source, /left:\s*clamp\(/);
+  assert.match(source, /:focus-visible/);
+});
