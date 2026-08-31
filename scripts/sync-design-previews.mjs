@@ -6,10 +6,7 @@ const defaultProjectRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..'
 
 export const previewMappings = Object.freeze([
   { source: 'prototypes/frontpage-concepts-v2/01-evergreen-partner', slug: 'evergreen-partner' },
-  { source: 'prototypes/frontpage-concepts-v2/03-blackline-office', slug: 'blackline-office' },
-  { source: 'prototypes/frontpage-concepts-v2/02-cobalt-standard', slug: 'cobalt-standard' },
-  { source: 'prototypes/frontpage-concepts/03-quiet-cinema', slug: 'quiet-cinema' },
-  { source: 'prototypes/frontpage-concepts/02-operators-atlas', slug: 'operators-atlas' },
+  { source: 'prototypes/frontpage-concepts-v2/05-evergreen-partner-refined', slug: 'evergreen-partner-refined' },
 ]);
 
 export async function syncDesignPreviews({
@@ -18,11 +15,13 @@ export async function syncDesignPreviews({
 } = {}) {
   const published = [];
 
+  await rm(destinationRoot, { recursive: true, force: true });
+  await mkdir(destinationRoot, { recursive: true });
+
   for (const mapping of previewMappings) {
     const sourceRoot = resolve(projectRoot, mapping.source);
     const targetRoot = resolve(destinationRoot, mapping.slug);
 
-    await rm(targetRoot, { recursive: true, force: true });
     await mkdir(targetRoot, { recursive: true });
 
     for (const file of ['index.html', 'styles.css', 'script.js']) {

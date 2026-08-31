@@ -15,7 +15,7 @@ import { designs } from '../data/designs';
         <p>Homepage design review</p>
         <h1>Choose a homepage direction.</h1>
       </div>
-      <p class="gallery-intro__note">Six finalized approaches. Select any panel to open the complete design.</p>
+      <p class="gallery-intro__note">Three approved directions. Select any panel to open the complete design.</p>
     </header>
 
     <main id="gallery-content" class="design-grid">
@@ -99,7 +99,7 @@ import { designs } from '../data/designs';
 
   .design-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: clamp(1rem, 2.5vw, 2rem);
     padding-block: clamp(1.4rem, 3vw, 2.6rem);
   }
@@ -125,6 +125,10 @@ import { designs } from '../data/designs';
 
     .gallery-intro__note {
       max-width: 36rem;
+    }
+
+    .design-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 

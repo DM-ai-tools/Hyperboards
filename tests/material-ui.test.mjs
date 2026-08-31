@@ -17,7 +17,7 @@ after(async () => {
   await browser?.close();
 });
 
-test('the case frame is decorative, stitched, and backed by local texture assets', async () => {
+test('the case frame keeps a subtle leather rail without stitches or hardware', async () => {
   await page.goto(leatherUrl, { waitUntil: 'networkidle' });
 
   const frameContract = await page.evaluate(() => {
@@ -47,17 +47,11 @@ test('the case frame is decorative, stitched, and backed by local texture assets
   assert.equal(frameContract.pointerEvents, 'none');
   assert.equal(frameContract.position, 'fixed');
   assert.equal(frameContract.stitchStyle, 'none');
-  assert.match(frameContract.stitchPattern, /saddle-stitch-horizontal\.svg/);
-  assert.match(frameContract.stitchPattern, /saddle-stitch-vertical\.svg/);
-  assert.match(frameContract.stitchSize, /^36px 6px/, 'the perimeter seam should be half the previous scale');
-  assert.ok(frameContract.railWidth >= 14, 'the desktop saddle seam should sit fully inside the leather rail');
+  assert.equal(frameContract.stitchPattern, 'none');
+  assert.ok(frameContract.railWidth >= 14, 'the desktop leather rail should remain visible');
 
   for (const asset of [
     '/assets/leather-relief.jpg',
-    '/assets/saddle-stitch-horizontal.svg',
-    '/assets/saddle-stitch-vertical.svg',
-    '/assets/saddle-stitch-navy-horizontal.svg',
-    '/assets/saddle-stitch-navy-vertical.svg',
     '/assets/paper-grain.svg',
   ]) {
     const response = await page.request.get(`${baseUrl}${asset}`);
@@ -95,13 +89,13 @@ test('primary dark and paper surfaces resolve the approved material textures', a
     assert.match(surfaces[selector], /leather-relief\.jpg/, `${selector} should render the navy relief texture`);
     assert.doesNotMatch(surfaces[selector], /leather-natural\.jpg/, `${selector} must not use the photograph as its color field`);
   }
-  assert.equal(surfaces.heroColor, 'rgb(11, 27, 54)', 'the hero should retain the original navy base');
+  assert.equal(surfaces.heroColor, 'rgb(24, 53, 83)', 'the hero should use the approved lighter navy base');
   assert.match(surfaces.heroBlend, /soft-light/, 'the leather image should behave as a relief layer');
   assert.match(surfaces.paper, /paper-grain\.svg/, 'paper sections should render the paper grain');
   assert.equal(surfaces.ctaEyebrow, 'rgb(232, 217, 167)', 'CTA eyebrow should remain legible on leather');
 });
 
-test('conversion controls and core content modules expose tactile casework treatments', async () => {
+test('conversion controls and core content modules retain depth without decorative seams', async () => {
   await page.goto(leatherUrl, { waitUntil: 'networkidle' });
 
   const treatments = await page.evaluate(() => {
@@ -127,16 +121,11 @@ test('conversion controls and core content modules expose tactile casework treat
     };
   });
 
-  assert.match(treatments.primaryStitch, /saddle-stitch-navy-horizontal\.svg/);
-  assert.match(treatments.primaryStitch, /saddle-stitch-navy-vertical\.svg/);
+  assert.equal(treatments.primaryStitch, 'none');
   assert.equal(treatments.primaryStitchBorder, 'none');
-  assert.match(treatments.primaryStitchSize, /^24px 4px/, 'control seams should be finer than panel seams');
   assert.doesNotMatch(treatments.primaryCarrier, /leather-relief\.jpg/);
   assert.equal(treatments.primaryCarrierColor, 'rgb(199, 168, 91)', 'the CTA carrier must be brass');
-  assert.ok(
-    treatments.primaryInset >= 3.75 && treatments.primaryInset <= 3.85,
-    'the navy saddle seam must sit 3.8px inside the brass face',
-  );
+  assert.equal(treatments.primaryInset, 2, 'the CTA should retain only its clean inset keyline');
   assert.notEqual(treatments.primaryPlate, 'none', 'the CTA should retain a dimensional brass highlight');
   assert.notEqual(treatments.primaryShadow, 'none');
   assert.notEqual(treatments.heroBorder, 'none');
@@ -201,7 +190,7 @@ test('secondary routes inherit the same leather and paper craft language', async
   }
 });
 
-test('major leather pieces use dimensional saddle stitching instead of dashed borders', async () => {
+test('major leather pieces do not render decorative stitching', async () => {
   await page.setViewportSize({ width: 1440, height: 1000 });
 
   const routeContracts = [
@@ -237,13 +226,9 @@ test('major leather pieces use dimensional saddle stitching instead of dashed bo
         };
       }, pseudo);
 
-      assert.match(stitch.image, /saddle-stitch-horizontal\.svg/, `${selector}${pseudo} needs saddle thread`);
-      assert.match(stitch.image, /saddle-stitch-vertical\.svg/, `${selector}${pseudo} needs vertical saddle thread`);
-      assert.equal(stitch.borderStyle, 'none', `${selector}${pseudo} must not use a dashed CSS border`);
-      assert.notEqual(stitch.shadow, 'none', `${selector}${pseudo} needs a recessed stitch channel`);
-      if (['.owner-context__aside', '.cta-band__inner', '.hero-art', '.inquiry-shell', '.lens'].includes(selector)) {
-        assert.match(stitch.size, /^28px 5px/, `${selector}${pseudo} should use the finer panel seam`);
-      }
+      assert.equal(stitch.image, 'none', `${selector}${pseudo} must not render a stitch image`);
+      assert.equal(stitch.borderStyle, 'none', `${selector}${pseudo} must not replace stitches with a dashed border`);
+      assert.equal(stitch.shadow, 'none', `${selector}${pseudo} must not retain a recessed stitch channel`);
       if (selector === '.inquiry-shell') {
         assert.ok(stitch.elementBorderWidth >= 12, 'the form seam should stay inside a substantial leather rail');
         assert.match(
@@ -281,27 +266,21 @@ test('paper tiles have layered depth and responsive lift without losing their ma
   assert.notEqual(await sector.evaluate((element) => getComputedStyle(element).transform), 'none', 'interactive tiles should lift subtly');
 });
 
-test('brass corners and the acquisition chart expose realistic hardware, grid, and restrained motion', async () => {
+test('the hardware-free frame retains the acquisition chart grid and restrained motion', async () => {
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto(leatherUrl, { waitUntil: 'networkidle' });
 
   const contract = await page.evaluate(() => {
-    const corner = document.querySelector('.case-frame__corner');
     const node = document.querySelector('.hero-art__node');
-    const cornerBefore = corner ? getComputedStyle(corner, '::before') : null;
     return {
-      cornerScrew: cornerBefore?.content || 'none',
-      cornerScrewFinish: cornerBefore?.backgroundImage || 'none',
-      cornerDepth: corner ? getComputedStyle(corner).boxShadow : 'none',
+      cornerHardware: document.querySelectorAll('.case-frame__corner').length,
       minorGrid: document.querySelectorAll('.hero-art__minor-grid').length,
       axisLabels: document.querySelectorAll('.hero-art__axis-labels').length,
       nodeMotion: node ? getComputedStyle(node).animationName : 'none',
     };
   });
 
-  assert.notEqual(contract.cornerScrew, 'none', 'corner plates should include a physical screw head');
-  assert.match(contract.cornerScrewFinish, /radial-gradient/, 'corner screws should have a metallic radial finish');
-  assert.notEqual(contract.cornerDepth, 'none');
+  assert.equal(contract.cornerHardware, 0, 'corner screw hardware should be removed');
   assert.equal(contract.minorGrid, 1, 'the chart should include a dedicated minor grid');
   assert.equal(contract.axisLabels, 1, 'the chart should include restrained axis notation');
   assert.notEqual(contract.nodeMotion, 'none', 'growth nodes should provide the signature motion moment');

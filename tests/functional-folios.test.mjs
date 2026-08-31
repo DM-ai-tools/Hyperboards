@@ -12,8 +12,8 @@ const frozenHomeFiles = new Map([
   ['src/components/SectionIntro.astro', '7b8e11e96a326b5003e1387852490440d14b4bb1165af0ee208d828d77055709'],
   ['src/components/SectorGrid.astro', '73e6abd3f4491075b0e7c8cdbcdedf7094230c334519e6ff379acdc075daf785'],
   ['src/components/Header.astro', '146ea9b1452cd80a94bf7bf23b301210eb00df7ee18b6591cac6b84b0d0a7e69'],
-  ['src/components/Footer.astro', 'd5988fdefa56cbc044625942e3396bad6e4342f0bb7fe99e763d2dc4f006568a'],
-  ['src/styles/global.css', '9b0e05f190f35a228d2a705530d69b1cb986d37321be94d296a52ea6ba45d4cd'],
+  ['src/components/Footer.astro', '0f41289942697e5690e1653e4d635f3c3c0da88713fdc9cd1b4d7cd907b1a007'],
+  ['src/styles/global.css', 'a5f85b05b00e88e72a3fc2a5ac40def8dce4a482cfafe16e5e03cdffd8b3c390'],
 ]);
 
 test('leather-home supporting source remains byte-for-byte frozen during gallery publishing', async () => {

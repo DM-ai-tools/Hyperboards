@@ -95,52 +95,6 @@ svg { display: block; }
 .evergreen-header__action:hover { color: var(--paper-0); background: var(--evergreen-900); }
 .evergreen-menu { display: none; min-width: 44px; min-height: 44px; border: 0; background: transparent; cursor: pointer; }
 
-.evergreen-section-index {
-  position: fixed;
-  z-index: 40;
-  top: 50%;
-  right: max(0.75rem, calc((100vw - var(--shell)) / 2 - 5.5rem));
-  display: grid;
-  gap: 0.15rem;
-  width: 4.75rem;
-  transform: translateY(-50%);
-}
-.evergreen-section-index::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0.68rem;
-  width: 1px;
-  background: color-mix(in oklch, var(--evergreen-900) 18%, transparent);
-}
-.evergreen-section-index a {
-  position: relative;
-  display: grid;
-  grid-template-columns: 1.4rem 1fr;
-  gap: 0.35rem;
-  align-items: center;
-  min-height: 2rem;
-  color: var(--ink-500);
-  font-size: 0.58rem;
-}
-.evergreen-section-index a::before {
-  content: '';
-  z-index: 1;
-  width: 0.42rem;
-  height: 0.42rem;
-  margin-left: 0.48rem;
-  border: 1px solid var(--limestone-50);
-  border-radius: 50%;
-  background: var(--rule-200);
-  transition: transform 180ms var(--ease), background-color 180ms ease;
-}
-.evergreen-section-index span { display: none; }
-.evergreen-section-index em { font-style: normal; opacity: 0; transform: translateX(-4px); transition: opacity 180ms ease, transform 180ms var(--ease); }
-.evergreen-section-index a:hover em, .evergreen-section-index a:focus-visible em, .evergreen-section-index a[aria-current='true'] em { opacity: 1; transform: none; }
-.evergreen-section-index a[aria-current='true'] { color: var(--evergreen-900); font-weight: 700; }
-.evergreen-section-index a[aria-current='true']::before { background: var(--copper-600); transform: scale(1.35); }
-
 .evergreen-eyebrow { margin: 0 0 1.3rem; color: var(--color-accent); font-size: 0.68rem; font-weight: 650; letter-spacing: 0.16em; text-transform: uppercase; }
 .evergreen-hero { position: relative; padding: clamp(4rem, 7vw, 7.5rem) 0 0; }
 .evergreen-hero::before {
@@ -296,7 +250,6 @@ svg { display: block; }
 .js .evergreen-reveal.is-visible { opacity: 1; transform: none; }
 
 @media (max-width: 1000px) {
-  .evergreen-section-index { display: none; }
   .evergreen-header__inner { grid-template-columns: auto auto 1fr; }
   .evergreen-menu { display: inline-flex; grid-column: 3; justify-self: end; align-items: center; gap: 0.7rem; font-size: 0.72rem; font-weight: 600; }
   .evergreen-menu i, .evergreen-menu i::before { display: block; width: 18px; height: 1px; background: var(--evergreen-900); transition: transform 180ms ease; }

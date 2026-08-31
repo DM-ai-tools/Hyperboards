@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { mkdtemp, readFile, rm } from 'node:fs/promises';
+import { access, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { pathToFileURL, fileURLToPath } from 'node:url';
@@ -10,13 +10,10 @@ const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const expectedDesigns = [
   ['hyperboards', 'Hyperboards Original', '/design-content/hyperboards'],
   ['evergreen-partner', 'Evergreen Partner', '/design-previews/evergreen-partner/index.html'],
-  ['blackline-office', 'Blackline Office', '/design-previews/blackline-office/index.html'],
-  ['cobalt-standard', 'Cobalt Standard', '/design-previews/cobalt-standard/index.html'],
-  ['quiet-cinema', 'Quiet Cinema', '/design-previews/quiet-cinema/index.html'],
-  ['operators-atlas', 'Operators Atlas', '/design-previews/operators-atlas/index.html'],
+  ['evergreen-partner-refined', 'Evergreen Partner — Refined', '/design-previews/evergreen-partner-refined/index.html'],
 ];
 
-test('design registry exposes the six approved previews in order', async () => {
+test('design registry exposes only the three approved previews in order', async () => {
   const moduleUrl = `${pathToFileURL(join(projectRoot, 'src', 'data', 'designs.ts')).href}?test=${Date.now()}`;
   const { designs, designBySlug } = await import(moduleUrl);
 
@@ -25,7 +22,8 @@ test('design registry exposes the six approved previews in order', async () => {
     expectedDesigns,
   );
   assert.equal(new Set(designs.map(({ slug }) => slug)).size, designs.length, 'design slugs must be unique');
-  assert.equal(designBySlug('blackline-office')?.name, 'Blackline Office');
+  assert.equal(designBySlug('evergreen-partner-refined')?.name, 'Evergreen Partner — Refined');
+  assert.equal(designBySlug('blackline-office'), undefined, 'retired previews must not resolve');
   assert.equal(designBySlug('../private'), undefined, 'unlisted route input must not resolve');
 });
 
@@ -35,9 +33,14 @@ test('preview publisher mirrors the latest canonical prototype bytes', async () 
   const temporaryRoot = await mkdtemp(join(tmpdir(), 'hyperboards-design-previews-'));
 
   try {
+    const retiredPreview = join(temporaryRoot, 'blackline-office');
+    await mkdir(retiredPreview, { recursive: true });
+    await writeFile(join(retiredPreview, 'index.html'), 'retired preview', 'utf8');
+
     const published = await syncDesignPreviews({ projectRoot, destinationRoot: temporaryRoot });
-    assert.equal(published.length, 5);
+    assert.equal(published.length, 2);
     assert.deepEqual(published.map(({ slug }) => slug), expectedDesigns.slice(1).map(([slug]) => slug));
+    await assert.rejects(access(retiredPreview), { code: 'ENOENT' }, 'retired previews must be removed from the published directory');
 
     for (const { source, slug } of previewMappings) {
       for (const file of ['index.html', 'styles.css', 'script.js']) {
@@ -53,7 +56,7 @@ test('preview publisher mirrors the latest canonical prototype bytes', async () 
   }
 });
 
-test('root gallery delegates all six semantic links to one design-card component', async () => {
+test('root gallery delegates all three semantic links to one design-card component', async () => {
   const [page, layout, card] = await Promise.all([
     readFile(join(projectRoot, 'src', 'pages', 'index.astro'), 'utf8'),
     readFile(join(projectRoot, 'src', 'layouts', 'DesignGalleryLayout.astro'), 'utf8'),
@@ -61,6 +64,7 @@ test('root gallery delegates all six semantic links to one design-card component
   ]);
 
   assert.match(page, /Choose a homepage direction\./i);
+  assert.match(page, /Three approved directions/i);
   assert.match(page, /designs\.map/);
   assert.match(page, /<DesignCard/);
   assert.doesNotMatch(page, /BaseLayout/);
@@ -108,10 +112,8 @@ test('project exposes dedicated browser QA for the published design gallery', as
   assert.equal(packageJson.scripts['qa:designs'], 'node scripts/design-gallery-qa.mjs');
   assert.match(qaSource, /\/designs\/hyperboards/);
   assert.match(qaSource, /\/designs\/evergreen-partner/);
-  assert.match(qaSource, /\/designs\/blackline-office/);
-  assert.match(qaSource, /\/designs\/cobalt-standard/);
-  assert.match(qaSource, /\/designs\/quiet-cinema/);
-  assert.match(qaSource, /\/designs\/operators-atlas/);
+  assert.match(qaSource, /\/designs\/evergreen-partner-refined/);
+  assert.doesNotMatch(qaSource, /\/designs\/(?:blackline-office|cobalt-standard|quiet-cinema|operators-atlas)/);
   assert.match(qaSource, /axeCore\.source/);
   assert.match(qaSource, /all-designs/);
 });

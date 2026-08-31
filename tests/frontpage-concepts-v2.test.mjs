@@ -16,7 +16,6 @@ const concepts = [
       'evergreen-profile',
       'evergreen-owner-grid',
       'evergreen-sector-index',
-      'evergreen-section-index',
       'evergreen-sector-ledger',
       'evergreen-process-line',
       'evergreen-buyer-band',
@@ -138,6 +137,10 @@ for (const concept of concepts) {
     }
     for (const signature of firstRoundSignatures) {
       assert.ok(!source.all.includes(signature), `${concept.folder} reuses first-round signature ${signature}`);
+    }
+
+    if (concept.id === 'evergreen-partner') {
+      assert.doesNotMatch(source.all, /evergreen-section-index/, 'Evergreen must not render the dynamic side-dot rail');
     }
 
     assert.match(source.css, /prefers-reduced-motion:\s*reduce/i);

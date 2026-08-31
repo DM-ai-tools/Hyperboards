@@ -9,10 +9,7 @@ const artifactRoot = resolve('artifacts', 'design-gallery');
 const designs = [
   { slug: 'hyperboards', route: '/designs/hyperboards', name: 'Hyperboards Original' },
   { slug: 'evergreen-partner', route: '/designs/evergreen-partner', name: 'Evergreen Partner' },
-  { slug: 'blackline-office', route: '/designs/blackline-office', name: 'Blackline Office' },
-  { slug: 'cobalt-standard', route: '/designs/cobalt-standard', name: 'Cobalt Standard' },
-  { slug: 'quiet-cinema', route: '/designs/quiet-cinema', name: 'Quiet Cinema' },
-  { slug: 'operators-atlas', route: '/designs/operators-atlas', name: 'Operators Atlas' },
+  { slug: 'evergreen-partner-refined', route: '/designs/evergreen-partner-refined', name: 'Evergreen Partner — Refined' },
 ];
 
 const viewports = [
@@ -139,6 +136,7 @@ try {
         h1Count: document.querySelectorAll('h1').length,
         h1: document.querySelector('h1')?.textContent?.replace(/\s+/g, ' ').trim() || '',
         body: document.body.innerText.replace(/\s+/g, ' '),
+        sideDotNavigation: document.querySelectorAll('.evergreen-section-index').length,
         overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
       }));
 
@@ -160,6 +158,9 @@ try {
       if (shell.overflow || content.overflow) failures.push(`${design.name} overflows horizontally at ${viewport.name}`);
       if (content.h1Count !== 1) failures.push(`${design.name} ${viewport.name} has ${content.h1Count} H1 elements`);
       if (!/Hyperboards|business|buyer/i.test(content.body)) failures.push(`${design.name} ${viewport.name} preview content did not load`);
+      if (design.slug.startsWith('evergreen-') && content.sideDotNavigation !== 0) {
+        failures.push(`${design.name} ${viewport.name} still renders the retired side-dot navigation`);
+      }
 
       await page.locator('.all-designs').focus();
       const backOutline = await page.locator('.all-designs').evaluate((element) => getComputedStyle(element).outlineStyle);
