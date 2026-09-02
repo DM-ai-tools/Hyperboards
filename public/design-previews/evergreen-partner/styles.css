@@ -315,3 +315,174 @@ svg { display: block; }
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
   .js .evergreen-reveal { opacity: 1; transform: none; }
 }
+
+/* Evergreen Navy Ledger — the approved Design 2 material direction. */
+:root {
+  --ledger-navy-950: #0a2035;
+  --ledger-navy-900: #102d49;
+  --ledger-navy-800: #173b5b;
+  --ledger-navy-700: #214b6e;
+  --ledger-blue-100: #e8eef2;
+  --ledger-blue-200: #c6d4df;
+  --ledger-gold: #dfc274;
+  --ledger-gold-bright: #f0d68c;
+  --ledger-cream: #fbf6e8;
+  --navy-gold-rule: rgb(223 194 116 / 34%);
+  --ledger-shadow: 0 1.5rem 4rem rgb(10 32 53 / 17%);
+}
+
+.evergreen-profile {
+  border: 1px solid var(--navy-gold-rule);
+  border-top: 4px solid var(--ledger-gold);
+  background-color: var(--ledger-navy-900);
+  background-image: linear-gradient(145deg, rgb(255 255 255 / 3%), transparent 46%);
+  box-shadow: var(--ledger-shadow);
+}
+.evergreen-profile::after { color: var(--ledger-gold); opacity: 0.58; }
+.evergreen-profile__status { color: var(--ledger-blue-200); background: var(--ledger-navy-950); }
+.evergreen-profile__status strong { color: var(--ledger-cream); }
+.evergreen-profile__status i { background: var(--ledger-gold); box-shadow: 0 0 0 4px rgb(223 194 116 / 14%); }
+.evergreen-profile__head { color: var(--ledger-cream); background: var(--ledger-navy-700); border-bottom-color: var(--navy-gold-rule); }
+.evergreen-profile__head span { color: var(--ledger-gold-bright); }
+.evergreen-profile__rows > div {
+  border-bottom-color: rgb(198 212 223 / 18%);
+  background: rgb(255 255 255 / 1.5%);
+  transition: background-color 180ms ease;
+}
+.evergreen-profile__rows > div:hover { background: rgb(255 255 255 / 5%); }
+.evergreen-profile dt, .evergreen-profile__foot { color: var(--ledger-blue-200); }
+.evergreen-profile dd { color: var(--ledger-cream); }
+
+.evergreen-hero__statement {
+  border-color: var(--navy-gold-rule);
+  color: var(--ledger-cream);
+  background-color: var(--ledger-navy-950);
+  background-image: linear-gradient(90deg, var(--ledger-navy-950), var(--ledger-navy-800));
+  box-shadow: var(--ledger-shadow);
+}
+.evergreen-hero__statement p { color: var(--ledger-blue-200); }
+.evergreen-hero__statement strong { color: var(--ledger-gold-bright); }
+
+.evergreen-owner-grid {
+  gap: clamp(0.65rem, 1.4vw, 1.1rem);
+  border-top: 0;
+}
+.evergreen-owner-grid__item,
+.evergreen-owner-grid__item + .evergreen-owner-grid__item {
+  min-height: 245px;
+  padding: clamp(1.4rem, 2.5vw, 2rem);
+  border: 1px solid var(--navy-gold-rule);
+  background-color: var(--ledger-navy-900);
+  background-image: linear-gradient(155deg, rgb(255 255 255 / 4%), transparent 48%);
+  box-shadow: 0 0.75rem 2rem rgb(10 32 53 / 10%);
+  transition: transform 220ms var(--ease), border-color 220ms ease, background-color 220ms ease, box-shadow 220ms ease;
+}
+.evergreen-owner-grid__item:nth-child(even) { background-color: var(--ledger-navy-800); }
+.evergreen-owner-grid__item:hover {
+  border-color: rgb(223 194 116 / 72%);
+  background-color: var(--ledger-navy-700);
+  box-shadow: 0 1.2rem 2.7rem rgb(10 32 53 / 18%);
+  transform: translateY(-4px);
+}
+.evergreen-owner-grid__item::after { top: auto; right: 1.5rem; bottom: 1.35rem; left: 1.5rem; width: auto; height: 1px; background: var(--ledger-gold); }
+.evergreen-owner-grid__item span,
+.evergreen-acquire__criteria span { color: var(--ledger-gold); }
+.evergreen-owner-grid h3 { color: var(--ledger-cream); font-family: var(--font-serif); font-size: 1.18rem; }
+.evergreen-owner-grid p { color: var(--ledger-blue-200); }
+
+.evergreen-acquire__criteria {
+  border-color: var(--navy-gold-rule);
+  border-radius: 0.35rem;
+  background-color: var(--ledger-navy-900);
+  background-image:
+    linear-gradient(120deg, rgb(255 255 255 / 3%), transparent 46%),
+    linear-gradient(90deg, var(--ledger-navy-950), var(--ledger-navy-800));
+  box-shadow: var(--ledger-shadow);
+}
+.evergreen-acquire__criteria > div { border-bottom-color: var(--navy-gold-rule); }
+.evergreen-acquire__criteria > div:nth-child(even) { border-left-color: var(--navy-gold-rule); }
+.evergreen-acquire__criteria h3 { color: var(--ledger-cream); }
+.evergreen-acquire__criteria p { color: var(--ledger-blue-200); }
+.evergreen-acquire__criteria span { color: var(--ledger-gold-bright); }
+
+.evergreen-sectors__head { border-bottom-color: var(--ledger-navy-800); }
+.evergreen-sector-index button[aria-pressed='true'] { color: var(--ledger-cream); background: var(--ledger-navy-800); }
+.evergreen-sector-index button[aria-pressed='true'] span,
+.evergreen-sector-index button[aria-pressed='true'] i { color: var(--ledger-gold-bright); }
+.evergreen-sector-ledger__brief {
+  border-color: var(--navy-gold-rule);
+  border-radius: 0.25rem;
+  background-color: var(--ledger-navy-900);
+  background-image: linear-gradient(110deg, var(--ledger-navy-950), var(--ledger-navy-800));
+  box-shadow: 0 1rem 2.8rem rgb(10 32 53 / 12%);
+}
+.evergreen-sector-ledger__brief span { color: var(--ledger-gold-bright); }
+.evergreen-sector-ledger__brief p { color: var(--ledger-cream); }
+
+.evergreen-process {
+  background-color: var(--ledger-navy-950);
+  background-image:
+    linear-gradient(rgb(223 194 116 / 5%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(223 194 116 / 5%) 1px, transparent 1px),
+    linear-gradient(125deg, var(--ledger-navy-950), var(--ledger-navy-800));
+  background-size: 32px 32px, 32px 32px, auto;
+}
+.evergreen-section-intro--inverse > div,
+.evergreen-section-intro--inverse > p:last-child,
+.evergreen-process__steps p { color: var(--ledger-blue-200); }
+.evergreen-section-intro--inverse .evergreen-eyebrow,
+.evergreen-process__steps span { color: var(--ledger-gold-bright); }
+.evergreen-process-line > span,
+.evergreen-process-line i.is-passed { border-color: var(--ledger-gold); background: var(--ledger-gold); }
+.evergreen-process-line i { background: var(--ledger-navy-950); }
+
+.evergreen-stewardship__principles {
+  gap: clamp(0.65rem, 1.4vw, 1.1rem);
+  border-top: 0;
+}
+.evergreen-stewardship__principles li,
+.evergreen-stewardship__principles li + li {
+  min-height: 155px;
+  padding: 1.45rem;
+  border: 1px solid var(--navy-gold-rule);
+  background: var(--ledger-navy-900);
+  box-shadow: 0 0.8rem 2rem rgb(10 32 53 / 9%);
+}
+.evergreen-stewardship__principles li:nth-child(even) { background: var(--ledger-navy-800); }
+.evergreen-stewardship__principles li::before { top: 1.5rem; right: 1.35rem; left: auto; border-color: var(--ledger-gold); background: transparent; }
+.evergreen-stewardship__principles span { color: var(--ledger-gold-bright); }
+.evergreen-stewardship__principles small { color: var(--ledger-blue-200); }
+
+.evergreen-faq__items { display: grid; gap: 0.65rem; border-top: 0; }
+.evergreen-faq details {
+  padding-inline: 1.2rem;
+  border: 1px solid #cfdae2;
+  background: var(--ledger-blue-100);
+  transition: border-color 180ms ease, background-color 180ms ease, color 180ms ease;
+}
+.evergreen-faq details[open] { border-color: var(--navy-gold-rule); color: var(--ledger-cream); background: var(--ledger-navy-800); }
+.evergreen-faq details[open] p { color: var(--ledger-blue-200); }
+.evergreen-faq details[open] summary::before,
+.evergreen-faq details[open] summary::after { background: var(--ledger-gold-bright); }
+
+.evergreen-contact { background-color: var(--ledger-navy-800); background-image: linear-gradient(105deg, var(--ledger-navy-950), var(--ledger-navy-700)); }
+.evergreen-contact .evergreen-eyebrow { color: var(--ledger-gold-bright); }
+.evergreen-contact__inner > div:last-child p { color: var(--ledger-blue-200); }
+.evergreen-contact .evergreen-button--light { border-color: var(--ledger-gold); color: var(--ledger-navy-950); background: var(--ledger-gold-bright); }
+.evergreen-contact .evergreen-button--light:hover { color: var(--ledger-cream); background: transparent; }
+.evergreen-footer { color: var(--ledger-blue-200); background: var(--ledger-navy-950); }
+.evergreen-footer__grid > div:first-child p,
+.evergreen-footer__legal { color: var(--ledger-blue-200); }
+.evergreen-footer__grid > div:not(:first-child) > p { color: var(--ledger-gold-bright); }
+
+@media (max-width: 720px) {
+  .evergreen-owner-grid { gap: 0.65rem; }
+  .evergreen-owner-grid__item,
+  .evergreen-owner-grid__item + .evergreen-owner-grid__item { min-height: 0; padding: 1.4rem; border: 1px solid var(--navy-gold-rule); }
+  .evergreen-owner-grid__item::after { right: 1.4rem; bottom: 1.1rem; left: 1.4rem; }
+  .evergreen-stewardship__principles { gap: 0.65rem; }
+  .evergreen-stewardship__principles li,
+  .evergreen-stewardship__principles li + li,
+  .evergreen-stewardship__principles li:nth-child(3),
+  .evergreen-stewardship__principles li:nth-child(4) { min-height: 0; padding: 1.4rem; border: 1px solid var(--navy-gold-rule); }
+}

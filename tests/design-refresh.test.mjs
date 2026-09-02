@@ -72,3 +72,46 @@ test('both Evergreen versions omit the dynamic side-dot navigation', async () =>
     assert.equal(await frame.locator('.evergreen-section-index').count(), 0, `${slug} must not show the side-dot rail`);
   }
 });
+
+test('Design 2 alone presents warm-white pages with navy information panels and gold hierarchy', async () => {
+  const response = await page.goto(`${baseUrl}/designs/evergreen-partner`, { waitUntil: 'domcontentloaded' });
+  assert.equal(response?.status(), 200, 'Design 2 preview should load');
+  const frame = await (await page.locator('iframe').elementHandle())?.contentFrame();
+  assert.ok(frame, 'Design 2 should expose its preview frame');
+  await frame.waitForLoadState('domcontentloaded');
+
+  const palette = await frame.evaluate(() => {
+    const value = (selector, property = 'backgroundColor') => {
+      const element = document.querySelector(selector);
+      return element ? getComputedStyle(element)[property] : '';
+    };
+
+    return {
+      page: value('body'),
+      ownerPanel: value('.evergreen-owner-grid__item'),
+      mandatePanel: value('.evergreen-acquire__criteria'),
+      ownerIndex: value('.evergreen-owner-grid__item span', 'color'),
+      mandateIndex: value('.evergreen-acquire__criteria span', 'color'),
+    };
+  });
+
+  assert.match(palette.page, /oklch\(0\.965 0\.012 89\)|rgb\(24[0-9][ ,]/, 'Design 2 should retain its warm-white page canvas');
+  for (const [name, value] of [['owner panel', palette.ownerPanel], ['mandate panel', palette.mandatePanel]]) {
+    const color = (value.match(/[\d.]+/g) ?? []).slice(0, 3).map(Number);
+    assert.equal(color.length, 3, `${name} should resolve to an opaque RGB color`);
+    assert.ok(color[2] > color[1] && color[1] > color[0], `${name} should resolve to deep navy rather than green`);
+  }
+  for (const [name, value] of [['owner index', palette.ownerIndex], ['mandate index', palette.mandateIndex]]) {
+    const color = (value.match(/[\d.]+/g) ?? []).slice(0, 3).map(Number);
+    assert.equal(color.length, 3, `${name} should resolve to an RGB text color`);
+    assert.ok(color[0] > color[1] && color[1] > color[2], `${name} should use a warm gold hierarchy color`);
+  }
+
+  const refinedResponse = await page.goto(`${baseUrl}/designs/evergreen-partner-refined`, { waitUntil: 'domcontentloaded' });
+  assert.equal(refinedResponse?.status(), 200, 'Design 3 preview should load');
+  const refinedFrame = await (await page.locator('iframe').elementHandle())?.contentFrame();
+  assert.ok(refinedFrame, 'Design 3 should expose its preview frame');
+  await refinedFrame.waitForLoadState('domcontentloaded');
+  const refinedMandate = await refinedFrame.locator('.evergreen-acquire__criteria').evaluate((element) => getComputedStyle(element).backgroundImage);
+  assert.match(refinedMandate, /oklch\([^)]*16[345]\)/, 'Design 3 should retain its established forest-green panel system');
+});
