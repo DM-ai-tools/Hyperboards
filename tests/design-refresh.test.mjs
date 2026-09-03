@@ -115,3 +115,21 @@ test('Design 2 alone presents warm-white pages with navy information panels and 
   const refinedMandate = await refinedFrame.locator('.evergreen-acquire__criteria').evaluate((element) => getComputedStyle(element).backgroundImage);
   assert.match(refinedMandate, /oklch\([^)]*16[345]\)/, 'Design 3 should retain its established forest-green panel system');
 });
+
+test('selected Design 3 is the production homepage while the chooser remains available', async () => {
+  const homepageResponse = await page.goto(baseUrl, { waitUntil: 'networkidle' });
+  assert.equal(homepageResponse?.status(), 200, 'the selected homepage should load');
+  assert.equal(new URL(page.url()).pathname, '/design-previews/evergreen-partner-refined/index.html');
+  assert.match(await page.locator('h1').innerText(), /A direct buyer for the business you built/i);
+  assert.equal(await page.locator('.design-card').count(), 0, 'the production homepage must not show the chooser');
+
+  const galleryResponse = await page.goto(`${baseUrl}/designs`, { waitUntil: 'networkidle' });
+  assert.equal(galleryResponse?.status(), 200, 'the design chooser should remain available');
+  assert.equal(await page.locator('.design-card').count(), 3);
+  const selectedCard = page.locator('[data-design="evergreen-partner-refined"]');
+  assert.equal((await selectedCard.locator('figcaption').textContent())?.trim(), 'Selected design');
+
+  await selectedCard.locator('a').click();
+  await page.waitForLoadState('domcontentloaded');
+  assert.equal(await page.locator('.all-designs').getAttribute('href'), '/designs');
+});

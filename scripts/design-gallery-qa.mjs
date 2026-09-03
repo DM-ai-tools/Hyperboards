@@ -18,7 +18,7 @@ const viewports = [
 ];
 
 const failures = [];
-const report = { gallery: [], previews: [], accessibility: [], screenshots: [], failures };
+const report = { selectedHomepage: [], gallery: [], previews: [], accessibility: [], screenshots: [], failures };
 
 async function runAxe(target, label) {
   await target.addScriptTag({ content: axeCore.source });
@@ -68,7 +68,21 @@ try {
       }
     });
 
-    const galleryResponse = await page.goto(baseUrl, { waitUntil: 'networkidle' });
+    const selectedResponse = await page.goto(baseUrl, { waitUntil: 'networkidle' });
+    const selectedHomepage = await page.evaluate(() => ({
+      pathname: window.location.pathname,
+      h1: document.querySelector('h1')?.textContent?.replace(/\s+/g, ' ').trim() || '',
+      designCards: document.querySelectorAll('.design-card').length,
+      overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+    }));
+    report.selectedHomepage.push({ viewport: viewport.name, status: selectedResponse?.status() || 0, ...selectedHomepage });
+    if (selectedResponse?.status() !== 200) failures.push(`selected homepage ${viewport.name} returned ${selectedResponse?.status()}`);
+    if (selectedHomepage.pathname !== '/design-previews/evergreen-partner-refined/index.html') failures.push(`selected homepage ${viewport.name} resolves to ${selectedHomepage.pathname}`);
+    if (!/direct buyer for the business you built/i.test(selectedHomepage.h1)) failures.push(`selected homepage ${viewport.name} has unexpected H1`);
+    if (selectedHomepage.designCards !== 0) failures.push(`selected homepage ${viewport.name} still renders the chooser`);
+    if (selectedHomepage.overflow) failures.push(`selected homepage overflows horizontally at ${viewport.name}`);
+
+    const galleryResponse = await page.goto(`${baseUrl}/designs`, { waitUntil: 'networkidle' });
     const galleryContract = await page.evaluate(() => ({
       h1Count: document.querySelectorAll('h1').length,
       links: [...document.querySelectorAll('.design-card > a')].map((link) => ({
@@ -142,7 +156,7 @@ try {
 
       report.previews.push({ design: design.name, viewport: viewport.name, status: response?.status() || 0, shell, content });
       if (response?.status() !== 200) failures.push(`${design.name} ${viewport.name} returned ${response?.status()}`);
-      if (shell.backText !== 'All designs' || shell.backHref !== '/') failures.push(`${design.name} ${viewport.name} has an invalid return control`);
+      if (shell.backText !== 'All designs' || shell.backHref !== '/designs') failures.push(`${design.name} ${viewport.name} has an invalid return control`);
       if (
         !shell.backBounds
         || shell.backBounds.width > 96

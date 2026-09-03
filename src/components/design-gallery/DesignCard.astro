@@ -21,7 +21,7 @@ const ordinal = String(index + 1).padStart(2, '0');
         loading={index === 0 ? 'eager' : 'lazy'}
         decoding="async"
       />
-      {design.original && <figcaption>Current approved site</figcaption>}
+      {design.selected && <figcaption>Selected design</figcaption>}
     </figure>
 
     <div class="design-card__body">

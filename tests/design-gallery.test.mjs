@@ -8,9 +8,9 @@ import test from 'node:test';
 const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
 const expectedDesigns = [
-  ['hyperboards', 'Hyperboards Original', '/design-content/hyperboards'],
-  ['evergreen-partner', 'Evergreen Partner', '/design-previews/evergreen-partner/index.html'],
-  ['evergreen-partner-refined', 'Evergreen Partner — Refined', '/design-previews/evergreen-partner-refined/index.html'],
+  ['hyperboards', 'Hyperboards Original', '/design-content/hyperboards', false],
+  ['evergreen-partner', 'Evergreen Partner', '/design-previews/evergreen-partner/index.html', false],
+  ['evergreen-partner-refined', 'Evergreen Partner — Refined', '/design-previews/evergreen-partner-refined/index.html', true],
 ];
 
 test('design registry exposes only the three approved previews in order', async () => {
@@ -18,11 +18,12 @@ test('design registry exposes only the three approved previews in order', async 
   const { designs, designBySlug } = await import(moduleUrl);
 
   assert.deepEqual(
-    designs.map(({ slug, name, contentUrl }) => [slug, name, contentUrl]),
+    designs.map(({ slug, name, contentUrl, selected }) => [slug, name, contentUrl, Boolean(selected)]),
     expectedDesigns,
   );
   assert.equal(new Set(designs.map(({ slug }) => slug)).size, designs.length, 'design slugs must be unique');
   assert.equal(designBySlug('evergreen-partner-refined')?.name, 'Evergreen Partner — Refined');
+  assert.equal(designs.filter(({ selected }) => selected).length, 1, 'exactly one design must be selected');
   assert.equal(designBySlug('blackline-office'), undefined, 'retired previews must not resolve');
   assert.equal(designBySlug('../private'), undefined, 'unlisted route input must not resolve');
 });
@@ -56,15 +57,18 @@ test('preview publisher mirrors the latest canonical prototype bytes', async () 
   }
 });
 
-test('root gallery delegates all three semantic links to one design-card component', async () => {
-  const [page, layout, card] = await Promise.all([
+test('selected homepage and gallery routes have distinct responsibilities', async () => {
+  const [homepage, page, layout, card] = await Promise.all([
     readFile(join(projectRoot, 'src', 'pages', 'index.astro'), 'utf8'),
+    readFile(join(projectRoot, 'src', 'pages', 'designs', 'index.astro'), 'utf8'),
     readFile(join(projectRoot, 'src', 'layouts', 'DesignGalleryLayout.astro'), 'utf8'),
     readFile(join(projectRoot, 'src', 'components', 'design-gallery', 'DesignCard.astro'), 'utf8'),
   ]);
 
-  assert.match(page, /Choose a homepage direction\./i);
-  assert.match(page, /Three approved directions/i);
+  assert.match(homepage, /evergreen-partner-refined\/index\.html/);
+  assert.match(homepage, /Astro\.redirect/);
+  assert.match(page, /Selected homepage direction\./i);
+  assert.match(page, /Design 3 is selected/i);
   assert.match(page, /designs\.map/);
   assert.match(page, /<DesignCard/);
   assert.doesNotMatch(page, /BaseLayout/);
@@ -94,7 +98,7 @@ test('preview shell isolates each design behind one tiny persistent return tab',
   assert.match(source, /designs\.map/);
   assert.match(source, /title={`\$\{design\.name\} homepage preview`}/);
   assert.match(source, /src={design\.contentUrl}/);
-  assert.match(source, /href="\/"/);
+  assert.match(source, /href="\/designs"/);
   assert.match(source, />All designs</);
   assert.equal((source.match(/<iframe\b/g) || []).length, 1);
   assert.equal((source.match(/class="all-designs"/g) || []).length, 1);
@@ -110,6 +114,8 @@ test('project exposes dedicated browser QA for the published design gallery', as
   const qaSource = await readFile(join(projectRoot, 'scripts', 'design-gallery-qa.mjs'), 'utf8');
 
   assert.equal(packageJson.scripts['qa:designs'], 'node scripts/design-gallery-qa.mjs');
+  assert.match(qaSource, /`\$\{baseUrl\}\/designs`/);
+  assert.match(qaSource, /evergreen-partner-refined\/index\.html/);
   assert.match(qaSource, /\/designs\/hyperboards/);
   assert.match(qaSource, /\/designs\/evergreen-partner/);
   assert.match(qaSource, /\/designs\/evergreen-partner-refined/);

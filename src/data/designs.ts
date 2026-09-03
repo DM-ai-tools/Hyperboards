@@ -5,6 +5,7 @@ export interface DesignOption {
   thumbnail: string;
   contentUrl: string;
   original?: boolean;
+  selected?: boolean;
 }
 
 export const designs = [
@@ -29,6 +30,7 @@ export const designs = [
     descriptor: 'Layered forest tones · refined restraint',
     thumbnail: '/design-thumbnails/evergreen-partner-refined.webp',
     contentUrl: '/design-previews/evergreen-partner-refined/index.html',
+    selected: true,
   },
 ] as const satisfies readonly DesignOption[];
 
