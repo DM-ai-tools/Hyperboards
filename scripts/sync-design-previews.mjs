@@ -22,11 +22,7 @@ export async function syncDesignPreviews({
     const sourceRoot = resolve(projectRoot, mapping.source);
     const targetRoot = resolve(destinationRoot, mapping.slug);
 
-    await mkdir(targetRoot, { recursive: true });
-
-    for (const file of ['index.html', 'styles.css', 'script.js']) {
-      await cp(join(sourceRoot, file), join(targetRoot, file));
-    }
+    await cp(sourceRoot, targetRoot, { recursive: true });
 
     published.push({ ...mapping, target: targetRoot });
   }

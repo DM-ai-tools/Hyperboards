@@ -44,7 +44,10 @@ test('preview publisher mirrors the latest canonical prototype bytes', async () 
     await assert.rejects(access(retiredPreview), { code: 'ENOENT' }, 'retired previews must be removed from the published directory');
 
     for (const { source, slug } of previewMappings) {
-      for (const file of ['index.html', 'styles.css', 'script.js']) {
+      const files = slug === 'evergreen-partner-refined'
+        ? ['index.html', 'styles.css', 'script.js', 'sell-your-business.html', 'what-we-acquire.html', 'inner-pages.css', 'inner-pages.js']
+        : ['index.html', 'styles.css', 'script.js'];
+      for (const file of files) {
         assert.deepEqual(
           await readFile(join(temporaryRoot, slug, file)),
           await readFile(join(projectRoot, source, file)),
@@ -55,6 +58,32 @@ test('preview publisher mirrors the latest canonical prototype bytes', async () 
   } finally {
     await rm(temporaryRoot, { recursive: true, force: true });
   }
+});
+
+test('selected design routes owner and acquisition calls to dedicated pages', async () => {
+  const sourceRoot = join(projectRoot, 'prototypes', 'frontpage-concepts-v2', '05-evergreen-partner-refined');
+  const [homepage, ownerPage, acquirePage] = await Promise.all([
+    readFile(join(sourceRoot, 'index.html'), 'utf8'),
+    readFile(join(sourceRoot, 'sell-your-business.html'), 'utf8'),
+    readFile(join(sourceRoot, 'what-we-acquire.html'), 'utf8'),
+  ]);
+
+  assert.match(homepage, /href="sell-your-business\.html"[^>]*>Start a conversation/);
+  assert.match(homepage, /href="sell-your-business\.html"[^>]*>Discuss selling your business/);
+  assert.match(homepage, /href="what-we-acquire\.html"[^>]*>See what we acquire/);
+
+  assert.match(ownerPage, /<form[^>]+action="\/api\/inquiries"[^>]+method="post"/);
+  assert.match(ownerPage, /name="fullName"/);
+  assert.match(ownerPage, /name="email"/);
+  assert.match(ownerPage, /name="message"/);
+  assert.match(ownerPage, /Preview only[^<]*messages are not transmitted/i);
+  assert.match(ownerPage, /hello@hyperboards\.com/);
+
+  assert.match(acquirePage, /\$750K[^<]*\$2M/);
+  assert.match(acquirePage, /\$2M[^<]*\$6M/);
+  assert.match(acquirePage, /Direct buyer/i);
+  assert.match(acquirePage, /Building &amp; Construction/);
+  assert.match(acquirePage, /Wholesale &amp; Distributors/);
 });
 
 test('selected homepage and gallery routes have distinct responsibilities', async () => {

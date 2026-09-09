@@ -18,6 +18,7 @@
     "qa:concepts": "node scripts/frontpage-concepts-qa.mjs",
     "qa:concepts:v2": "node scripts/frontpage-concepts-v2-qa.mjs",
     "qa:designs": "node scripts/design-gallery-qa.mjs",
+    "qa:inner-pages": "node scripts/inner-pages-qa.mjs",
     "capture:design-thumbnails": "node scripts/capture-design-thumbnails.mjs",
     "sync:designs": "node scripts/sync-design-previews.mjs"
   },
