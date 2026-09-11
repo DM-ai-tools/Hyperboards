@@ -62,3 +62,5 @@ The requested UI/UX Pro Max and frontend-design skills informed art direction, c
 - Production URLs: https://hyperboards-production.up.railway.app/ and https://hyperboards.com/.
 
 The existing GitHub-connected Railway pipeline deploys pushes to main. Public deployment evidence, the final commit and the production health response are recorded locally in `artifacts/premium-showcase/deployment.json` after release verification. DNS and MX/email records are preserved.
+
+The initial collection release, commit `fce9764`, was successfully deployed to Railway production on 11 September 2026. Both public health endpoints returned HTTP 200 and the expected release marker; the custom domain opened the new four-design chooser. Production currently reports `inquiryDeliveryConfigured: false`: the website and form validation are available, but real owner-inquiry delivery requires the existing webhook integration to be configured. Forms report this honestly and retain entered details. The final follow-up adjusts the collapsed return control to a slim edge handle while preserving a 44px interactive area and full hover/focus reveal.
