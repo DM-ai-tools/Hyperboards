@@ -49,38 +49,27 @@
 
       <section class="inner-section" id="owner-introduction" aria-labelledby="introduction-title">
         <div class="evergreen-shell conversation-layout">
-          <form class="owner-form evergreen-reveal" action="/api/inquiries" method="post" data-owner-form>
+          <section class="owner-form evergreen-reveal" aria-labelledby="introduction-title" data-email-contact>
             <div class="owner-form__intro">
-              <p class="evergreen-eyebrow">Confidential introduction</p>
+              <p class="evergreen-eyebrow">Direct email</p>
               <h2 id="introduction-title">Start with the broad outline.</h2>
-              <p>Fields marked required help us understand fit. Submitting this form does not create an NDA, valuation, offer, or obligation for either party.</p>
+              <p>A brief email is enough to begin. Tell us about your business and what you are considering, in your own words.</p>
             </div>
-            <div class="owner-form__grid">
-              <div class="field"><label for="fullName">Your name *</label><input id="fullName" name="fullName" type="text" autocomplete="name" minlength="2" required /></div>
-              <div class="field"><label for="email">Email *</label><input id="email" name="email" type="email" autocomplete="email" required /></div>
-              <div class="field"><label for="phone">Phone <small>(optional)</small></label><input id="phone" name="phone" type="tel" autocomplete="tel" /></div>
-              <div class="field"><label for="company">Company *</label><input id="company" name="company" type="text" autocomplete="organization" minlength="2" required /></div>
-              <div class="field"><label for="companyWebsite">Company website <small>(optional)</small></label><input id="companyWebsite" name="companyWebsite" type="url" autocomplete="url" placeholder="https://" /></div>
-              <div class="field"><label for="location">Business location *</label><input id="location" name="location" type="text" autocomplete="address-level2" minlength="2" required /></div>
-              <div class="field"><label for="industry">Industry *</label><select id="industry" name="industry" required><option value="">Select an industry</option><option value="building-construction">Building &amp; Construction</option><option value="communication-media">Communication &amp; Media</option><option value="entertainment-recreation">Entertainment &amp; Recreation</option><option value="financial-services">Financial Services</option><option value="health-care-fitness">Health Care &amp; Fitness</option><option value="manufacturing">Manufacturing</option><option value="online-technology">Online &amp; Technology</option><option value="service-businesses">Service Businesses</option><option value="wholesale-distribution">Wholesale &amp; Distributors</option><option value="other">Other</option></select></div>
-              <div class="field"><label for="ebitda">Approximate annual EBITDA *</label><select id="ebitda" name="ebitda" required><option value="">Select a range</option><option value="under-750k">Under $750K</option><option value="750k-1m">$750K–$1M</option><option value="1m-2m">$1M–$2M</option><option value="over-2m">Over $2M</option><option value="not-sure">Not sure / prefer to discuss</option></select></div>
-              <fieldset class="fieldset"><legend>I am contacting Hyperboards as *</legend><div class="choice-row"><label><input type="radio" name="role" value="owner" required />Business owner</label><label><input type="radio" name="role" value="adviser" />Owner's adviser</label><label><input type="radio" name="role" value="investor" />Investor</label><label><input type="radio" name="role" value="other" />Other</label></div></fieldset>
-              <div class="field field--wide"><label for="message">What are you considering? *</label><textarea id="message" name="message" minlength="20" required aria-describedby="message-hint"></textarea><small id="message-hint">A short overview of the business, your timing, and what prompted you to reach out is enough.</small></div>
-              <label class="check-field"><input type="checkbox" name="acknowledgement" value="true" required /><span>I understand this introduction is not an NDA or an offer, and I will not include confidential customer, employee, or proprietary records. *</span></label>
-              <div class="honeypot" aria-hidden="true"><label for="companyFax">Company fax</label><input id="companyFax" name="companyFax" tabindex="-1" autocomplete="off" /></div>
-              <div class="owner-form__actions"><button class="evergreen-button evergreen-button--primary" type="submit">Send private introduction</button><p class="form-status" data-form-status role="status" aria-live="polite">We only request information needed for an initial fit review.</p></div>
+            <ol class="email-brief">
+              <li><strong>Your business</strong><p>Its name, location, industry, and what it does.</p></li>
+              <li><strong>Your perspective</strong><p>Your role, your priorities, and the timing you have in mind.</p></li>
+              <li><strong>The broad picture</strong><p>Share approximate financial context if you are comfortable, or leave it for a conversation.</p></li>
+            </ol>
+            <div class="owner-form__actions">
+              <a class="evergreen-button evergreen-button--primary" href="mailto:hello@hyperboards.com?subject=Confidential%20business%20conversation" data-contact-email>Write a private introduction <span aria-hidden="true">↗</span></a>
             </div>
-          </form>
+            <p class="email-contact-note">Opens your email app. You can also write directly to <a href="mailto:hello@hyperboards.com">hello@hyperboards.com</a>.</p>
+            <p class="email-contact-note">An introduction does not create an NDA, valuation, offer, or obligation. Please leave sensitive customer, employee, and proprietary records out of your first email.</p>
+          </section>
 
-          <aside class="conversation-rail" aria-label="Other ways to connect">
-            <section class="contact-card evergreen-reveal"><span>Direct email</span><h3>Prefer to write from your inbox?</h3><p>Email a brief introduction and a member of the Hyperboards team can continue the conversation directly.</p><a href="mailto:hello@hyperboards.com?subject=Confidential%20business%20conversation">hello@hyperboards.com</a></section>
-            <section class="chat-preview evergreen-reveal" aria-labelledby="chat-title">
-              <div class="chat-preview__bar"><span>Chat assistant / Preview</span><i aria-hidden="true"></i></div>
-              <h3 id="chat-title">A quicker way to find the right next step.</h3>
-              <div class="chat-preview__messages" aria-hidden="true"><p class="chat-bubble">Are you exploring a sale now, or simply considering future options?</p><p class="chat-bubble chat-bubble--reply">I am beginning to consider my options.</p></div>
-              <div class="chat-preview__composer"><input type="text" value="Ask about fit or next steps" aria-label="Chat message preview" disabled /><button type="button" aria-label="Send chat message" disabled>→</button></div>
-              <p class="chat-preview__note">Preview only — messages are not transmitted. Use the private form or email above to contact Hyperboards.</p>
-            </section>
+          <aside class="conversation-rail" aria-label="Planning your introduction">
+            <section class="contact-card evergreen-reveal"><span>At your pace</span><h3>A conversation before a decision.</h3><p>You do not need to be actively selling. Begin with the questions and priorities that matter to you.</p></section>
+            <section class="contact-card evergreen-reveal"><span>Consider the fit</span><h3>A clear starting point.</h3><p>Explore the types of businesses Hyperboards considers and the financial guidelines behind our acquisition focus.</p><a href="what-we-acquire.html">View acquisition criteria →</a></section>
           </aside>
         </div>
       </section>

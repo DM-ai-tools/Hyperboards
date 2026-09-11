@@ -1,4 +1,4 @@
-> **September 2026:** the main website opens the finalized Evergreen template. The separate Design Approver contains nine existing designs, including the restored earlier Design 3 as Design 2. See [service setup](docs/design-approver-release.md) and [design sources](<Hyper boards DEMO/README.md>). Both services use port 8080 by default.
+> **Finalized: Design 1 — Evergreen.** The main website uses the approved Evergreen design with direct email contact at `hello@hyperboards.com`. A verified Desktop backup was made before finalization. See [finalization notes](docs/design-1-finalization.md). The nine-design approver remains available for reference; [service setup](docs/design-approver-release.md) and [design sources](<Hyper boards DEMO/README.md>) are retained.
 
 # Hyperboards Website
 
