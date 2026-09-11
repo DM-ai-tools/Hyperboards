@@ -116,12 +116,12 @@ test('Design 2 alone presents warm-white pages with navy information panels and 
   assert.match(refinedMandate, /oklch\([^)]*16[345]\)/, 'Design 3 should retain its established forest-green panel system');
 });
 
-test('selected Design 3 is the production homepage while the chooser remains available', async () => {
+test('premium design chooser is the homepage while the legacy gallery remains available', async () => {
   const homepageResponse = await page.goto(baseUrl, { waitUntil: 'networkidle' });
   assert.equal(homepageResponse?.status(), 200, 'the selected homepage should load');
-  assert.equal(new URL(page.url()).pathname, '/design-previews/evergreen-partner-refined/index.html');
-  assert.match(await page.locator('h1').innerText(), /A direct buyer for the business you built/i);
-  assert.equal(await page.locator('.design-card').count(), 0, 'the production homepage must not show the chooser');
+  assert.equal(new URL(page.url()).pathname, '/showcase/choose-design.html');
+  assert.match(await page.locator('h1').innerText(), /One vision/i);
+  assert.equal(await page.locator('.design-card').count(), 4, 'the homepage exposes the original plus three new designs');
 
   const galleryResponse = await page.goto(`${baseUrl}/designs`, { waitUntil: 'networkidle' });
   assert.equal(galleryResponse?.status(), 200, 'the design chooser should remain available');

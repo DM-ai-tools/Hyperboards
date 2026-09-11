@@ -1,3 +1,5 @@
+> **September 2026 design collection:** the homepage now opens the original reference plus three new complete websites (Atelier, Meridian and Fieldwork). Source and standalone entry point: [Hyper boards DEMO/README.md](<Hyper boards DEMO/README.md>). Production uses port 8080 by default and the checked-in Railway configuration. Previous `/designs` previews remain available as an archive.
+
 # Hyperboards Website
 
 A standalone, seller-first website for Hyperboards as a direct acquirer of established businesses.

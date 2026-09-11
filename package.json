@@ -8,8 +8,8 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "start": "node ./dist/server/entry.mjs",
-    "build": "npm run sync:designs && astro check && astro build",
+    "start": "node scripts/start-server.mjs",
+    "build": "npm run sync:designs && npm run sync:showcase && astro check && astro build",
     "check": "astro check",
     "preview": "astro preview",
     "test": "node --test tests/*.test.mjs",
@@ -20,7 +20,10 @@
     "qa:designs": "node scripts/design-gallery-qa.mjs",
     "qa:inner-pages": "node scripts/inner-pages-qa.mjs",
     "capture:design-thumbnails": "node scripts/capture-design-thumbnails.mjs",
-    "sync:designs": "node scripts/sync-design-previews.mjs"
+    "sync:designs": "node scripts/sync-design-previews.mjs",
+    "sync:showcase": "node scripts/sync-premium-showcase.mjs",
+    "qa:showcase": "node scripts/premium-showcase-qa.mjs",
+    "capture:showcase": "node scripts/capture-showcase.mjs"
   },
   "dependencies": {
     "@astrojs/node": "11.1.4",

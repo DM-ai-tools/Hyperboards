@@ -94,7 +94,7 @@ test('selected homepage and gallery routes have distinct responsibilities', asyn
     readFile(join(projectRoot, 'src', 'components', 'design-gallery', 'DesignCard.astro'), 'utf8'),
   ]);
 
-  assert.match(homepage, /evergreen-partner-refined\/index\.html/);
+  assert.match(homepage, /showcase\/choose-design\.html/);
   assert.match(homepage, /Astro\.redirect/);
   assert.match(page, /Selected homepage direction\./i);
   assert.match(page, /Design 3 is selected/i);

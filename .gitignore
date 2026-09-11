@@ -9,3 +9,8 @@ artifacts/
 *.log
 .DS_Store
 Thumbs.db
+
+# Local design verification output
+Hyper boards DEMO/**/.qa/
+Hyper boards DEMO/**/qa/
+Hyper boards DEMO/**/qa-*.png
