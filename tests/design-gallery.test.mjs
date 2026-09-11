@@ -94,8 +94,8 @@ test('runtime site mode separates the approver chooser from finalized Evergreen 
   ]);
 
   assert.match(homepage, /process\.env\.HYPERBOARDS_SITE_MODE\s*===\s*['"]approver['"]/);
-  assert.match(homepage, /\?\s*['"]\/showcase\/choose-design\.html['"]/);
-  assert.match(homepage, /:\s*['"]\/design-previews\/evergreen-partner-refined\/index\.html['"]/);
+  assert.match(homepage, /Astro\.redirect\(['"]\/showcase\/choose-design\.html['"]/);
+  assert.match(homepage, /return liveDesign\('home'\)/);
   assert.match(homepage, /Astro\.redirect/);
   assert.match(page, /Selected homepage direction\./i);
   assert.match(page, /Design 3 is selected/i);

@@ -10,7 +10,7 @@
     "dev": "astro dev",
     "start": "node scripts/start-server.mjs",
     "start:approver": "node scripts/start-approver.mjs",
-    "build": "npm run sync:designs && npm run sync:showcase && astro check && astro build",
+    "build": "npm run sync:designs && npm run sync:showcase && node scripts/sync-live-design.mjs && astro check && astro build",
     "check": "astro check",
     "preview": "astro preview",
     "test": "node --test tests/*.test.mjs",

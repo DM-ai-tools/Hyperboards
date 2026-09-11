@@ -1,6 +1,6 @@
 # Design 1 finalized
 
-Design 1 (Evergreen) is the selected production website. The default service opens `/design-previews/evergreen-partner-refined/index.html`; the separate approver mode is retained for reviewing the collection. The approved homepage and acquisition-page design remain unchanged.
+Design 1 (Evergreen) is the selected production website. The default service serves the homepage directly at `/`, with `/acquisition-criteria` and `/sell-your-business` for the inner pages; the separate approver mode is retained for reviewing the collection. The approved homepage and acquisition-page design remain unchanged.
 
 The user chose the existing `hello@hyperboards.com` email link for inquiries. The owner-introduction page now offers a direct email action, the visible address, and a short guide to a useful introduction. The unavailable web form and disabled chat demonstration have been removed from the selected design. Email opens the visitor's email app for them to compose and send; the website does not claim to have delivered a message. The other prototype designs and the existing inquiry API are preserved.
 

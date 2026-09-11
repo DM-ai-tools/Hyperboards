@@ -1,5 +1,5 @@
 ---
-return Astro.redirect(process.env.HYPERBOARDS_SITE_MODE === 'approver'
-  ? '/showcase/choose-design.html'
-  : '/design-previews/evergreen-partner-refined/index.html', 302);
+import { liveDesign } from '../lib/live-design';
+if (process.env.HYPERBOARDS_SITE_MODE === 'approver') return Astro.redirect('/showcase/choose-design.html', 302);
+return liveDesign('home');
 ---

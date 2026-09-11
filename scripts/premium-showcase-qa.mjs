@@ -180,7 +180,7 @@ try {
     await page.goto(base, { waitUntil: 'networkidle' });
     assert.equal(new URL(page.url()).pathname, siteMode === 'approver'
       ? chooserPath
-      : '/design-previews/evergreen-partner-refined/index.html');
+      : '/');
   });
   await check('Chooser exposes all nine destinations in order', async () => {
     await page.goto(`${base}${chooserPath}`, { waitUntil: 'networkidle' });

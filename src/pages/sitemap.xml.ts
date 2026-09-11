@@ -4,6 +4,8 @@ export const prerender = true;
 
 const publicRoutes = [
   '/',
+  '/acquisition-criteria',
+  '/sell-your-business',
   '/what-we-acquire',
   '/business-owners',
   '/our-approach',

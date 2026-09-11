@@ -3,7 +3,7 @@ import type { APIRoute } from 'astro';
 export const prerender = false;
 export const GET: APIRoute = () => Response.json({
   ok: true,
-  release: 'design-1-finalized-email-2026-09-11',
+  release: 'design-1-clean-urls-2026-09-11',
   selectedDesign: 1,
   contactMode: 'email',
   mode: process.env.HYPERBOARDS_SITE_MODE === 'approver' ? 'approver' : 'evergreen',

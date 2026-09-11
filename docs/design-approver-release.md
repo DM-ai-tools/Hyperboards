@@ -1,6 +1,6 @@
 # Evergreen production and Design Approver
 
-The primary Hyperboards service returns to the finalized Evergreen homepage from commit `a84b34a`: `/design-previews/evergreen-partner-refined/index.html`. Its source is preserved in `prototypes/frontpage-concepts-v2/05-evergreen-partner-refined/`. DNS and email records are unchanged.
+The primary Hyperboards service returns to the finalized Evergreen homepage from commit `a84b34a`: `/`. Production serves the page directly, with clean `/acquisition-criteria` and `/sell-your-business` links. Its source is preserved in `prototypes/frontpage-concepts-v2/05-evergreen-partner-refined/`. DNS and email records are unchanged.
 
 The separate Design Approver uses the same repository and build, with `node scripts/start-approver.mjs` as its start command. This sets `HYPERBOARDS_SITE_MODE=approver` at runtime, routing its homepage to `/showcase/choose-design.html`. Default `npm start` opens Evergreen. `/api/health` reports the active mode and release without exposing credentials.
 
