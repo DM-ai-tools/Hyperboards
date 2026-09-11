@@ -7,6 +7,7 @@ const routes = { home: '/', acquire: '/acquisition-criteria', contact: '/sell-yo
 
 export function liveDesign(page: keyof typeof pages): Response {
   let html = pages[page]
+    .replace('Concept study / Evergreen Partner Refined', 'Direct private acquisitions')
     .replace(/<link[^>]+href="https:\/\/fonts\.(?:googleapis|gstatic)\.com[^>]*>/g, '')
     .replace(/(href|src)="(styles\.css|inner-pages\.css|script\.js|inner-pages\.js)"/g, '$1="/assets/evergreen/$2"')
     .replace(/href="index\.html(#[^"]*)?"/g, 'href="/$1"')
