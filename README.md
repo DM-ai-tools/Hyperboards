@@ -1,4 +1,4 @@
-> **September 2026 design collection:** the homepage now opens the original reference plus three new complete websites (Atelier, Meridian and Fieldwork). Source and standalone entry point: [Hyper boards DEMO/README.md](<Hyper boards DEMO/README.md>). Production uses port 8080 by default and the checked-in Railway configuration. Previous `/designs` previews remain available as an archive.
+> **September 2026 design collection:** the homepage now opens the original reference plus three Evergreen-led replacements (Stewardship, Corporate and Ledger). Source and standalone entry point: [Hyper boards DEMO/README.md](<Hyper boards DEMO/README.md>). Production uses port 8080 by default and the checked-in Railway configuration. Previous `/designs` previews remain available as an archive.
 
 # Hyperboards Website
 

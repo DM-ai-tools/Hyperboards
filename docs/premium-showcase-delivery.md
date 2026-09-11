@@ -1,66 +1,61 @@
-# Hyperboards premium website collection
+# Hyperboards Evergreen collection
 
-The collection contains the supplied original and three complete new websites. Design M is the selection page; Designs 1 through 4 are the four website experiences.
+The three alternatives have been replaced following the user’s request for professional sites closer to the original Evergreen design. Design M opens the collection; Design 1 retains the supplied reference.
 
-## Delivered source
-
-Open `Hyper boards DEMO/choose-design.html` to browse the collection locally.
-
-| Choice | Folder inside `Hyper boards DEMO` | Direction |
+| Choice | Directory inside `Hyper boards DEMO` | Direction |
 | --- | --- | --- |
-| Design 1 | `design-1-original` | Integrated copy of the original reference |
-| Design 2 | `design-2-atelier` | Ivory and oxblood, variable serif typography, architectural photography |
-| Design 3 | `design-3-meridian` | Midnight and silver, custom sculptural links, atmospheric lighting |
-| Design 4 | `design-4-fieldwork` | Cobalt and porcelain, dimensional graphic H, Swiss typography |
+| Design 1 | `design-1-original` | Evergreen Original |
+| Design 2 | `design-2-atelier` | Stewardship: forest and ivory, acquisition mandate and ownership priorities |
+| Design 3 | `design-3-meridian` | Corporate: navy and stone, structured acquisition brief and process |
+| Design 4 | `design-4-fieldwork` | Ledger: warm charcoal and cream, organized ownership prospectus |
 
-Each website contains a home page, acquisition-criteria page and owner-introduction page. The three new folders contain their own fonts, graphics, styles and scripts. A compact top-left control expands on hover or keyboard focus to return to the collection. The original seven supplied root files remain unchanged, verified against their SHA-256 baseline.
+Existing directory names and URLs are retained so bookmarks immediately show the replacements. Open `Hyper boards DEMO/choose-design.html` locally, or visit https://hyperboards.com/.
 
-The main Astro route opens `/showcase/choose-design.html`. Previous `/designs` and `/design-previews` routes remain available. `npm run sync:showcase` publishes the editable source into `public/showcase`, excluding authoring and QA scripts.
+## What changed
 
-## Behaviour and implementation
+The replacements use the original’s serif/sans typography, criteria-led presentation and direct-buyer positioning. Acquisition panels, sector context, small line icons, operating principles and process diagrams give each section a business purpose. Type and section spacing are restrained. Oversized sculptures, tilted graphics and ornamental architectural heroes are removed.
 
-All four experiences retain the original nine acquisition sectors, financial guidelines, buyer positioning, process, FAQs and owner-introduction contract. Each new experience includes responsive navigation, keyboard controls, contextual sector selection, scroll reveals, dimensional pointer response, visible focus and reduced-motion handling. Meridian also offers a motion pause control. Content and navigation remain usable without JavaScript; Meridian's sector fallback also remains available when its script fails to load.
+Each design contains a home page, acquisition page and owner-introduction page, with self-hosted assets. The original seven root files remain untouched. The discreet return handle, responsive navigation, native FAQs, sector information, reduced-motion support and inquiry endpoint remain integrated.
 
-New graphics use lightweight local assets and CSS transforms. Fonts are self-hosted, including variable Instrument Sans and Newsreader. Photographic sources, font licences and custom-graphic authorship are recorded in each assets directory. No new framework or runtime dependency was added.
+The content authority is the supplied Evergreen reference. Financial guidelines remain target EBITDA $750K–$2M and typical deal value $2M–$6M. All nine industry categories and the original transaction stages are retained. No portfolio claims, performance figures or third-party track record are invented.
 
-The existing `/api/inquiries` server contract is retained. Forms display success only after server acceptance, retain entered information on failure, and explain the unavailable-server case when opened directly as local files. Real delivery uses the existing Railway `INQUIRY_WEBHOOK_URL` configuration, with optional `INQUIRY_WEBHOOK_TOKEN`. These are private environment variables, not source files. No real inquiries were sent during verification.
+## Run and verify
 
-## Validation
-
-- Existing application suite: 49 tests passed.
-- Production build: Astro check completed with zero errors, warnings or hints; production server starts on port 8080 and respects Railway's injected `PORT`.
-- All 12 website pages checked at 390, 768 and 1440 pixels: 36 responsive checks with no horizontal overflow, broken images, JavaScript errors or serious/critical axe accessibility findings.
-- Separate interaction checks cover the chooser at three widths, return-control focus, all nine sector selections per design, FAQ keyboard toggling, mobile menus, required fields, mocked service errors and successful submissions, direct file opening, and no-JavaScript navigation.
-- Visual inspection covers the three home pages, both inner pages per design, mobile views and true rendered chooser thumbnails. Independent review identified one script-failure fallback issue; it was fixed and reverified with no open P1/P2 findings.
-
-Reproduce with Node 22.19 or newer:
+Use Node 22.19 or newer in the repository root:
 
 ```sh
-npm install
+npm ci
 npm run build
 npm start
-# Run in another terminal; QA_BASE_URL defaults to the development server.
-# Set QA_BASE_URL=http://127.0.0.1:8080 for the production build.
+```
+
+The server defaults to port 8080 and respects Railway’s `PORT`. `npm run sync:showcase` publishes source folders to `public/showcase`. `npm run capture:showcase` refreshes the chooser from real rendered pages. Set `QA_BASE_URL` when using a port other than the QA default, 4321.
+
+```sh
 npm test
 npm run qa:showcase
 ```
 
-Local evidence is saved under `artifacts/premium-showcase/`; original hashes and build/test logs are also in `artifacts/`. This generated evidence is intentionally ignored by Git. The QA script intercepts inquiry requests locally instead of sending personal data.
+Replacement evidence is saved under `artifacts/evergreen-replacement/`. QA covers all 12 pages at phone/tablet/desktop widths, accessibility, images, runtime errors, menus, keyboard controls, sector information, direct file opening and form responses intercepted locally. No real owner inquiries are sent during verification.
 
-## Research
+## Production
 
-Primary references inspected on 11 September 2026 include [Linear](https://linear.app/) for controlled depth and dark hierarchy, [Kinfolk](https://www.kinfolk.com/) for editorial scale and imagery, [General Atlantic](https://www.generalatlantic.com/) for entrepreneur-focused presentation, [Aesop](https://www.aesop.com/de/en/r/store-experience/) for architectural identity, and [Benchmark International](https://www.benchmarkintl.com/about/process/) for clear transaction stages. Their compositions informed distinct directions; competitor copy, proprietary assets and track records were not reused.
+- Repository: `DM-ai-tools/Hyperboards`, `main`.
+- Railway: `thriving-appreciation`, `production`, `Hyperboards`.
+- Build: `npm run build`; start: `npm start`; default port 8080.
+- Public hosts: https://hyperboards.com/ and https://hyperboards-production.up.railway.app/.
+- Health marker: `evergreen-collection-2026-09-11` from `/api/health`.
+- The GitHub-connected Railway pipeline deploys pushes to main. Existing DNS and email records are preserved.
 
-The requested UI/UX Pro Max and frontend-design skills informed art direction, contrast, spacing, typography, responsive structure and motion. Asset credits distinguish editorial architecture from any suggestion of actual Hyperboards portfolio holdings.
+Inquiry delivery uses the existing `INQUIRY_WEBHOOK_URL` and optional `INQUIRY_WEBHOOK_TOKEN`. Production had no webhook configured before this replacement. The redesign preserves honest server-error handling, retains entered information on failure and shows success only after server acceptance. Direct file opening supports browsing; actual form delivery requires a configured server.
 
-## Production configuration
+## Replacement validation
 
-- Repository: `DM-ai-tools/Hyperboards`, branch `main`.
-- Railway project: `thriving-appreciation`; environment: `production`; service: `Hyperboards`.
-- Build: `npm run build`; start: `npm start`; default port: 8080.
-- Health route: `/api/health`, returning release marker `premium-showcase-2026-09-11`, design count, and whether inquiry delivery is configured. No secrets are exposed.
-- Production URLs: https://hyperboards-production.up.railway.app/ and https://hyperboards.com/.
+- Final production build: 110 files checked, zero errors, warnings or hints.
+- Existing application suite: 49 tests passed.
+- Integrated responsive audit: all 12 pages at 390, 768 and 1440 pixels passed (36 page checks), with no overflow, broken images, runtime errors or reported accessibility violations.
+- Final interaction run: 34 checks passed, covering the chooser, return control, navigation, disclosures, form response handling, local files and JavaScript-free browsing.
+- Independent review: no outstanding substantive findings; six focused rechecks passed after correcting Ledger's server feedback and keyboard focus.
+- All seven original reference hashes match. 120 comparisons confirm source, published and built files are identical.
 
-The existing GitHub-connected Railway pipeline deploys pushes to main. Public deployment evidence, the final commit and the production health response are recorded locally in `artifacts/premium-showcase/deployment.json` after release verification. DNS and MX/email records are preserved.
-
-The initial collection release, commit `fce9764`, was successfully deployed to Railway production on 11 September 2026. Both public health endpoints returned HTTP 200 and the expected release marker; the custom domain opened the new four-design chooser. Production currently reports `inquiryDeliveryConfigured: false`: the website and form validation are available, but real owner-inquiry delivery requires the existing webhook integration to be configured. Forms report this honestly and retain entered details. The final follow-up adjusts the collapsed return control to a slim edge handle while preserving a 44px interactive area and full hover/focus reveal.
+Evidence is in `artifacts/evergreen-replacement/`, including `integrated/report.json` for the responsive matrix, `integrated/interaction-report.json` for the final interaction results, and `final-review.md`. The initial combined report's two interaction failures were corrected and superseded by the final 34-check run. GitHub deployment status and byte comparisons on both public hosts are recorded in `deployment.json` after release.

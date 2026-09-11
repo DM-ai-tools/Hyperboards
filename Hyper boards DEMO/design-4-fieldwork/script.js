@@ -1,83 +1,61 @@
 (() => {
   'use strict';
   document.documentElement.classList.add('js');
-  const menu = document.querySelector('[data-menu]');
   const header = document.querySelector('.header');
+  const menu = document.querySelector('[data-menu]');
   const nav = document.querySelector('#navigation');
   const closeMenu = () => {
     header?.classList.remove('is-open');
     menu?.setAttribute('aria-expanded', 'false');
   };
   menu?.addEventListener('click', () => {
-    const isOpen = menu.getAttribute('aria-expanded') === 'true';
-    menu.setAttribute('aria-expanded', String(!isOpen));
-    header.classList.toggle('is-open', !isOpen);
+    const open = menu.getAttribute('aria-expanded') !== 'true';
+    header.classList.toggle('is-open', open);
+    menu.setAttribute('aria-expanded', String(open));
   });
-  nav?.addEventListener('click', event => {
-    if (event.target.closest('a')) closeMenu();
-  });
+  nav?.addEventListener('click', event => { if (event.target.closest('a')) closeMenu(); });
+  document.addEventListener('click', event => { if (!header?.contains(event.target)) closeMenu(); });
   document.addEventListener('keydown', event => {
     if (event.key === 'Escape' && menu?.getAttribute('aria-expanded') === 'true') {
       closeMenu();
       menu.focus();
     }
   });
-  document.addEventListener('click', event => {
-    if (header && !header.contains(event.target)) closeMenu();
-  });
-  const desktop = matchMedia('(min-width: 801px)');
-  desktop.addEventListener('change', closeMenu);
-  document.querySelectorAll('[data-year]').forEach(item => item.textContent = new Date().getFullYear());
-
-  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-  if ('IntersectionObserver' in window && !reduced.matches) {
+  matchMedia('(min-width: 901px)').addEventListener('change', closeMenu);
+  document.querySelectorAll('[data-year]').forEach(node => { node.textContent = new Date().getFullYear(); });
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  if ('IntersectionObserver' in window && !reducedMotion.matches) {
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add('is-visible');
-        observer.unobserve(entry.target);
+        if (entry.isIntersecting) {
+          entry.target.classList.add('reveal-visible');
+          observer.unobserve(entry.target);
+        }
       });
-    }, { threshold: 0.08, rootMargin: '0px 0px 35px 0px' });
-    document.querySelectorAll('.reveal').forEach(item => {
-      if (item.getBoundingClientRect().top > innerHeight) {
-        item.classList.add('will-reveal');
-        observer.observe(item);
+    }, { threshold: 0.04 });
+    document.querySelectorAll('.section-head, .relationship, .principles').forEach(node => {
+      if (node.getBoundingClientRect().top > innerHeight) {
+        node.classList.add('reveal-pending');
+        observer.observe(node);
       }
     });
-    reduced.addEventListener('change', event => {
+    reducedMotion.addEventListener('change', event => {
       if (event.matches) {
-        document.querySelectorAll('.will-reveal').forEach(item => item.classList.add('is-visible'));
+        document.querySelectorAll('.reveal-pending').forEach(node => node.classList.add('reveal-visible'));
         observer.disconnect();
       }
     });
   }
-
-  const art = document.querySelector('[data-art]');
-  const sculpture = art?.querySelector('[data-sculpture]');
-  if (art && sculpture && matchMedia('(pointer: fine)').matches) {
-    let frame = 0;
-    art.addEventListener('pointermove', event => {
-      if (reduced.matches || frame) return;
-      frame = requestAnimationFrame(() => {
-        const bounds = art.getBoundingClientRect();
-        const x = (event.clientX - bounds.left) / bounds.width - 0.5;
-        const y = (event.clientY - bounds.top) / bounds.height - 0.5;
-        sculpture.style.transform = `rotateY(${x * 12}deg) rotateX(${-y * 8}deg) translateY(${-y * 5}px)`;
-        frame = 0;
-      });
-    });
-    art.addEventListener('pointerleave', () => sculpture.style.transform = '');
-  }
-
   document.querySelectorAll('[data-owner-form]').forEach(form => {
     const status = form.querySelector('[data-form-status]');
-    const submit = form.querySelector('button[type="submit"]');
+    const submit = form.querySelector('[type="submit"]');
+    if (location.protocol === 'file:') status.textContent = 'This local preview cannot deliver inquiries. Online delivery requires the website server. You can also email hello@hyperboards.com.';
     form.addEventListener('submit', async event => {
       event.preventDefault();
       if (!form.reportValidity() || submit.disabled) return;
       if (location.protocol === 'file:') {
         status.dataset.state = 'error';
-        status.textContent = 'This local preview cannot send inquiries. No information was delivered. Please email hello@hyperboards.com or use the published website.';
+        status.textContent = 'No information was delivered. This local preview needs the website server to send an inquiry. Use the published website or email hello@hyperboards.com.';
         return;
       }
       submit.disabled = true;
@@ -89,23 +67,24 @@
       try {
         const response = await fetch(form.action, {
           method: 'POST',
-          headers: { 'Accept': 'application/json', 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+          headers: { Accept: 'application/json', 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
           body: new URLSearchParams(new FormData(form)),
           signal: controller.signal
         });
         const result = await response.json().catch(() => null);
         if (!response.ok || result?.ok !== true) {
+          const message = typeof result?.message === 'string' ? result.message.trim() : '';
           status.dataset.state = 'error';
-          status.textContent = result?.message || 'We could not confirm delivery. Your information is still in the form. Please try again or email hello@hyperboards.com.';
+          status.textContent = message || 'We could not confirm delivery. Your information is still in the form. Please try again or email hello@hyperboards.com.';
           return;
         }
         status.dataset.state = 'success';
-        status.textContent = result.message || 'Your introduction has been received.';
+        status.textContent = 'Your introduction has been received. Thank you for sharing the broad outline of your business.';
         form.reset();
       } catch (error) {
         status.dataset.state = 'error';
         status.textContent = error.name === 'AbortError'
-          ? 'The request timed out. Delivery has not been confirmed. Please email hello@hyperboards.com before trying again.'
+          ? 'The request timed out. Delivery has not been confirmed, and your information is still in the form. Please email hello@hyperboards.com before trying again.'
           : 'We could not confirm delivery. Your information is still in the form. Please try again or email hello@hyperboards.com.';
       } finally {
         clearTimeout(timeout);

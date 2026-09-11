@@ -7,7 +7,7 @@ import { pathToFileURL } from 'node:url';
 import { designs } from './sync-premium-showcase.mjs';
 
 const base = (process.env.QA_BASE_URL || 'http://127.0.0.1:4321').replace(/\/$/,'');
-const output = resolve('artifacts/premium-showcase/integrated');
+const output = resolve(process.env.QA_OUTPUT_DIR || 'artifacts/evergreen-replacement/integrated');
 const pages = ['index.html','what-we-acquire.html','sell-your-business.html'];
 const report = {base, pages:[], interactions:[], failures:[]};
 await mkdir(output,{recursive:true});
@@ -94,7 +94,7 @@ try {
   await check('Chooser offers all four designs and return tab reveals on focus', async () => {
     await page.goto(`${base}/showcase/choose-design.html`,{waitUntil:'networkidle'});
     assert.equal(await page.locator('.design-card').count(),4);
-    await page.locator('[data-design="atelier"] .preview').click();
+    await page.locator('[data-design="stewardship"] .preview').click();
     const back = page.locator('.hb-design-return');
     await back.focus();
     assert.ok((await back.boundingBox()).width >= 180);
@@ -168,7 +168,7 @@ try {
     await page.goto(pathToFileURL(resolve('Hyper boards DEMO',slug,'index.html')).href,{waitUntil:'networkidle'});
     assert.ok(await page.locator('h1').isVisible());
     assert.equal(await page.evaluate(()=>[...document.images].filter(i=>i.loading!=='lazy'&&(!i.complete||!i.naturalWidth)).length),0);
-    await page.locator('a[href="sell-your-business.html"]').first().click();
+    await page.locator('a[href="sell-your-business.html"]:visible').first().click();
     assert.ok(await page.locator('[data-owner-form]').isVisible());
     await page.close();
   });
