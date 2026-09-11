@@ -1,40 +1,25 @@
-# Hyperboards — four website experiences
+# Hyperboards Design Approver
 
-Open `choose-design.html` to explore the complete collection locally. Each site has a homepage, acquisition profile, and owner introduction page.
+The main website opens the finalized Evergreen template. The approver presents nine existing designs:
 
-| Choice | Folder | Direction |
-|---|---|---|
-| Design M | choose-design.html | The design collection |
-| Design 1 | design-1-original | Supplied reference, preserved |
-| Design 2 | design-2-atelier | Stewardship — forest/ivory, acquisition mandate and ownership priorities |
-| Design 3 | design-3-meridian | Corporate — navy/stone, institutional criteria and clear process |
-| Design 4 | design-4-fieldwork | Ledger — charcoal/cream, ownership prospectus and sector ledger |
+| Choice | Source folder or route |
+|---|---|
+| Design 1 — Evergreen Original | design-1-original |
+| Design 2 — Corporate (earlier Meridian) | design-2-corporate |
+| Design 3 — Monumental Ledger | design-3-monumental-ledger |
+| Design 4 — Operators Atlas | design-4-operators-atlas |
+| Design 5 — Quiet Cinema | design-5-quiet-cinema |
+| Design 6 — Cobalt Standard | design-6-cobalt-standard |
+| Design 7 — Blackline Office | design-7-blackline-office |
+| Design 8 — Continuum House | design-8-continuum-house |
+| Design 9 — Original Hyperboards | /design-content/hyperboards (Astro) |
 
-These three designs replace the initial alternatives. Directory names are retained so saved links continue to work. The seven original HTML/CSS/JS files directly in this directory are unchanged. `design-1-original` is the integrated copy with self-hosted fonts and the return control. The three new folders include all their page styles, scripts, fonts and graphics. The top-left edge control expands on hover or keyboard focus to return to the chooser, and remains touch accessible.
+Design 2 restores Design 3 from commit `756034c`, before the rejected changes. Designs 1 and 2 have home, acquisition and owner-introduction pages. Designs 3–8 are the existing homepage concepts, preserved from the listed prototype folders. Design 9 uses the original LeatherHomepage component.
 
-## Run with the server
+From the parent repository, use Node 22.19 or later and run `npm run build`, then `npm run start:approver`. Open `http://localhost:8080/`. Standard `npm start` serves Evergreen at its homepage. Railway's injected PORT is respected.
 
-From the parent `HYPERBOARDS WEBSITE` directory, use Node 22.19 or later:
+The local `choose-design.html` can open the eight static designs directly; Design 9 requires the running Astro server. Hover or keyboard-focus the left-edge return control to return to the approver.
 
-```sh
-npm ci
-npm run build
-npm start
-```
+Source concepts and the seven original root files remain unchanged. The rejected three replacement folders have been removed. Font and image licenses accompany the supplied designs; the six archived concepts retain their existing external font references.
 
-Default port is 8080; Railway's PORT takes precedence. Open `http://localhost:8080/`. The Astro server preserves all existing business and legal routes and `/api/inquiries`. Direct file opening supports browsing and interactions; forms explain that delivery requires the deployed website.
-
-## Validation and authoring
-
-```sh
-npm run sync:showcase
-npm run capture:showcase
-npm run qa:showcase
-npm test
-```
-
-Capture and QA default to a running preview at `http://127.0.0.1:4321`; override `QA_BASE_URL` for a production build. Browser verification uses the installed Edge browser and local mock inquiry responses. No live inquiries are sent by the QA script. Source assets are published into `public/showcase` by `scripts/sync-premium-showcase.mjs`. QA artifacts and authoring Python files are excluded from publication.
-
-Asset sources and font licenses are in `showcase-assets/ASSET-CREDITS.md` and each design's assets directory. Shared contact details, criteria and API field values match the reference.
-
-Online inquiry delivery uses the existing `INQUIRY_WEBHOOK_URL` and optional `INQUIRY_WEBHOOK_TOKEN` configuration. The pages only show success after the server confirms acceptance. `/api/health` identifies this release and reports whether a delivery URL is configured without exposing it.
+Run `npm run qa:showcase` against the approver and `npm test` against the standard app. Deployment configuration and evidence are described in `../docs/design-approver-release.md`.

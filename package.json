@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "astro dev",
     "start": "node scripts/start-server.mjs",
+    "start:approver": "node scripts/start-approver.mjs",
     "build": "npm run sync:designs && npm run sync:showcase && astro check && astro build",
     "check": "astro check",
     "preview": "astro preview",

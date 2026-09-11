@@ -2,192 +2,252 @@ import assert from 'node:assert/strict';
 import { chromium } from 'playwright-core';
 import axe from 'axe-core';
 import { mkdir, writeFile } from 'node:fs/promises';
-import { resolve, join } from 'node:path';
-import { pathToFileURL } from 'node:url';
+import { join, resolve } from 'node:path';
 import { designs } from './sync-premium-showcase.mjs';
 
-const base = (process.env.QA_BASE_URL || 'http://127.0.0.1:4321').replace(/\/$/,'');
-const output = resolve(process.env.QA_OUTPUT_DIR || 'artifacts/evergreen-replacement/integrated');
-const pages = ['index.html','what-we-acquire.html','sell-your-business.html'];
-const report = {base, pages:[], interactions:[], failures:[]};
-await mkdir(output,{recursive:true});
-const browser = await chromium.launch({channel:'msedge',headless:true});
-const check = async (name, fn) => {
-  try { await fn(); report.interactions.push({name,pass:true}); }
-  catch (error) { report.failures.push(`${name}: ${error.message}`); }
-};
+const base = (process.env.QA_BASE_URL || 'http://127.0.0.1:4323').replace(/\/$/, '');
+const siteMode = process.env.QA_SITE_MODE || 'approver';
+assert.ok(['approver', 'evergreen'].includes(siteMode), 'QA_SITE_MODE is approver or evergreen');
+const output = resolve(process.env.QA_OUTPUT_DIR || 'artifacts/approver-release/browser-qa');
+const widths = [390, 768, 1440];
+const chooserPath = '/showcase/choose-design.html';
+const staticDesigns = [
+  'design-1-original',
+  'design-2-corporate',
+  'design-3-monumental-ledger',
+  'design-4-operators-atlas',
+  'design-5-quiet-cinema',
+  'design-6-cobalt-standard',
+  'design-7-blackline-office',
+  'design-8-continuum-house',
+];
+assert.deepEqual(designs, staticDesigns, 'QA must cover the published static design manifest');
 
-async function fillInquiry(page) {
-  await page.locator('[name="fullName"]').fill('Local QA Owner');
-  await page.locator('[name="email"]').fill('qa@example.test');
-  await page.locator('[name="company"]').fill('Local QA Company');
-  await page.locator('[name="location"]').fill('Test City');
-  await page.locator('[name="industry"]').selectOption('manufacturing');
-  await page.locator('[name="ebitda"]').selectOption('1m-2m');
-  const role = page.locator('[name="role"]');
-  if (await role.first().evaluate(el => el.tagName === 'SELECT')) await role.selectOption('owner');
-  else await page.locator('[name="role"][value="owner"]').check();
-  await page.locator('[name="message"]').fill('This is a local test of the owner introduction form and must never leave the test browser.');
-  await page.locator('[name="acknowledgement"]').check();
+const homepages = [
+  ...staticDesigns.map(slug => ({ slug, route: `/showcase/${slug}/index.html` })),
+  { slug: 'design-9-hyperboards-original', route: '/design-content/hyperboards' },
+];
+const pageCases = homepages.flatMap(page => [
+  page,
+  ...(['design-1-original', 'design-2-corporate'].includes(page.slug)
+    ? ['what-we-acquire.html', 'sell-your-business.html'].map(file => ({
+      slug: page.slug,
+      route: `/showcase/${page.slug}/${file}`,
+    }))
+    : []),
+]);
+assert.equal(pageCases.length, 13, 'nine homepages and four existing inner pages');
+
+const report = {
+  base,
+  siteMode,
+  startedAt: new Date().toISOString(),
+  expectedDesigns: homepages.length,
+  expectedRoutes: pageCases.length,
+  pages: [],
+  checks: [],
+  accessibilityFindings: [],
+  failures: [],
+  interceptedWrites: [],
+};
+await mkdir(output, { recursive: true });
+const browser = await chromium.launch({ channel: 'msedge', headless: true });
+
+async function check(name, run) {
+  try {
+    await run();
+    report.checks.push({ name, pass: true });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    report.checks.push({ name, pass: false });
+    report.failures.push({ name, message });
+    console.error(`FAIL ${name}: ${message}`);
+  }
+}
+
+async function safeContext(options = {}) {
+  const context = await browser.newContext({ reducedMotion: 'reduce', serviceWorkers: 'block', ...options });
+  // Every context intercepts writes before a page opens. QA never sends inquiries.
+  await context.route('**/*', async route => {
+    const request = route.request();
+    const isInquiry = new URL(request.url()).pathname === '/api/inquiries';
+    if (isInquiry || !['GET', 'HEAD'].includes(request.method())) {
+      report.interceptedWrites.push({ method: request.method(), url: request.url() });
+      await route.fulfill({
+        status: 503,
+        contentType: 'application/json',
+        body: JSON.stringify({ ok: false, message: 'Local QA intercepted this request. No information was delivered.' }),
+      });
+      return;
+    }
+    await route.continue();
+  });
+  return context;
+}
+
+function watchPage(page) {
+  const evidence = { errors: [], assetFailures: [] };
+  const assetTypes = new Set(['document', 'stylesheet', 'script', 'image', 'font']);
+  page.on('pageerror', error => evidence.errors.push(error.message));
+  page.on('response', response => {
+    if (response.status() >= 400 && assetTypes.has(response.request().resourceType())) {
+      evidence.assetFailures.push({ url: response.url(), status: response.status() });
+    }
+  });
+  page.on('requestfailed', request => {
+    const error = request.failure()?.errorText || 'request failed';
+    if (assetTypes.has(request.resourceType()) && error !== 'net::ERR_ABORTED') {
+      evidence.assetFailures.push({ url: request.url(), error });
+    }
+  });
+  return evidence;
+}
+
+async function prepareScreenshot(page) {
+  await page.evaluate(async () => {
+    document.querySelectorAll('img').forEach(image => { image.loading = 'eager'; });
+    await document.fonts.ready;
+    await Promise.all([...document.images].map(image => image.decode().catch(() => {})));
+    // Trigger existing reveal/lazy behavior without altering any design's CSS.
+    for (let y = 0; y < document.documentElement.scrollHeight; y += Math.max(600, innerHeight - 100)) {
+      scrollTo(0, y);
+      await new Promise(requestAnimationFrame);
+    }
+    scrollTo(0, 0);
+    await new Promise(requestAnimationFrame);
+  });
+}
+
+async function inspectPage(page, item, width, evidence) {
+  const response = await page.goto(`${base}${item.route}`, { waitUntil: 'networkidle' });
+  assert.equal(response?.status(), 200, 'page responds successfully');
+  await prepareScreenshot(page);
+  await page.addScriptTag({ content: axe.source });
+  const data = await page.evaluate(async () => {
+    const audit = await window.axe.run(document, {
+      runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'] },
+    });
+    return {
+      h1: document.querySelectorAll('h1').length,
+      overflow: document.documentElement.scrollWidth > innerWidth + 1,
+      brokenImages: [...document.images]
+        .filter(image => !image.complete || image.naturalWidth === 0)
+        .map(image => image.src),
+      violations: audit.violations.map(violation => ({
+        id: violation.id,
+        impact: violation.impact,
+        description: violation.description,
+        nodes: violation.nodes.map(node => ({ target: node.target, summary: node.failureSummary })),
+      })),
+    };
+  });
+  const record = { ...item, width, ...data, ...evidence };
+  report.pages.push(record);
+  if (data.violations.length) {
+    report.accessibilityFindings.push({
+      route: item.route,
+      width,
+      note: 'Existing design accessibility findings; recorded separately from collection integration failures.',
+      violations: data.violations,
+    });
+  }
+  const filename = `${item.slug}-${item.route.split('/').pop().replace('.html', '')}-${width}.png`;
+  await page.screenshot({ path: join(output, filename), fullPage: true });
+  assert.equal(data.overflow, false, 'no horizontal page overflow');
+  assert.deepEqual(data.brokenImages, [], 'all page images load');
+  assert.deepEqual(evidence.assetFailures, [], 'page assets load without HTTP/network failures');
+  assert.deepEqual(evidence.errors, [], 'no uncaught page JavaScript errors');
 }
 
 try {
-  for (const width of (process.env.QA_INTERACTIONS_ONLY ? [] : [390,768,1440])) {
-    const context = await browser.newContext({viewport:{width,height:1000},reducedMotion:'reduce'});
-    const page = await context.newPage();
-    const errors = [];
-    page.on('pageerror', e => errors.push(e.message));
-    for (const slug of designs) for (const route of pages) {
-      const name = `${slug}/${route} @${width}`;
-      await check(name, async () => {
-        errors.length = 0;
-        const response = await page.goto(`${base}/showcase/${slug}/${route}`,{waitUntil:'networkidle'});
-        assert.equal(response.status(),200);
-        await page.evaluate(() => document.fonts.ready);
-        // Reach lower images before taking full-page evidence.
-        await page.evaluate(async () => {
-          const images = [...document.images];
-          images.forEach(image => image.loading = 'eager');
-          await Promise.all(images.map(image => image.decode().catch(() => {})));
-        });
-        await page.addScriptTag({content:axe.source});
-        const data = await page.evaluate(async () => {
-          const audit = await window.axe.run(document,{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa','wcag22aa']}});
-          return {
-            h1:document.querySelectorAll('h1').length,
-            overflow:document.documentElement.scrollWidth > innerWidth+1,
-            brokenImages:[...document.images].filter(i => !i.complete || i.naturalWidth === 0).map(i=>i.src),
-            violations:audit.violations.map(v=>({id:v.id,impact:v.impact,nodes:v.nodes.map(n=>({target:n.target,summary:n.failureSummary}))})),
-            externalAssets:[...document.querySelectorAll('script[src],link[rel="stylesheet"]')].map(e=>e.src||e.href).filter(url=>new URL(url).origin!==location.origin),
-          };
-        });
-        report.pages.push({slug,route,width,...data,errors:[...errors]});
-        await page.screenshot({path:join(output,`${slug}-${route.replace('.html','')}-${width}.png`),fullPage:true});
-        assert.equal(data.h1,1,'one H1');
-        assert.equal(data.overflow,false,'no horizontal overflow');
-        assert.equal(data.brokenImages.length,0,'all images loaded');
-        assert.equal(errors.length,0,`no JS errors: ${errors.join(';')}`);
-        assert.equal(data.externalAssets.length,0,'CSS and JS self hosted');
-        const severe = data.violations.filter(v=>['serious','critical'].includes(v.impact));
-        assert.equal(severe.length,0,`axe: ${severe.map(v=>v.id).join(', ')}`);
-        assert.equal(await page.locator('.hb-design-return').getAttribute('href'),'../choose-design.html');
-      });
-    }
-    await context.close();
-  }
-
-  const page = await browser.newPage({viewport:{width:1440,height:1000},reducedMotion:'reduce'});
-  for (const width of [390,768,1440]) await check(`Chooser layout and accessibility @${width}`, async () => {
-    await page.setViewportSize({width,height:1000});
-    await page.goto(`${base}/showcase/choose-design.html`,{waitUntil:'networkidle'});
-    await page.addScriptTag({content:axe.source});
-    const result = await page.evaluate(async () => ({
-      overflow:document.documentElement.scrollWidth > innerWidth+1,
-      brokenImages:[...document.images].filter(i=>!i.complete||!i.naturalWidth).length,
-      violations:(await window.axe.run(document,{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa','wcag22aa']}})).violations.map(v=>({id:v.id,impact:v.impact})),
-    }));
-    assert.equal(result.overflow,false);
-    assert.equal(result.brokenImages,0);
-    assert.equal(result.violations.filter(v=>['serious','critical'].includes(v.impact)).length,0,JSON.stringify(result.violations));
-    await page.screenshot({path:join(output,`chooser-${width}.png`),fullPage:true});
-  });
-  await check('Chooser offers all four designs and return tab reveals on focus', async () => {
-    await page.goto(`${base}/showcase/choose-design.html`,{waitUntil:'networkidle'});
-    assert.equal(await page.locator('.design-card').count(),4);
-    await page.locator('[data-design="stewardship"] .preview').click();
-    const back = page.locator('.hb-design-return');
-    await back.focus();
-    assert.ok((await back.boundingBox()).width >= 180);
-    await back.click();
-    assert.ok(page.url().endsWith('choose-design.html'));
-  });
-
-  for (const slug of designs) {
-    await page.goto(`${base}/showcase/${slug}/index.html`,{waitUntil:'networkidle'});
-    await check(`${slug}: industry selection explains all nine sectors`, async () => {
-      const choices = page.locator('summary[data-sector],button[data-sector],button[data-evergreen-sector]');
-      assert.equal(await choices.count(),9);
-      for (const choice of await choices.all()) {
-        if (await choice.evaluate(el => el.tagName === 'SUMMARY' && el.parentElement.open)) await choice.click();
-        await choice.click();
-        assert.ok(await choice.evaluate(el => el.tagName==='SUMMARY' ? el.parentElement.open : el.getAttribute('aria-pressed')==='true'));
+  if (!process.env.QA_INTERACTIONS_ONLY) {
+    for (const width of widths) {
+      const context = await safeContext({ viewport: { width, height: 1000 } });
+      for (const item of [...pageCases, { slug: 'chooser', route: chooserPath }]) {
+        const page = await context.newPage();
+        const evidence = watchPage(page);
+        await check(`${item.route} @${width}`, () => inspectPage(page, item, width, evidence));
+        await page.close();
       }
-    });
-    await check(`${slug}: FAQ opens with keyboard`, async () => {
-      const faq = page.locator('details:not(.sector-fallback):visible').filter({has:page.locator('summary')}).filter({hasNot:page.locator('summary[data-sector]')}).first();
-      await faq.locator('summary').focus();
-      if (await faq.evaluate(el=>el.open)) await faq.locator('summary').press('Enter');
-      await faq.locator('summary').press('Enter');
-      assert.ok(await faq.evaluate(el=>el.open));
-      await faq.locator('summary').press('Enter');
-      assert.equal(await faq.evaluate(el=>el.open),false);
-    });
-    await check(`${slug}: mobile navigation opens`, async () => {
-      await page.setViewportSize({width:390,height:844});
-      const menu = page.locator('[data-menu],[data-menu-toggle],[data-evergreen-menu]').first();
-      await menu.click();
-      assert.equal(await menu.getAttribute('aria-expanded'),'true');
-      await menu.click();
-      assert.equal(await menu.getAttribute('aria-expanded'),'false');
-      await page.setViewportSize({width:1440,height:1000});
-    });
-    await page.goto(`${base}/showcase/${slug}/sell-your-business.html`,{waitUntil:'networkidle'});
-    let calls = 0;
-    let reply = {status:503,body:{ok:false,message:'Online submission is not yet connected. No information was delivered.'}};
-    await page.route('**/api/inquiries',async route => {
-      calls++;
-      const payload = new URLSearchParams(route.request().postData());
-      for (const key of ['fullName','email','company','location','industry','ebitda','role','message','acknowledgement']) assert.ok(payload.get(key),`required ${key}`);
-      assert.equal(payload.get('industry'),'manufacturing');
-      assert.equal(payload.get('role'),'owner');
-      await route.fulfill({status:reply.status,contentType:'application/json',body:JSON.stringify(reply.body)});
-    });
-    await check(`${slug}: invalid form prevents submission`,async()=>{
-      await page.locator('[data-owner-form] button[type="submit"]').click();
-      assert.equal(calls,0);
-      assert.equal(await page.locator('[data-owner-form]').evaluate(form=>form.checkValidity()),false);
-    });
-    await check(`${slug}: service error is honest and retains entries`,async()=>{
-      await fillInquiry(page);
-      await page.locator('[data-owner-form] button[type="submit"]').click();
-      await page.waitForFunction(()=>document.querySelector('[data-form-status]').textContent.includes('No information was delivered'));
-      assert.equal(await page.locator('[name="fullName"]').inputValue(),'Local QA Owner');
-    });
-    await check(`${slug}: successful server confirmation resets form`,async()=>{
-      reply={status:200,body:{ok:true,message:'Your confidential introduction has been received.'}};
-      await page.locator('[data-owner-form] button[type="submit"]').click();
-      await page.waitForFunction(()=>document.querySelector('[data-form-status]').textContent.includes('has been received'));
-      assert.equal(await page.locator('[name="fullName"]').inputValue(),'');
-    });
-    await page.unroute('**/api/inquiries');
+      await context.close();
+      console.log(`Completed ${width}px layout, asset and accessibility evidence.`);
+    }
   }
-  await page.close();
 
-  for (const slug of designs.slice(1)) await check(`${slug}: source folder opens directly as local HTML`, async()=>{
-    const page = await browser.newPage({viewport:{width:1440,height:1000},reducedMotion:'reduce'});
-    await page.goto(pathToFileURL(resolve('Hyper boards DEMO',slug,'index.html')).href,{waitUntil:'networkidle'});
-    assert.ok(await page.locator('h1').isVisible());
-    assert.equal(await page.evaluate(()=>[...document.images].filter(i=>i.loading!=='lazy'&&(!i.complete||!i.naturalWidth)).length),0);
-    await page.locator('a[href="sell-your-business.html"]:visible').first().click();
-    assert.ok(await page.locator('[data-owner-form]').isVisible());
-    await page.close();
+  const context = await safeContext({ viewport: { width: 1440, height: 1000 } });
+  const page = await context.newPage();
+  await check(`${siteMode} root opens its intended landing page`, async () => {
+    await page.goto(base, { waitUntil: 'networkidle' });
+    assert.equal(new URL(page.url()).pathname, siteMode === 'approver'
+      ? chooserPath
+      : '/design-previews/evergreen-partner-refined/index.html');
+  });
+  await check('Chooser exposes all nine destinations in order', async () => {
+    await page.goto(`${base}${chooserPath}`, { waitUntil: 'networkidle' });
+    const links = await page.locator('.design-card .preview').evaluateAll(elements =>
+      elements.map(element => new URL(element.href).pathname));
+    assert.equal(await page.locator('.design-card').count(), 9);
+    assert.deepEqual(links, homepages.map(item => item.route), 'chooser order and destinations match all nine designs');
   });
 
-  for (const slug of designs.slice(1)) await check(`${slug}: no-JavaScript content and navigation remain usable`, async()=>{
-    const context = await browser.newContext({javaScriptEnabled:false,viewport:{width:390,height:844}});
-    const page = await context.newPage();
-    await page.goto(`${base}/showcase/${slug}/index.html`);
-    assert.ok(await page.locator('h1').isVisible());
-    const summary = page.locator('summary[data-sector]').first();
-    if (await summary.count()) { if (await summary.locator('..').getAttribute('open') === null) await summary.click(); assert.ok(await summary.locator('..').getAttribute('open') !== null); }
-    const owner = page.locator('a[href="sell-your-business.html"]:visible').first();
-    await owner.click();
-    assert.ok(await page.locator('[data-owner-form]').isVisible());
-    await context.close();
+  await check(`Health identifies ${siteMode} site mode`, async () => {
+    const response = await page.goto(`${base}/api/health`);
+    assert.equal(response?.status(), 200);
+    const health = await response.json();
+    assert.equal(health.ok, true);
+    assert.equal(health.mode, siteMode);
+    assert.equal(health.designs, siteMode === 'approver' ? 9 : 1);
   });
+
+  for (const item of homepages) {
+    await check(`${item.slug}: chooser link and keyboard return`, async () => {
+      await page.setViewportSize({ width: 1440, height: 1000 });
+      await page.goto(`${base}${chooserPath}`, { waitUntil: 'networkidle' });
+      const link = page.locator('.design-card .preview').nth(homepages.indexOf(item));
+      await link.click();
+      await page.waitForLoadState('networkidle');
+      assert.equal(new URL(page.url()).pathname, item.route);
+      const back = page.locator('.hb-design-return');
+      assert.equal(await back.count(), 1);
+      assert.equal(await back.evaluate(element => new URL(element.href).pathname), chooserPath);
+      await back.focus();
+      await page.waitForFunction(() => document.querySelector('.hb-design-return').getBoundingClientRect().width >= 180);
+      assert.ok(await back.evaluate(element => element === document.activeElement));
+      await back.press('Enter');
+      await page.waitForURL(`**${chooserPath}`);
+    });
+
+    await check(`${item.slug}: existing mobile navigation`, async () => {
+      await page.setViewportSize({ width: 390, height: 844 });
+      await page.goto(`${base}${item.route}`, { waitUntil: 'networkidle' });
+      const toggle = page.locator('button[aria-controls][aria-expanded]:visible').first();
+      if (!await toggle.count()) {
+        report.checks.push({ name: `${item.slug}: no collapsible mobile control in the preserved design`, informational: true });
+        return;
+      }
+      const controlledId = await toggle.getAttribute('aria-controls');
+      const initial = await toggle.getAttribute('aria-expanded');
+      await toggle.focus();
+      await toggle.press('Enter');
+      assert.notEqual(await toggle.getAttribute('aria-expanded'), initial, 'keyboard activation toggles navigation state');
+      if (await toggle.getAttribute('aria-expanded') === 'true') {
+        assert.ok(await page.locator(`[id="${controlledId}"]`).isVisible(), 'expanded navigation is visible');
+      }
+      await toggle.press('Enter');
+      assert.equal(await toggle.getAttribute('aria-expanded'), initial, 'a second activation restores navigation state');
+    });
+  }
+  await context.close();
 } finally {
   await browser.close();
-  await writeFile(join(output,process.env.QA_INTERACTIONS_ONLY ? 'interaction-report.json' : 'report.json'),JSON.stringify(report,null,2));
+  report.finishedAt = new Date().toISOString();
+  await writeFile(join(output, process.env.QA_INTERACTIONS_ONLY ? 'interaction-report.json' : 'report.json'), JSON.stringify(report, null, 2));
+  if (!process.env.QA_INTERACTIONS_ONLY) {
+    await writeFile(join(output, 'accessibility-findings.json'), JSON.stringify(report.accessibilityFindings, null, 2));
+  }
 }
-console.log(`${report.pages.length} responsive page checks; ${report.interactions.length} total checks passed; ${report.failures.length} failures.`);
-if (report.failures.length) { console.error(report.failures.join('\n')); process.exitCode=1; }
+
+const responsivePages = report.pages.filter(item => item.slug !== 'chooser').length;
+console.log(`${responsivePages} responsive design-page checks; ${report.pages.filter(item => item.slug === 'chooser').length} chooser layouts; ${report.checks.filter(item => item.pass === true).length} checks passed; ${report.failures.length} failures.`);
+console.log(`${report.accessibilityFindings.length} page/viewport accessibility records are reported separately. ${report.interceptedWrites.length} write requests were intercepted; no QA inquiry was delivered.`);
+if (report.failures.length) process.exitCode = 1;

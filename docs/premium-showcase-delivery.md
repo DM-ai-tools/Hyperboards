@@ -1,5 +1,7 @@
 # Hyperboards Evergreen collection
 
+> Historical delivery note: this collection has since been replaced by the nine-design approver and restored Evergreen homepage. See [current delivery](design-approver-release.md).
+
 The three alternatives have been replaced following the user’s request for professional sites closer to the original Evergreen design. Design M opens the collection; Design 1 retains the supplied reference.
 
 | Choice | Directory inside `Hyper boards DEMO` | Direction |

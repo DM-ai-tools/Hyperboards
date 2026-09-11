@@ -86,7 +86,7 @@ test('selected design routes owner and acquisition calls to dedicated pages', as
   assert.match(acquirePage, /Wholesale &amp; Distributors/);
 });
 
-test('selected homepage and gallery routes have distinct responsibilities', async () => {
+test('runtime site mode separates the approver chooser from finalized Evergreen and the legacy gallery', async () => {
   const [homepage, page, layout, card] = await Promise.all([
     readFile(join(projectRoot, 'src', 'pages', 'index.astro'), 'utf8'),
     readFile(join(projectRoot, 'src', 'pages', 'designs', 'index.astro'), 'utf8'),
@@ -94,7 +94,9 @@ test('selected homepage and gallery routes have distinct responsibilities', asyn
     readFile(join(projectRoot, 'src', 'components', 'design-gallery', 'DesignCard.astro'), 'utf8'),
   ]);
 
-  assert.match(homepage, /showcase\/choose-design\.html/);
+  assert.match(homepage, /process\.env\.HYPERBOARDS_SITE_MODE\s*===\s*['"]approver['"]/);
+  assert.match(homepage, /\?\s*['"]\/showcase\/choose-design\.html['"]/);
+  assert.match(homepage, /:\s*['"]\/design-previews\/evergreen-partner-refined\/index\.html['"]/);
   assert.match(homepage, /Astro\.redirect/);
   assert.match(page, /Selected homepage direction\./i);
   assert.match(page, /Design 3 is selected/i);

@@ -116,12 +116,14 @@ test('Design 2 alone presents warm-white pages with navy information panels and 
   assert.match(refinedMandate, /oklch\([^)]*16[345]\)/, 'Design 3 should retain its established forest-green panel system');
 });
 
-test('premium design chooser is the homepage while the legacy gallery remains available', async () => {
+test('the default homepage opens finalized Evergreen while the legacy gallery remains available', async () => {
   const homepageResponse = await page.goto(baseUrl, { waitUntil: 'networkidle' });
   assert.equal(homepageResponse?.status(), 200, 'the selected homepage should load');
-  assert.equal(new URL(page.url()).pathname, '/showcase/choose-design.html');
-  assert.match(await page.locator('h1').innerText(), /One vision/i);
-  assert.equal(await page.locator('.design-card').count(), 4, 'the homepage exposes the original plus three new designs');
+  assert.equal(new URL(page.url()).pathname, '/design-previews/evergreen-partner-refined/index.html');
+  assert.match(await page.locator('h1').innerText(), /A direct buyer for the business you built/i);
+  assert.equal(await page.locator('.design-card').count(), 0, 'the default homepage presents Evergreen rather than approval choices');
+  assert.ok(await page.locator('a[href="sell-your-business.html"]').count() > 0, 'Evergreen keeps its owner introduction route');
+  assert.ok(await page.locator('a[href="what-we-acquire.html"]').count() > 0, 'Evergreen keeps its acquisition route');
 
   const galleryResponse = await page.goto(`${baseUrl}/designs`, { waitUntil: 'networkidle' });
   assert.equal(galleryResponse?.status(), 200, 'the design chooser should remain available');

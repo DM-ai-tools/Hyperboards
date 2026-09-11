@@ -3,7 +3,7 @@ import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-export const designs = ['design-1-original', 'design-2-atelier', 'design-3-meridian', 'design-4-fieldwork'];
+export const designs = ['design-1-original', 'design-2-corporate', 'design-3-monumental-ledger', 'design-4-operators-atlas', 'design-5-quiet-cinema', 'design-6-cobalt-standard', 'design-7-blackline-office', 'design-8-continuum-house'];
 const originals = ['index.html','styles.css','script.js','sell-your-business.html','what-we-acquire.html','inner-pages.css','inner-pages.js'];
 const returnLink = '<a class="hb-design-return" href="../choose-design.html" aria-label="Back to choose design"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="12" y="2" width="5" height="5" rx="1"/><rect x="2" y="12" width="5" height="5" rx="1"/><rect x="12" y="12" width="5" height="5" rx="1"/></svg><span>Back to choose design</span></a>';
 
@@ -59,5 +59,5 @@ export async function syncPremiumShowcase() {
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   await syncPremiumShowcase();
-  console.log('Published original + three premium websites.');
+  console.log('Published eight static designs; Original Hyperboards is served by Astro as Design 9.');
 }
