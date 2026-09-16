@@ -181,3 +181,20 @@ test('finalized Evergreen uses a consistent, readable three-level heading system
   assert.ok(Math.max(...home.h2) - Math.min(...home.h2) <= 2, 'homepage H2s should resolve to one consistent scale');
   assert.ok(Math.max(...home.h3) - Math.min(...home.h3) <= 2, 'homepage H3s should resolve to one consistent scale');
 });
+
+test('finalized Evergreen keeps the hero grid visible without overpowering the white canvas', async () => {
+  const response = await page.goto(baseUrl, { waitUntil: 'networkidle' });
+  assert.equal(response?.status(), 200, 'the finalized homepage should load');
+
+  const grid = await page.locator('.evergreen-hero').evaluate((hero) => {
+    const style = getComputedStyle(hero, '::before');
+    return {
+      opacity: Number.parseFloat(style.opacity),
+      backgroundImage: style.backgroundImage,
+    };
+  });
+
+  assert.match(grid.backgroundImage, /linear-gradient/, 'the hero should retain its structural grid');
+  assert.ok(grid.opacity > 0.5, 'the grid should remain visibly present against the white canvas');
+  assert.ok(grid.opacity <= 0.6, 'the grid should remain a restrained background detail');
+});

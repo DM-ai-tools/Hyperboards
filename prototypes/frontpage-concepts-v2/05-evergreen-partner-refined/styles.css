@@ -372,7 +372,7 @@ html[data-concept='evergreen-partner-refined'] {
 
 .evergreen-refined .evergreen-hero::before {
   width: min(42vw, 640px);
-  opacity: 0.5;
+  opacity: 0.56;
   background-image:
     linear-gradient(90deg, transparent 31px, color-mix(in oklch, var(--evergreen-800) 7%, transparent) 32px),
     linear-gradient(transparent 31px, color-mix(in oklch, var(--evergreen-800) 7%, transparent) 32px),
