@@ -117,7 +117,7 @@ svg { display: block; }
 }
 .evergreen-hero__grid { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(320px, 0.75fr); gap: clamp(4rem, 8vw, 8rem); align-items: end; }
 .evergreen-hero__copy { padding-bottom: clamp(2rem, 5vw, 4rem); }
-.evergreen-hero h1 { max-width: 870px; margin: 0; font-family: var(--font-serif); font-size: var(--type-h1); font-weight: 500; line-height: 0.95; letter-spacing: -0.052em; text-wrap: balance; }
+.evergreen-hero h1 { max-width: 870px; margin: 0; font-family: 'Literata Display', var(--font-serif); font-size: var(--type-h1); font-weight: 500; font-optical-sizing: auto; line-height: 1.02; letter-spacing: -0.052em; text-wrap: balance; }
 .evergreen-hero__lede { max-width: 730px; margin: 2rem 0 0; color: var(--color-muted); font-size: var(--type-lede); line-height: 1.65; }
 .evergreen-actions { display: flex; flex-wrap: wrap; gap: 0.8rem 1.25rem; margin-top: 2rem; }
 .evergreen-button { display: inline-flex; align-items: center; justify-content: center; min-height: var(--button-height); padding: 0.85rem 1.2rem; font-size: 0.79rem; font-weight: 650; transition: transform 180ms var(--ease), color 180ms ease, background-color 180ms ease, border-color 180ms ease; }

@@ -1,4 +1,11 @@
 @font-face {
+  font-family: 'Literata Display';
+  font-style: normal;
+  font-weight: 500 600;
+  font-display: swap;
+  src: url(literata-display-latin-variable.woff2) format('woff2');
+}
+@font-face {
   font-family: 'Literata';
   font-style: normal;
   font-weight: 500;

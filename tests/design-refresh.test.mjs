@@ -208,17 +208,33 @@ test('finalized Evergreen preserves the original typeface roles while standardiz
     return {
       body: family('body'),
       hero: family('.evergreen-hero h1'),
+      exactDisplayFaceLoaded: document.fonts.check('500 6rem "Literata Display"'),
       tertiary: [...document.querySelectorAll('.evergreen-owner-grid h3, .evergreen-process h3')]
         .map((element) => getComputedStyle(element).fontFamily),
     };
   });
 
   assert.notEqual(typography.hero, typography.body, 'the original editorial hero should retain its serif display face');
+  assert.match(typography.hero, /^"?Literata Display"?/, 'the hero should use the exact variable optical-size Literata reference face');
+  assert.equal(typography.exactDisplayFaceLoaded, true, 'the exact self-hosted display face should finish loading');
   assert.ok(typography.tertiary.length > 0, 'the homepage should expose tertiary headings');
   assert.ok(
     typography.tertiary.every((fontFamily) => fontFamily === typography.body),
     'tertiary headings should retain the original sans-serif face instead of inheriting the size pass as a style change',
   );
+});
+
+test('finalized Evergreen leaves clear vertical space around headline descenders', async () => {
+  const response = await page.goto(baseUrl, { waitUntil: 'networkidle' });
+  assert.equal(response?.status(), 200, 'the finalized homepage should load');
+
+  const spacing = await page.locator('.evergreen-hero h1').evaluate((element) => {
+    const style = getComputedStyle(element);
+    return Number.parseFloat(style.lineHeight) / Number.parseFloat(style.fontSize);
+  });
+
+  assert.ok(spacing >= 1.01, 'headline line boxes should not overlap descenders with the following line');
+  assert.ok(spacing <= 1.04, 'the spacing correction should remain visually restrained');
 });
 
 test('finalized Evergreen enlarges the acquisition profile panel by ten percent on desktop', async () => {
