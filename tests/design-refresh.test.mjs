@@ -198,3 +198,43 @@ test('finalized Evergreen keeps the hero grid visible without overpowering the w
   assert.ok(grid.opacity > 0.5, 'the grid should remain visibly present against the white canvas');
   assert.ok(grid.opacity <= 0.6, 'the grid should remain a restrained background detail');
 });
+
+test('finalized Evergreen preserves the original typeface roles while standardizing heading sizes', async () => {
+  const response = await page.goto(baseUrl, { waitUntil: 'networkidle' });
+  assert.equal(response?.status(), 200, 'the finalized homepage should load');
+
+  const typography = await page.evaluate(() => {
+    const family = (selector) => getComputedStyle(document.querySelector(selector)).fontFamily;
+    return {
+      body: family('body'),
+      hero: family('.evergreen-hero h1'),
+      tertiary: [...document.querySelectorAll('.evergreen-owner-grid h3, .evergreen-process h3')]
+        .map((element) => getComputedStyle(element).fontFamily),
+    };
+  });
+
+  assert.notEqual(typography.hero, typography.body, 'the original editorial hero should retain its serif display face');
+  assert.ok(typography.tertiary.length > 0, 'the homepage should expose tertiary headings');
+  assert.ok(
+    typography.tertiary.every((fontFamily) => fontFamily === typography.body),
+    'tertiary headings should retain the original sans-serif face instead of inheriting the size pass as a style change',
+  );
+});
+
+test('finalized Evergreen enlarges the acquisition profile panel by ten percent on desktop', async () => {
+  const response = await page.goto(baseUrl, { waitUntil: 'networkidle' });
+  assert.equal(response?.status(), 200, 'the finalized homepage should load');
+
+  const panel = await page.locator('.evergreen-profile').evaluate((element) => {
+    const bounds = element.getBoundingClientRect();
+    return {
+      widthRatio: bounds.width / element.offsetWidth,
+      heightRatio: bounds.height / element.offsetHeight,
+      overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    };
+  });
+
+  assert.ok(Math.abs(panel.widthRatio - 1.1) <= 0.015, 'the panel should be visually 10% wider');
+  assert.ok(Math.abs(panel.heightRatio - 1.1) <= 0.015, 'the panel should be visually 10% taller');
+  assert.ok(panel.overflow <= 1, 'the larger panel should not create horizontal overflow');
+});
