@@ -26,9 +26,15 @@
   --color-focus: var(--copper-600);
   --font-sans: 'Schibsted Grotesk', 'Aptos', 'Segoe UI', sans-serif;
   --font-serif: 'Literata', 'Iowan Old Style', Georgia, serif;
+  --type-h1: clamp(3.75rem, 5.85vw, 6.25rem);
+  --type-h2: clamp(2.55rem, 4.2vw, 4.6rem);
+  --type-h3: clamp(1.1rem, 1.25vw, 1.35rem);
+  --type-lede: clamp(1.075rem, 1.3vw, 1.2rem);
+  --type-ui: 0.875rem;
+  --measure-copy: 68ch;
   --shell: 1240px;
   --gutter: clamp(1.25rem, 4vw, 4rem);
-  --section: clamp(5rem, 9vw, 9rem);
+  --section: clamp(4.75rem, 8vw, 8rem);
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
 
   /* Component tokens */
@@ -87,11 +93,11 @@ svg { display: block; }
 .evergreen-brand { display: inline-flex; align-items: center; gap: 0.72rem; font-size: 0.96rem; font-weight: 650; letter-spacing: -0.025em; }
 .evergreen-brand__mark { width: 27px; color: var(--evergreen-900); }
 .evergreen-brand__mark path { fill: none; stroke: currentColor; stroke-width: 3; }
-.evergreen-nav { display: flex; justify-content: center; gap: clamp(1.35rem, 2.6vw, 2.75rem); color: var(--ink-700); font-size: 0.78rem; font-weight: 600; }
+.evergreen-nav { display: flex; justify-content: center; gap: clamp(1.35rem, 2.6vw, 2.75rem); color: var(--ink-700); font-size: var(--type-ui); font-weight: 600; }
 .evergreen-nav a, .evergreen-footer a { position: relative; }
 .evergreen-nav a::after, .evergreen-footer a::after { content: ''; position: absolute; right: 0; bottom: -0.35rem; left: 0; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: right; transition: transform 180ms ease; }
 .evergreen-nav a:hover::after, .evergreen-nav a:focus-visible::after, .evergreen-footer a:hover::after, .evergreen-footer a:focus-visible::after { transform: scaleX(1); transform-origin: left; }
-.evergreen-header__action { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0.7rem 1rem; border: 1px solid var(--evergreen-900); color: var(--evergreen-900); font-size: 0.74rem; font-weight: 650; transition: color 180ms ease, background-color 180ms ease; }
+.evergreen-header__action { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0.72rem 1.15rem; border: 1px solid var(--evergreen-900); color: var(--evergreen-900); font-size: var(--type-lede); font-weight: 650; line-height: 1.2; transition: color 180ms ease, background-color 180ms ease; }
 .evergreen-header__action:hover { color: var(--paper-0); background: var(--evergreen-900); }
 .evergreen-menu { display: none; min-width: 44px; min-height: 44px; border: 0; background: transparent; cursor: pointer; }
 
@@ -112,8 +118,8 @@ svg { display: block; }
 }
 .evergreen-hero__grid { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(320px, 0.75fr); gap: clamp(4rem, 8vw, 8rem); align-items: end; }
 .evergreen-hero__copy { padding-bottom: clamp(2rem, 5vw, 4rem); }
-.evergreen-hero h1 { max-width: 870px; margin: 0; font-family: var(--font-serif); font-size: clamp(3.45rem, 6.2vw, 6.6rem); font-weight: 500; line-height: 0.95; letter-spacing: -0.052em; text-wrap: balance; }
-.evergreen-hero__lede { max-width: 730px; margin: 2rem 0 0; color: var(--color-muted); font-size: clamp(1.03rem, 1.35vw, 1.22rem); line-height: 1.65; }
+.evergreen-hero h1 { max-width: 870px; margin: 0; font-family: var(--font-serif); font-size: var(--type-h1); font-weight: 500; line-height: 0.96; letter-spacing: -0.052em; text-wrap: balance; }
+.evergreen-hero__lede { max-width: var(--measure-copy); margin: 2rem 0 0; color: var(--color-muted); font-size: var(--type-lede); line-height: 1.58; }
 .evergreen-actions { display: flex; flex-wrap: wrap; gap: 0.8rem 1.25rem; margin-top: 2rem; }
 .evergreen-button { display: inline-flex; align-items: center; justify-content: center; min-height: var(--button-height); padding: 0.85rem 1.2rem; font-size: 0.79rem; font-weight: 650; transition: transform 180ms var(--ease), color 180ms ease, background-color 180ms ease, border-color 180ms ease; }
 .evergreen-button:hover { transform: translateY(-2px); }
@@ -146,7 +152,7 @@ svg { display: block; }
 .evergreen-role, .evergreen-acquire, .evergreen-stewardship, .evergreen-faq { padding-block: var(--section); }
 .evergreen-section-intro { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr); gap: clamp(3rem, 7vw, 7rem); align-items: end; }
 .evergreen-section-intro > .evergreen-eyebrow { grid-column: 1 / -1; margin-bottom: -1.5rem; }
-.evergreen-section-intro h2, .evergreen-stewardship h2, .evergreen-faq h2, .evergreen-contact h2 { max-width: 850px; margin: 0; font-family: var(--font-serif); font-size: clamp(2.7rem, 5vw, 5.25rem); font-weight: 500; line-height: 0.99; letter-spacing: -0.045em; text-wrap: balance; }
+.evergreen-section-intro h2, .evergreen-stewardship h2, .evergreen-faq h2, .evergreen-contact h2 { max-width: 850px; margin: 0; font-family: var(--font-serif); font-size: var(--type-h2); font-weight: 500; line-height: 1; letter-spacing: -0.045em; text-wrap: balance; }
 .evergreen-section-intro > div, .evergreen-section-intro > p:last-child { color: var(--color-muted); }
 .evergreen-section-intro > div p, .evergreen-section-intro > p:last-child { margin: 0; }
 .evergreen-section-intro > div p + p { margin-top: 1rem; }
@@ -156,7 +162,7 @@ svg { display: block; }
 .evergreen-owner-grid__item:hover::after { transform: scaleX(1); }
 .evergreen-owner-grid__item + .evergreen-owner-grid__item { padding-left: clamp(1rem, 2.3vw, 2rem); border-left: 1px solid var(--color-rule); }
 .evergreen-owner-grid__item span, .evergreen-acquire__criteria span { color: var(--color-accent); font-size: 0.65rem; font-weight: 650; letter-spacing: 0.12em; }
-.evergreen-owner-grid h3, .evergreen-acquire__criteria h3, .evergreen-process h3 { margin: 1.25rem 0 0.75rem; font-size: 1rem; line-height: 1.35; }
+.evergreen-owner-grid h3, .evergreen-acquire__criteria h3, .evergreen-process h3 { margin: 1.25rem 0 0.75rem; font-family: var(--font-serif); font-size: var(--type-h3); font-weight: 600; line-height: 1.25; }
 .evergreen-owner-grid p, .evergreen-acquire__criteria p, .evergreen-process p { margin: 0; color: var(--color-muted); font-size: 0.82rem; line-height: 1.65; }
 
 .evergreen-acquire { background: var(--color-surface); }
@@ -471,6 +477,35 @@ html[data-concept='evergreen-partner-refined'] {
   background: linear-gradient(118deg, var(--evergreen-900), var(--evergreen-800));
 }
 .evergreen-refined .evergreen-footer { background: var(--evergreen-950); }
+
+/* Final typography contract: one display, section, and tertiary heading scale. */
+.evergreen-refined main h1 {
+  font-family: var(--font-serif);
+  font-size: var(--type-h1);
+  font-weight: 500;
+  line-height: 0.96;
+  letter-spacing: -0.052em;
+}
+.evergreen-refined main h2 {
+  font-family: var(--font-serif);
+  font-size: var(--type-h2);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.043em;
+}
+.evergreen-refined main h3 {
+  font-family: var(--font-serif);
+  font-size: var(--type-h3);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.018em;
+}
+.evergreen-refined .inner-hero__lede { max-width: var(--measure-copy); font-size: var(--type-lede); line-height: 1.58; }
+.evergreen-refined .evergreen-section-intro { gap: clamp(2.75rem, 6vw, 6rem); }
+.evergreen-refined .evergreen-section-intro > div,
+.evergreen-refined .evergreen-section-intro > p:last-child { max-width: 58ch; font-size: 1rem; line-height: 1.62; }
+.evergreen-refined .evergreen-owner-grid,
+.evergreen-refined .evergreen-acquire__criteria { margin-top: clamp(3.5rem, 6vw, 5.5rem); }
 
 @media (max-width: 720px) {
   .evergreen-refined { background-size: auto, 3rem 3rem, auto; }

@@ -136,3 +136,48 @@ test('the default homepage opens finalized Evergreen while the legacy gallery re
   await page.waitForLoadState('domcontentloaded');
   assert.equal(await page.locator('.all-designs').getAttribute('href'), '/designs');
 });
+
+test('finalized Evergreen uses a consistent, readable three-level heading system', async () => {
+  const collectType = async (route) => {
+    const response = await page.goto(`${baseUrl}${route}`, { waitUntil: 'networkidle' });
+    assert.equal(response?.status(), 200, `${route} should load`);
+
+    return page.evaluate(() => {
+      const pixels = (selector) => {
+        const element = document.querySelector(selector);
+        return element ? Number.parseFloat(getComputedStyle(element).fontSize) : 0;
+      };
+
+      return {
+        h1: pixels('main h1'),
+        h2: [...document.querySelectorAll('main h2')].map((element) => Number.parseFloat(getComputedStyle(element).fontSize)),
+        h3: [...document.querySelectorAll('main h3')].map((element) => Number.parseFloat(getComputedStyle(element).fontSize)),
+        lede: pixels('.evergreen-hero__lede, .inner-hero__lede'),
+        navigation: pixels('.evergreen-nav a'),
+        conversation: pixels('.evergreen-header__action'),
+        overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      };
+    });
+  };
+
+  const home = await collectType('/');
+  const acquire = await collectType('/acquisition-criteria');
+  const contact = await collectType('/sell-your-business');
+
+  for (const [route, type] of [['/', home], ['/acquisition-criteria', acquire], ['/sell-your-business', contact]]) {
+    assert.ok(type.h1 >= 72, `${route} should retain a confident desktop H1`);
+    assert.ok(type.lede >= 17, `${route} supporting introduction should remain comfortably readable`);
+    assert.ok(type.navigation >= 13, `${route} navigation should not render as fine print`);
+    assert.ok(type.conversation >= 15, `${route} conversation action should carry stronger visual prominence`);
+    assert.ok(type.conversation > type.navigation, `${route} conversation action should outrank navigation text`);
+    assert.ok(Math.abs(type.conversation - type.lede) <= 1, `${route} conversation action should share the supporting H2 scale`);
+    assert.ok(type.overflow <= 1, `${route} should not overflow horizontally`);
+  }
+
+  assert.ok(Math.abs(home.h1 - acquire.h1) <= 2, 'homepage and acquisition-page H1s should share one display scale');
+  assert.ok(Math.abs(home.h1 - contact.h1) <= 2, 'homepage and conversation-page H1s should share one display scale');
+  assert.ok(home.h2.length >= 5, 'homepage should expose the section-heading level throughout');
+  assert.ok(home.h3.length >= 10, 'homepage should expose the tertiary-heading level throughout');
+  assert.ok(Math.max(...home.h2) - Math.min(...home.h2) <= 2, 'homepage H2s should resolve to one consistent scale');
+  assert.ok(Math.max(...home.h3) - Math.min(...home.h3) <= 2, 'homepage H3s should resolve to one consistent scale');
+});
