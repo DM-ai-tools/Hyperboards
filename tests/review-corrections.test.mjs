@@ -59,28 +59,43 @@ test('each acquisition industry reveals its relevant one-line context by keyboar
   }
 });
 
-test('process and stewardship rules meet their circle centers and retain equal lengths', async () => {
-  await page.goto(base);
-  const measurements = await page.evaluate(() => {
-    const nodes = [...document.querySelectorAll('.evergreen-process-line i')];
-    const steps = [...document.querySelectorAll('.evergreen-process__steps li')];
-    const process = steps.slice(1).map((li, i) => {
-      const line = getComputedStyle(li, '::before');
-      const circle = nodes[i + 1].getBoundingClientRect();
-      return { gap: Math.abs(li.getBoundingClientRect().left + parseFloat(line.left) + .5 - (circle.left + circle.width / 2)), height: parseFloat(line.height) };
+test('process and stewardship dividers leave clear space below their centered circles', async () => {
+  for (const width of [1440, 834]) {
+    await page.setViewportSize({ width, height: 1000 });
+    await page.goto(base);
+    const measurements = await page.evaluate(() => {
+      const nodes = [...document.querySelectorAll('.evergreen-process-line i')];
+      const steps = [...document.querySelectorAll('.evergreen-process__steps li')];
+      const process = steps.slice(1).flatMap((li, i) => {
+        const line = getComputedStyle(li, '::before');
+        if (line.display === 'none') return [];
+        const rect = li.getBoundingClientRect();
+        const node = nodes[i + 1];
+        const circleStyle = getComputedStyle(li, '::after');
+        const circle = node.getClientRects().length ? node.getBoundingClientRect() : {
+          left: rect.left + li.clientLeft + parseFloat(circleStyle.left),
+          width: parseFloat(circleStyle.width),
+          bottom: rect.top + li.clientTop + parseFloat(circleStyle.top) + parseFloat(circleStyle.height),
+        };
+        return [{ gap: Math.abs(rect.left + li.clientLeft + parseFloat(line.left) + .5 - (circle.left + circle.width / 2)), clearance: rect.top + li.clientTop + parseFloat(line.top) - circle.bottom, height: parseFloat(line.height) }];
+      });
+      const stewardship = [...document.querySelectorAll('.evergreen-stewardship__principles li')].slice(1).flatMap((li) => {
+        const circle = getComputedStyle(li, '::before');
+        const line = getComputedStyle(li, '::after');
+        if (line.display === 'none') return [];
+        return [{ gap: Math.abs(parseFloat(line.left) + .5 - (parseFloat(circle.left) + parseFloat(circle.width) / 2)), clearance: parseFloat(line.top) - parseFloat(circle.top) - parseFloat(circle.height), height: parseFloat(line.height) }];
+      });
+      return { process, stewardship };
     });
-    const stewardship = [...document.querySelectorAll('.evergreen-stewardship__principles li')].slice(1).map((li) => {
-      const circle = getComputedStyle(li, '::before');
-      const line = getComputedStyle(li, '::after');
-      return { gap: Math.abs(parseFloat(line.left) + .5 - (parseFloat(circle.left) + parseFloat(circle.width) / 2)), height: parseFloat(line.height) };
-    });
-    return { process, stewardship };
-  });
-  for (const group of Object.values(measurements)) {
-    assert.ok(group.every(({ gap }) => gap <= 1), JSON.stringify(measurements));
-    assert.ok(Math.max(...group.map(x => x.height)) - Math.min(...group.map(x => x.height)) < 1);
+    for (const group of Object.values(measurements)) {
+      assert.equal(group.length, width > 1000 ? 3 : 2);
+      assert.ok(group.every(({ gap }) => gap <= 1), JSON.stringify(measurements));
+      assert.ok(group.every(({ clearance }) => clearance >= 8 && clearance <= 16), `dividers must visibly clear the circles at ${width}px: ${JSON.stringify(measurements)}`);
+      if (width > 1000) assert.ok(Math.max(...group.map(x => x.height)) - Math.min(...group.map(x => x.height)) < 1);
+    }
+    assert.ok(measurements.stewardship.every(x => x.height < 145), 'stewardship dividers should be compact');
   }
-  assert.ok(measurements.stewardship.every(x => x.height < 145), 'stewardship dividers should be compact');
+  await page.setViewportSize({ width: 1440, height: 1000 });
 });
 
 async function fillIntroduction() {
