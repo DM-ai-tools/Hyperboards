@@ -15,5 +15,11 @@ export function liveDesign(page: keyof typeof pages): Response {
     .replace(/href="sell-your-business\.html"/g, 'href="/sell-your-business"')
     .replace('</head>', `<link rel="stylesheet" href="/assets/evergreen/original-fonts.css"><link rel="canonical" href="https://hyperboards.com${routes[page]}"></head>`);
   if (page === 'home') html = html.replace(/<title>[^<]*<\/title>/, '<title>Hyperboards | Private Business Acquisitions</title>');
+  if (page === 'contact' && process.env.INQUIRY_WEBHOOK_URL) {
+    html = html
+      .replace('data-delivery-mode="email"', 'data-delivery-mode="online"')
+      .replace(/(<p class="delivery-note" data-delivery-note>)[^<]*(<\/p>)/, '$1Your introduction is submitted directly to our inquiry channel. Sensitive records can wait until appropriate protections are in place.$2')
+      .replace('Prepare introduction <span', 'Send introduction <span');
+  }
   return new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
 }

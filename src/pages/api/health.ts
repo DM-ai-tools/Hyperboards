@@ -3,9 +3,9 @@ import type { APIRoute } from 'astro';
 export const prerender = false;
 export const GET: APIRoute = () => Response.json({
   ok: true,
-  release: 'design-1-clean-urls-2026-09-11',
+  release: 'evergreen-review-2026-09-18',
   selectedDesign: 1,
-  contactMode: 'email',
+  contactMode: process.env.INQUIRY_WEBHOOK_URL ? 'form-online' : 'form-email-draft',
   mode: process.env.HYPERBOARDS_SITE_MODE === 'approver' ? 'approver' : 'evergreen',
   designs: process.env.HYPERBOARDS_SITE_MODE === 'approver' ? 9 : 1,
   inquiryDeliveryConfigured: Boolean(process.env.INQUIRY_WEBHOOK_URL),

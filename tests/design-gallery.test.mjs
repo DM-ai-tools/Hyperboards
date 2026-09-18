@@ -72,10 +72,6 @@ test('selected design routes owner and acquisition calls to dedicated pages', as
   assert.match(homepage, /href="sell-your-business\.html"[^>]*>Discuss selling your business/);
   assert.match(homepage, /href="what-we-acquire\.html"[^>]*>See what we acquire/);
 
-  assert.match(ownerPage, /data-email-contact/);
-  assert.match(ownerPage, /href="mailto:hello@hyperboards\.com\?subject=Confidential%20business%20conversation"/);
-  assert.match(ownerPage, /Opens your email app/);
-  assert.doesNotMatch(ownerPage, /<form\b|chat-preview|disabled/);
   assert.match(ownerPage, /hello@hyperboards\.com/);
 
   assert.match(acquirePage, /\$750K[^<]*\$2M/);
